@@ -218,3 +218,45 @@ export interface MapSummary {
   landmarks: number;
   model_status: ModelStatus["status"];
 }
+
+export interface RouteStep {
+  kind: "start" | "walk" | "arrive";
+  instruction: string;
+  distance_m: number;
+  node_ids: string[];
+}
+
+export interface RouteResult {
+  found: boolean;
+  origin_node: string;
+  destination_node: string;
+  origin_name: string;
+  destination_name: string;
+  node_ids: string[];
+  points: Point2D[];
+  distance_m: number;
+  steps: RouteStep[];
+  avoided_stairs: boolean;
+  reason: string | null;
+  spoken: string;
+  safety_note?: string | null;
+}
+
+export interface AskContext {
+  last_place_id: string | null;
+  current_place_id: string | null;
+  avoid_stairs: boolean;
+}
+
+export type AskIntent = "help" | "overview" | "list" | "where" | "nearby" | "route" | "whereami" | "describe" | "clarify" | "unknown";
+
+export interface AskResult {
+  answer: string;
+  intent: AskIntent;
+  place_ids: string[];
+  route: RouteResult | null;
+  context: AskContext;
+  understood_by: "rules" | "gemini";
+  safety_note: string | null;
+  suggestions: string[];
+}
