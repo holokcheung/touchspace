@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import type { FloorMap } from "../api/types";
+import DotPadPreview from "../components/DotPadPreview";
 import FloorPlanSvg from "../components/FloorPlanSvg";
 import MapNav from "../components/MapNav";
 import { LiveStatus, Notice } from "../components/Status";
+import { framePins, mapPins, statusLine } from "../lib/dotpad";
 import { dist, planBounds, roomAt } from "../lib/geometry";
 import {
   SOUNDSCAPE,
@@ -155,6 +157,9 @@ export function WalkthroughView({ map, header }: { map: FloorMap; header?: React
 
   const readings = useMemo(() => (scene && pose ? readZones(scene, pose) : []), [scene, pose]);
   const dataHere = scene && pose ? hasMapData(scene, pose.position) : true;
+  const dot = useMemo(() => mapPins(map), [map]);
+  const frame = useMemo(() => framePins(dot.grid, dot.layout, pose, dot.placed), [dot, pose]);
+  const padText = useMemo(() => statusLine(map, pose), [map, pose]);
 
   useEffect(() => {
     if (!soundOn || readings.length === 0) return;
@@ -408,20 +413,35 @@ export function WalkthroughView({ map, header }: { map: FloorMap; header?: React
             </section>
           </div>
 
-          <aside aria-labelledby={`${ids}-map`} className="card p-2">
-            <h2 id={`${ids}-map`} className="px-2 pt-2 text-lg font-bold">
-              Map
-            </h2>
-            <p className="px-2 text-sm text-muted">
-              The orange arrow is you. Dashed lines reach the nearest surface on your left, ahead and right.
-            </p>
-            <FloorPlanSvg
-              map={map}
-              layers={LAYERS}
-              selectedId={null}
-              walker={{ position: pose.position, heading: pose.heading, hits }}
-              label="Floor plan with your position. The walk area lists the same information as text."
-            />
+          <aside className="space-y-6">
+            <section aria-labelledby={`${ids}-map`} className="card p-2">
+              <h2 id={`${ids}-map`} className="px-2 pt-2 text-lg font-bold">
+                Map
+              </h2>
+              <p className="px-2 text-sm text-muted">
+                The orange arrow is you. Dashed lines reach the nearest surface on your left, ahead and right.
+              </p>
+              <FloorPlanSvg
+                map={map}
+                layers={LAYERS}
+                selectedId={null}
+                walker={{ position: pose.position, heading: pose.heading, hits }}
+                label="Floor plan with your position. The walk area lists the same information as text."
+              />
+            </section>
+
+            <section aria-labelledby={`${ids}-dotpad`} className="card p-4">
+              <h2 id={`${ids}-dotpad`} className="text-lg font-bold">
+                DotPad
+              </h2>
+              <p className="text-sm text-muted">
+                What the DotPad's pins will show: walls, doorways as gaps, a symbol for each marked place, and an X for you that
+                moves as you walk. The text line under it says the room and which way you face.
+              </p>
+              <div className="mt-3">
+                <DotPadPreview grid={frame.grid} walker={frame.walker} text={padText} metersPerPin={dot.layout.metersPerPin} />
+              </div>
+            </section>
           </aside>
         </div>
       </div>

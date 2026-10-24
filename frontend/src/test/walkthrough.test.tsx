@@ -96,6 +96,18 @@ describe("Walk-through", () => {
     expect(screen.getByRole("status")).toHaveTextContent(/facing north/);
   });
 
+  it("shows the DotPad pins, with your X moving as you walk", async () => {
+    setup();
+    const pad = await screen.findByRole("img", { name: /^DotPad preview, 60 by 40 pins/ });
+    expect(pad.getAttribute("aria-label")).toMatch(/Text line: Lobby N\.$/);
+    const before = pad.getAttribute("aria-label")!.match(/row (\d+)/)![1];
+    const area = screen.getByRole("application", { name: "Walk area" });
+    area.focus();
+    for (let i = 0; i < 8; i++) await userEvent.keyboard("{ArrowUp}");
+    const after = pad.getAttribute("aria-label")!.match(/row (\d+)/)![1];
+    expect(Number(after)).toBeLessThan(Number(before)); // north is up on the pad
+  });
+
   it("offers every landmark as a starting point", async () => {
     setup();
     const select = await screen.findByLabelText("Start from");
