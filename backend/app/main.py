@@ -1,4 +1,4 @@
-"""TouchSpace AI HTTP API.
+"""Touchspace AI HTTP API.
 
 Run locally:  uvicorn app.main:app --reload --port 8000
 """
@@ -11,12 +11,15 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
-from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, Field
 
+from app.touchspace.api import router as touchspace_router
+from app.touchspace.middleware import PackageSizeLimit
 from app.models.map import FloorMap, SourceInfo, ValidationIssue
 from app.models.tactile import TactileReport, TactileSettings
 from app.services.assistant import AskContext, AskResult, answer
@@ -159,7 +162,7 @@ class AskRequest(BaseModel):
 # --------------------------------------------------------------------------- app
 
 
-app = FastAPI(title="TouchSpace AI API", version=VERSION)
+app = FastAPI(title="Touchspace AI API", version=VERSION)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_settings().cors_origins,
@@ -381,3 +384,15 @@ def download_stl(map_id: str, store: MapStore = Depends(get_store)) -> FileRespo
         filename=status.filename,
         headers={"X-Model-Stale": "true" if status.status == "stale" else "false", "Cache-Control": "no-store"},
     )
+
+# Indoor exploration is isolated from the existing scan/STL API.
+@app.exception_handler(HTTPException)
+async def _http_error(request: Request, exc: HTTPException) -> JSONResponse:
+    if not request.url.path.startswith("/api/touchspace/"):
+        return await http_exception_handler(request, exc)
+    return JSONResponse(status_code=exc.status_code,
+                        content=_error_body('http_error', str(exc.detail)), headers=exc.headers)
+
+
+app.include_router(touchspace_router)
+app.add_middleware(PackageSizeLimit)

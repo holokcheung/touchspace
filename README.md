@@ -1,124 +1,67 @@
-# TouchSpace AI
+# Touchspace AI
 
-**Scan a Space. Feel the Layout. Explore with Confidence.**
+A native, accessible iOS app for exploring volunteer-scanned indoor maps with voice or text. Import a portable package, inspect its rooms and landmarks offline, attempt automatic ARKit positioning, and follow deterministic routes with speech and optional stereo waypoint cues.
 
-TouchSpace AI turns real indoor spaces into 3D-printable tactile maps for blind and visually impaired people, and pairs them with a voice assistant that answers questions about the space. Built for Cal Hacks 13.0.
+The implementation follows [app-spec.md](app-spec.md). The app and its isolated backend module use the **Touchspace AI** name. No tactile hardware is required. The existing web/STL tools remain available as a separate reference workflow; see [legacy web documentation](docs/legacy-web.md).
 
-## Workflow
+## Run the iOS app
 
-Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process Geometry → Generate Tactile Map → Preview 3D → Download STL → Print
+Open [ios-scanner/TouchspaceAI.xcodeproj](ios-scanner/TouchspaceAI.xcodeproj) in Xcode and run the **TouchspaceAI** scheme. Use iOS 17 or later and Xcode 16 or later (tested with Xcode 27.1). For a real device, choose your signing team in the app target. There are no external Swift package dependencies; `TouchspaceCore` is a local Swift package and uses system zlib.
 
-## Repository layout
+The simulator supports import, map details, offline Q&A, catalog, settings, and the demo. RoomPlan scanning requires a LiDAR-equipped iPhone/iPad; live exploration requires a real saved world map and successful ARKit relocalization. The demo never fabricates those capabilities.
 
-| Path | Contents |
-| --- | --- |
-| `frontend/` | React + TypeScript + Vite web app |
-| `backend/` | FastAPI service: RoomPlan import, floor-plan processing, STL generation, routing, voice Q&A |
-| `ios-scanner/` | SwiftUI RoomPlan scanner app |
-| `sample-data/` | Synthetic demo fixtures (not real venue scans) |
-| `shared/` | Settings shared by the web app and the iPhone app (`soundscape.json`) |
-| `docs/` | Architecture and usage docs |
+1. Tap **Try the map-only demo** to add the bundled small venue.
+2. Open **Small venue demo**, read its metadata and warnings, and tap **Explore map**.
+3. Ask or type “how are the rooms connected?” or “where is the exit?”. Follow-up questions retain stable landmark IDs. Direction questions clearly report that the map-only demo has no live position.
+4. On a supported device, choose **Scan a space**, capture one enclosed room, finish, label rooms/entrances/landmarks, review connectivity, and save the complete package. World-map capture uses the same uninterrupted AR session. Inadequate world mapping produces an explicitly labelled map-only draft.
+5. Share the saved `.touchspacemap` through the system share sheet. Another installation/device can import it from Files or an incoming share/open action and attempt **Start live exploration**.
 
-## Status
+Positioning requires normal tracking and the recovered saved frame anchor. Limited/lost/stale tracking halts guidance. Resume explicitly recalculates a route locally. Directions follow the phone, not necessarily the person's body. Maps are structural approximations, not live collision avoidance or a replacement for a cane/guide dog.
 
-| Phase | State |
-| --- | --- |
-| 1. Data pipeline: normalized schema, synthetic demo, floor-plan processing, tactile STL generator, tests | Done |
-| 2. FastAPI endpoints + React web app (upload, 2D editor, 3D preview, STL download, demo mode) | Done |
-| 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. iOS app written, not yet built or tested on a device. |
-| 4. Voice explorer and routing | Done: routing over recorded paths, grounded Q&A, Voice Explorer page, path editor, Cartesia voice, optional Gemini |
-| Walk-through soundscape | Done on the web: walk the map with headphones, and the noise is muffled on the side of a nearby wall. Settings shared with the iPhone app; live LiDAR version not built. |
-| 5. Polish and docs | Not started |
+## Run the backend
 
-The demo building in `sample-data/demo-building.json` is **synthetic**. It is not a scan of any real place.
-
-## Running it locally
-
-Requires Python 3.11+ and Node 20+.
-
-**1. Backend** (FastAPI on port 8000):
+Python 3.11+ is required (tested with Python 3.12). From the repository root:
 
 ```bash
+uv venv --python 3.12 backend/.venv
+uv pip install --python backend/.venv/bin/python -r backend/requirements-dev.txt
+cp .env.example .env
 cd backend
-python3 -m venv .venv
-.venv/bin/pip install -r requirements-dev.txt
-.venv/bin/python -m uvicorn app.main:app --reload --port 8000
+.venv/bin/python -m uvicorn app.main:app --reload --env-file ../.env --port 8000
 ```
 
-**2. Frontend** (Vite on port 5173, proxies `/api` to the backend), in a second terminal:
+Alternatively, use `python3 -m venv backend/.venv` and pip. Set `TOUCHSPACE_UPLOAD_TOKEN` in `.env` to at least 24 random characters to enable uploads. Without it, local app features and public browsing still work. Optional `TOUCHSPACE_GEMINI_API_KEY` (or existing `GEMINI_API_KEY`) enables backend conversational intent interpretation; `TOUCHSPACE_GEMINI_MODEL` chooses the model. Provider keys stay on the server. Without a key or during a provider outage, Q&A uses a deterministic fallback.
+
+In iOS **Settings**, enter `http://localhost:8000` for the simulator, or an HTTPS server URL for a real device. Store the upload credential through the app's secure field. Uploads are private by default; public publication requires a separate explicit consent toggle and saved world data. **Use server assistant for this map** is opt-in and sends each question and its optional current pose only when submitted. Local maps are not silently uploaded for chat; upload privately or download a server-stored map first.
+
+- [API contract, storage, authentication, LLM grounding, and limits](docs/touchspace-api.md)
+- [Portable package format and shared coordinate conventions](docs/map-package.md)
+- [Tests, device acceptance procedure, and remaining verification](docs/ios-testing.md)
+- Interactive API documentation: `http://localhost:8000/docs`
+
+## Test
 
 ```bash
-cd frontend
-npm install
-npm run dev
+backend/.venv/bin/python -m pytest backend/tests
+swift test --package-path ios-scanner/TouchspaceCore
+xcodebuild -project ios-scanner/TouchspaceAI.xcodeproj \
+  -scheme TouchspaceAI -destination 'platform=iOS Simulator,name=iPhone 18 Pro' \
+  -parallel-testing-enabled NO test CODE_SIGNING_ALLOWED=NO
 ```
 
-Open http://localhost:5173 and click **Try Demo**. No API keys are needed. To use Cartesia voice, see [docs/voice.md](docs/voice.md).
+Choose an installed simulator name from `xcrun simctl list devices available`. The client/server integration test needs the documented local backend on port 8765; it skips when that server is absent. [Testing instructions](docs/ios-testing.md) include its exact command and required device checks. `xcodegen generate --spec ios-scanner/project.yml` regenerates the checked-in Xcode project if source membership or settings change.
 
-To try the RoomPlan import path without an iPhone, upload `sample-data/synthetic-roomplan-capturedroom.json`. It is synthetic data in RoomPlan's format. For real scans, see [ios-scanner/README.md](ios-scanner/README.md) and [docs/roomplan-import.md](docs/roomplan-import.md).
+The synthetic venue fixture is [sample-data/touchspace-demo.touchspacemap](sample-data/touchspace-demo.touchspacemap), with canonical JSON in `sample-data/touchspace-demo/` and route/direction vectors in `sample-data/spatial-test-vectors.json`. It includes a reachable exit and a disconnected store room. Regenerate it using `python3 sample-data/scripts/make_touchspace_demo.py` and copy the archive/vectors into the app/test resource folders when changing fixtures.
 
-**Tests:**
+## Layout
 
-```bash
-cd backend && .venv/bin/python -m pytest
-cd frontend && npm test
-```
-
-**STL from the command line** (no server needed):
-
-```bash
-cd backend
-.venv/bin/python -m app.cli generate ../sample-data/demo-building.json -o demo.stl --set wall_height_mm=3
-```
-
-## Web app
-
-| Page | What it does |
+| Directory | Purpose |
 | --- | --- |
-| Home | Product overview, **Get Started**, **Try Demo**, tactile symbol key |
-| Upload scan | Drag-and-drop or file picker for scan JSON, parsing errors with details, demo scan, list of saved maps |
-| Floor plan | SVG plan with walls, doors, rooms, objects, paths and landmarks. Add, drag, or arrow-key move landmarks. Rename landmarks and rooms, set the starting point, choose which furniture is printed, check the map. Includes a full text description of the plan. |
-| Voice explorer | Ask by voice or text: descriptions, where things are, what's nearby, step-by-step directions over recorded paths. Answers are spoken (Cartesia or the browser), shown as text, and drawn on the plan. |
-| Walk-through | Practice walking through the map with headphones, by keyboard or touch. Each ear's noise is muffled when a wall or furniture is close on that side; ticks mean something is in your path; doors, rooms and landmarks are announced. Simulated from the map, not live sensing. Works on a phone over Wi-Fi. |
-| 3D tactile map | Interactive 3D model (rotate, zoom, reset, top view), measurements, print checks, print settings with regenerate, **Download STL**, and a text description of the model |
-
-Accessibility: semantic landmarks and headings, skip link, visible focus outlines, labeled inputs, live status messages, keyboard-movable landmarks, text equivalents for both the 2D plan and the 3D model, color never used alone, light and dark themes, and the Atkinson Hyperlegible font.
-
-## API
-
-| Method | Path | Purpose |
-| --- | --- | --- |
-| GET | `/api/health` | Health check, plus which optional services are configured |
-| POST | `/api/scans` | Upload scan JSON (multipart `file`), then parse, clean up, and save it |
-| POST | `/api/demo` | Create an editable copy of the synthetic demo building |
-| GET | `/api/maps` | List saved maps |
-| GET / PUT | `/api/maps/{id}` | Read or replace a map. Responses include validation issues and 3D model status. |
-| POST | `/api/maps/{id}/route` | Shortest route between two places over recorded paths, with spoken directions |
-| POST | `/api/maps/{id}/ask` | Answer a question using only this map's data |
-| POST | `/api/tts` | Speak text with Cartesia (503 means use the browser voice) |
-| POST | `/api/stt` | Transcribe a recording with Cartesia |
-| POST | `/api/maps/{id}/generate` | Generate the tactile model, optionally with new `settings` |
-| GET | `/api/maps/{id}/model` | Model status (`none` / `ready` / `stale`) and the generation report |
-| GET | `/api/maps/{id}/stl` | Download the binary STL |
-
-Errors return `{"error": {"code", "message", "details"}}`. Maps are stored as JSON files under `backend/data/` (gitignored).
-
-## More docs
-
-- [docs/voice-explorer.md](docs/voice-explorer.md): routing, grounded answers, the path editor, Gemini
-- [docs/soundscape.md](docs/soundscape.md): the walk-through's sound design, shared settings, using it on a phone, plan for live LiDAR
-- [docs/voice.md](docs/voice.md): Cartesia setup
-- [docs/roomplan-import.md](docs/roomplan-import.md): RoomPlan format and coordinates
-- [docs/ACCESSIBILITY_CHECKLIST.md](docs/ACCESSIBILITY_CHECKLIST.md): run before the demo
-- [docs/DEMO.md](docs/DEMO.md): 3-minute pitch script and likely questions
-- [docs/DEVPOST.md](docs/DEVPOST.md): submission draft
-
-## Tactile model, in short
-
-- Flat base (3 mm), with the top-left corner cut off so the reader can tell which way is up.
-- Raised walls (2.5 mm tall, 2 mm wide) with door and opening gaps. A gap narrower than 5 mm at print scale is widened so a finger can find it.
-- Landmark symbols: triangle = entrance, square = exit, circle = restroom, three bars = stairs, ring = elevator, plus = information. Symbols are moved clear of walls and doorways automatically.
-- A legend strip along the bottom edge, plus optional raised dot paths along recorded routes.
-- Every model is checked before export: watertight, one connected solid, fits the print area, all features on the base, correct height.
-
-These dimensions are prototype defaults for FDM printing, not an accessibility standard. Blind users have not tested them yet.
+| `ios-scanner/TouchspaceAI/` | SwiftUI maps, exploration, ARKit positioning, RoomPlan scanning, speech/dictation, catalog client |
+| `ios-scanner/TouchspaceCore/` | Portable models, bounded ZIP codec, spatial engine, A*, occupancy-grid construction, guidance state, offline Q&A |
+| `backend/app/touchspace/` | Package validation, SQLite catalog, file storage, authorized publication, deterministic tools, hosted intent interpretation |
+| `backend/tests/test_touchspace_*` | Package, spatial, API, chat, and provider contract tests |
+| `ios-scanner/TouchspaceAITests/` | Persistence, frame validation, scan transforms, and Swift client/server integration |
+| `ios-scanner/TouchspaceAIUITests/` | Map-only critical flow, typed questions, hardware fallback, large text, accessibility audit |
+| `frontend/` | Existing web editor/STL reference workflow |
+| `sample-data/` | Clearly identified synthetic fixtures; no fake ARWorldMap |
