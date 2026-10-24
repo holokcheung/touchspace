@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import apartment from "../../standalone/maps/apartment.json";
 import demo from "../../../sample-data/demo-building.json";
 import type { FloorMap } from "../api/types";
 import {
@@ -6,6 +7,7 @@ import {
   buildScene,
   compassName,
   describeSurroundings,
+  freeSpotNear,
   hasMapData,
   move,
   muffleFor,
@@ -182,5 +184,33 @@ describe("describing the surroundings", () => {
     const start = demoMap.landmarks.find((l) => l.id === demoMap.start_landmark_id)!;
     expect(hasMapData(scene, start.position)).toBe(true);
     expect(describeSurroundings(scene, { position: start.position, heading: 0 })).toMatch(/facing north/);
+  });
+});
+
+describe("starting positions", () => {
+  it("moves a start that sits on furniture to the nearest free spot in the same room", () => {
+    const map = twoRooms();
+    map.objects = [
+      { id: "bed", category: "bed", label: null, position: { x: 2, y: 2 }, width: 1.6, depth: 2, rotation: 0, include_in_tactile: true, hidden: false },
+    ];
+    const scene = buildScene(map);
+    const spot = freeSpotNear(scene, { x: 2, y: 2 });
+    expect(Math.abs(spot.x - 2) > 0.8 || Math.abs(spot.y - 2) > 1).toBe(true);
+    expect(spot.x).toBeLessThan(4); // still in Room A
+    expect(move(scene, { position: spot, heading: 0 }, 0.25).blocked).toBe(false);
+  });
+
+  it("leaves a free start alone", () => {
+    expect(freeSpotNear(buildScene(twoRooms()), { x: 2, y: 2 })).toEqual({ x: 2, y: 2 });
+  });
+
+  it("doesn't start the real apartment scan inside a bed", () => {
+    const map = apartment as unknown as FloorMap;
+    const scene = buildScene(map);
+    for (const l of map.landmarks) {
+      const spot = freeSpotNear(scene, l.position);
+      const readings = readZones(scene, { position: spot, heading: 0 });
+      expect(Math.min(...readings.map((r) => r.distance ?? Infinity))).toBeGreaterThan(0.2);
+    }
   });
 });

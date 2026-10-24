@@ -80,6 +80,8 @@ export interface Scene {
   map: FloorMap;
   segments: Segment[];
   gaps: Gap[];
+  /** Furniture outlines, so nobody starts inside a bed. */
+  footprints: Point2D[][];
 }
 
 export interface Reading {
@@ -108,6 +110,7 @@ export function bearingVector(deg: number): Point2D {
 export function buildScene(map: FloorMap): Scene {
   const passable = [...map.doors, ...map.openings];
   const segments: Segment[] = [];
+  const footprints: Point2D[][] = [];
   for (const wall of map.walls) {
     const own = passable.filter((g) => g.wall_id === wall.id);
     for (const [a, b] of wallPieces(wall, own)) segments.push({ a, b, pad: wall.thickness / 2, label: "wall" });
@@ -123,6 +126,7 @@ export function buildScene(map: FloorMap): Scene {
       [-o.width / 2, o.depth / 2],
     ].map(([x, y]) => ({ x: o.position.x + x * c - y * s, y: o.position.y + x * s + y * c }));
     const label = (o.label ?? o.category).toLowerCase();
+    footprints.push(corners);
     corners.forEach((p, i) => segments.push({ a: p, b: corners[(i + 1) % 4], pad: 0, label }));
   }
   const walls = new Map(map.walls.map((w) => [w.id, w]));
@@ -133,7 +137,7 @@ export function buildScene(map: FloorMap): Scene {
     const [a, b] = gapEnds(wall, g);
     gaps.push({ id: g.id, kind: g.kind, a, b, center: g.position });
   }
-  return { map, segments, gaps };
+  return { map, segments, gaps, footprints };
 }
 
 /** Nearest surface along one bearing, within maxRange. */
@@ -223,6 +227,26 @@ function clearance(scene: Scene, p: Point2D): { distance: number; what: string |
     if (d < best.distance) best = { distance: d, what: seg.label };
   }
   return best;
+}
+
+/**
+ * The nearest spot to p where someone could stand: clear of walls and furniture, on the map,
+ * and reachable without passing through a wall. Landmarks often sit on top of furniture.
+ */
+export function freeSpotNear(scene: Scene, p: Point2D, s: SoundscapeSettings = SOUNDSCAPE): Point2D {
+  const free = (q: Point2D) =>
+    clearance(scene, q).distance >= s.walk.body_radius_m + 0.05 &&
+    hasMapData(scene, q) &&
+    !scene.footprints.some((f) => pointInPolygon(q, f));
+  if (free(p)) return p;
+  for (let r = 0.25; r <= 3; r += 0.25) {
+    for (let i = 0; i < 24; i++) {
+      const a = (i / 24) * 2 * Math.PI;
+      const q = { x: p.x + Math.cos(a) * r, y: p.y + Math.sin(a) * r };
+      if (free(q) && !scene.segments.some((seg) => seg.label === "wall" && segmentsCross(p, q, seg.a, seg.b))) return q;
+    }
+  }
+  return p;
 }
 
 export function turn(pose: Pose, deg: number): Pose {
