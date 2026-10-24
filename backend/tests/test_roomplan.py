@@ -248,6 +248,25 @@ def test_upload_roomplan_through_api(tmp_path):
         app.dependency_overrides.clear()
 
 
+def test_public_roomplan_sample_endpoint(tmp_path):
+    """Endpoint ported from PR #1: loads the checked-in public export through the normal import path."""
+    store = MapStore(tmp_path)
+    app.dependency_overrides[get_store] = lambda: store
+    try:
+        client = TestClient(app)
+        r = client.post("/api/samples/roomplan")
+        assert r.status_code == 201, r.text
+        body = r.json()
+        assert body["map"]["id"].startswith("roomplan-")
+        assert body["map"]["name"] == "Public RoomPlan sample"
+        assert body["map"]["source"]["kind"] == "roomplan"
+        assert len(body["map"]["walls"]) == 20 and all(d["wall_id"] for d in body["map"]["doors"])
+        assert client.post(f"/api/maps/{body['map']['id']}/generate").status_code == 200
+        assert client.get(f"/api/maps/{body['map']['id']}/stl").headers["content-type"] == "model/stl"
+    finally:
+        app.dependency_overrides.clear()
+
+
 def test_broken_roomplan_upload_explains_problem(tmp_path):
     store = MapStore(tmp_path)
     app.dependency_overrides[get_store] = lambda: store

@@ -49,6 +49,7 @@ export const api = {
   health: () => request<{ status: string; features: { gemini: boolean; cartesia: boolean } }>("/api/health"),
   listMaps: () => request<MapSummary[]>("/api/maps"),
   createDemo: () => request<MapResponse>("/api/demo", { method: "POST" }),
+  createRoomPlanSample: () => request<MapResponse>("/api/samples/roomplan", { method: "POST" }),
   uploadScan: (file: File) => {
     const form = new FormData();
     form.append("file", file);

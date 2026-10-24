@@ -38,10 +38,10 @@ export default function Upload() {
     }
   }
 
-  async function loadDemo() {
-    setState({ kind: "uploading", name: "the synthetic demo building" });
+  async function loadSample(name: string, create: () => Promise<MapResponse>) {
+    setState({ kind: "uploading", name });
     try {
-      setState({ kind: "done", res: await api.createDemo() });
+      setState({ kind: "done", res: await create() });
     } catch (e) {
       setState({ kind: "error", message: e instanceof Error ? e.message : String(e), details: [] });
     }
@@ -95,10 +95,30 @@ export default function Upload() {
           disabled={state.kind === "uploading"}
         />
         <div className="mt-6 border-t border-line pt-6">
-          <p className="text-muted">No scan yet?</p>
-          <button type="button" className="btn-secondary mt-2" onClick={loadDemo} disabled={state.kind === "uploading"}>
-            Load the demo scan (synthetic)
-          </button>
+          <p className="text-muted">No scan yet? Try one of these:</p>
+          <div className="mt-2 flex flex-wrap justify-center gap-2">
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => loadSample("the synthetic demo building", api.createDemo)}
+              disabled={state.kind === "uploading"}
+            >
+              Load the demo scan (synthetic)
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              aria-describedby={`${inputId}-sample-note`}
+              onClick={() => loadSample("the public RoomPlan sample", api.createRoomPlanSample)}
+              disabled={state.kind === "uploading"}
+            >
+              Try the public RoomPlan sample
+            </button>
+          </div>
+          <p id={`${inputId}-sample-note`} className="mx-auto mt-3 max-w-xl text-sm text-muted">
+            The public sample is a RoomPlan export of an apartment from another open-source project (MIT license). It
+            is not a scan by our team, and its original author did not document where it was captured.
+          </p>
         </div>
       </div>
 
