@@ -27,3 +27,4 @@ ios-scanner/**/DerivedData/
 
 # OS
 .DS_Store
+dist-walk

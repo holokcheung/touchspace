@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:walk": "vite build --config vite.walk.config.ts && node scripts/inline-walk.mjs"
   },
   "dependencies": {
     "@react-three/drei": "10.1.2",

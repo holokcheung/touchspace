@@ -11,6 +11,7 @@ import {
   compassName,
   describeSurroundings,
   directionTo,
+  freeSpotNear,
   gapName,
   hasMapData,
   meters,
@@ -106,12 +107,10 @@ function ReadingRow({ r }: { r: Reading }) {
   );
 }
 
-export default function Walkthrough() {
-  const { mapId } = useParams();
-  const { data, error } = useMapData(mapId);
+/** The walk-through itself, for any map. The standalone page (standalone/walk.tsx) uses it without the backend. */
+export function WalkthroughView({ map, header }: { map: FloorMap; header?: ReactNode }) {
   const ids = useId();
-  const map = data?.map;
-  const scene = useMemo(() => (map ? buildScene(map) : null), [map]);
+  const scene = useMemo(() => buildScene(map), [map]);
 
   const [pose, setPose] = useState<Pose | null>(null);
   const [startId, setStartId] = useState("");
@@ -132,7 +131,8 @@ export default function Walkthrough() {
   const placeAt = useCallback(
     (landmarkId: string) => {
       if (!map || !scene) return;
-      const p = startPose(map, landmarkId || null);
+      const start = startPose(map, landmarkId || null);
+      const p = { ...start, position: freeSpotNear(scene, start.position) };
       poseRef.current = p;
       near.current = nearbyLandmarks(scene, p);
       setPose(p);
@@ -264,15 +264,7 @@ export default function Walkthrough() {
     }
   }
 
-  if (error)
-    return (
-      <div className="mx-auto max-w-3xl px-4 py-12">
-        <Notice tone="error" title="Could not load this map">
-          {error}
-        </Notice>
-      </div>
-    );
-  if (!map || !pose || !scene) return <p className="p-8 text-muted" role="status">Loading map…</p>;
+  if (!pose) return <p className="p-8 text-muted" role="status">Loading map…</p>;
 
   const room = roomAt(map, pose.position);
   const hits = readings.flatMap((r) => (r.hit ? [r.hit] : []));
@@ -280,7 +272,7 @@ export default function Walkthrough() {
 
   return (
     <div>
-      <MapNav map={map} />
+      {header}
       <div className="mx-auto max-w-7xl px-4 py-6">
         <Notice tone="info" title="Practice walking this map with sound">
           Put on headphones. A soft noise plays in each ear; it gets muffled on the side where a wall or furniture is close, and
@@ -435,4 +427,19 @@ export default function Walkthrough() {
       </div>
     </div>
   );
+}
+
+export default function Walkthrough() {
+  const { mapId } = useParams();
+  const { data, error } = useMapData(mapId);
+  if (error)
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-12">
+        <Notice tone="error" title="Could not load this map">
+          {error}
+        </Notice>
+      </div>
+    );
+  if (!data) return <p className="p-8 text-muted" role="status">Loading map…</p>;
+  return <WalkthroughView key={data.map.id} map={data.map} header={<MapNav map={data.map} />} />;
 }
