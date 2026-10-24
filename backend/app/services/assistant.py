@@ -358,8 +358,51 @@ def _known_places_sentence(fmap: FloorMap) -> str:
     return f"Places I know: {join_names(names[:12])}." if names else "This map has no named places yet."
 
 
-def answer(fmap: FloorMap, question: str, ctx: AskContext | None = None) -> AskResult:
+def answer(fmap: FloorMap, question: str, ctx: AskContext | None = None, interpreter=None) -> AskResult:
+    """Answer from map facts. `interpreter` (optional, e.g. Gemini) only helps when the rules can't parse."""
     ctx = ctx or AskContext()
+    result = _answer_rules(fmap, question, ctx)
+    # Only when the rules got nowhere: unknown question, unknown place, or no place named at all.
+    # Real ambiguity ("Bedroom 1 or Bedroom 2?") stays a question back to the user.
+    needs_help = result.intent == "unknown" or (
+        result.intent == "clarify" and ("couldn't find" in result.answer or result.answer.startswith("Which place")))
+    if not needs_help or interpreter is None or not getattr(interpreter, "enabled", False):
+        return result
+    places = [(pl.id, _strip_qualifiers(pl.name), pl.type.value if pl.type else "room") for pl in all_places(fmap)]
+    guess = interpreter.interpret(question, places, ctx.last_place_id)
+    canonical = _canonical_question(fmap, guess) if guess else None
+    if canonical is None:
+        return result
+    helped = _answer_rules(fmap, canonical, ctx)
+    if helped.intent in ("unknown", "clarify"):
+        return result
+    return helped.model_copy(update={"understood_by": "gemini"})
+
+
+def _canonical_question(fmap: FloorMap, guess) -> str | None:
+    """Turn a structured interpretation into a plain question the rules answer exactly."""
+    names = {pl.id: _strip_qualifiers(pl.name) for pl in all_places(fmap)}
+    target = names.get(guess.target_id) if guess.target_id else None
+    origin = names.get(guess.origin_id) if guess.origin_id else None
+    match guess.intent:
+        case "overview":
+            return "Describe this place."
+        case "list":
+            return "What places are there?"
+        case "whereami":
+            return "Where am I?"
+        case "help":
+            return "help"
+        case "where" if target:
+            return f"Where is {target}?"
+        case "nearby" if target:
+            return f"What is near {target}?"
+        case "route" if target:
+            return f"How do I get to {target} from {origin}?" if origin else f"How do I get to {target}?"
+    return None
+
+
+def _answer_rules(fmap: FloorMap, question: str, ctx: AskContext) -> AskResult:
     p = parse(question)
 
     def result(text: str, intent: Intent, places: list[Place] = (), route: RouteResult | None = None,

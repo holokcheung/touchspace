@@ -257,6 +257,9 @@ export default function VoiceExplorer() {
                           </ol>
                         )}
                         {t.result.safety_note && <p className="text-sm text-muted">{t.result.safety_note}</p>}
+                        {t.result.understood_by === "gemini" && (
+                          <p className="text-sm text-muted">Gemini helped interpret this question. The answer itself comes from the map.</p>
+                        )}
                         <div className="flex flex-wrap gap-2">
                           <button
                             type="button"

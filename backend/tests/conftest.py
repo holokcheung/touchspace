@@ -52,3 +52,14 @@ def section_at(mesh: trimesh.Trimesh, z: float):
         return Point(0, 0).buffer(0)
     planar, _ = sec.to_2D(to_2D=np.eye(4))
     return unary_union(list(planar.polygons_full))
+
+
+@pytest.fixture(autouse=True)
+def _no_real_external_calls():
+    """Tests never call Gemini, even if a developer's .env has a key. Tests that need it inject a fake."""
+    from app.main import app, get_interpreter
+    from app.services.gemini import GeminiConfig, GeminiInterpreter
+
+    app.dependency_overrides[get_interpreter] = lambda: GeminiInterpreter(GeminiConfig(api_key=None, model="test"))
+    yield
+    app.dependency_overrides.pop(get_interpreter, None)

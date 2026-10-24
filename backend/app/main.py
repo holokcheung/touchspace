@@ -21,6 +21,7 @@ from app.models.map import FloorMap, SourceInfo, ValidationIssue
 from app.models.tactile import TactileReport, TactileSettings
 from app.services.assistant import AskContext, AskResult, answer
 from app.services.floorplan import FloorPlanError, process_map, validate_map
+from app.services.gemini import GeminiConfig, GeminiInterpreter
 from app.services.importers import ImportError_, import_scan
 from app.services.routing import SAFETY_NOTE, RouteResult, RoutingError, plan_route
 from app.services.storage import MapNotFound, MapStore, map_revision, new_map_id
@@ -81,6 +82,11 @@ def get_store() -> MapStore:
 @lru_cache
 def get_voice() -> CartesiaVoice:
     return CartesiaVoice(VoiceConfig.from_env())
+
+
+@lru_cache
+def get_interpreter() -> GeminiInterpreter:
+    return GeminiInterpreter(GeminiConfig.from_env())
 
 
 # --------------------------------------------------------------------------- errors
@@ -215,12 +221,12 @@ def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None) -> Map
 
 
 @app.get("/api/health")
-def health(voice: CartesiaVoice = Depends(get_voice)) -> dict:
+def health(voice: CartesiaVoice = Depends(get_voice), interpreter: GeminiInterpreter = Depends(get_interpreter)) -> dict:
     return {
         "status": "ok",
         "version": VERSION,
         "features": {
-            "gemini": bool(os.environ.get("GEMINI_API_KEY")),
+            "gemini": interpreter.enabled,
             "cartesia": voice.config.enabled,
         },
     }
@@ -352,9 +358,10 @@ def route(map_id: str, body: RouteRequest, store: MapStore = Depends(get_store))
 
 
 @app.post("/api/maps/{map_id}/ask", response_model=AskResult)
-def ask(map_id: str, body: AskRequest, store: MapStore = Depends(get_store)) -> AskResult:
-    """Answer a spatial question using only facts from this map."""
-    return answer(_load(store, map_id), body.question, body.context)
+def ask(map_id: str, body: AskRequest, store: MapStore = Depends(get_store),
+        interpreter: GeminiInterpreter = Depends(get_interpreter)) -> AskResult:
+    """Answer a spatial question using only facts from this map (Gemini, if configured, only helps parse it)."""
+    return answer(_load(store, map_id), body.question, body.context, interpreter=interpreter)
 
 
 @app.get("/api/maps/{map_id}/model", response_model=ModelStatus)
