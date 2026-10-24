@@ -80,6 +80,19 @@ describe("Upload", () => {
     expect(await screen.findByRole("alert")).toHaveTextContent('"photo.png" is not a JSON file');
     expect(fetchMock).not.toHaveBeenCalledWith("/api/scans", expect.anything());
   });
+
+  it("loads the public RoomPlan sample and shows its provenance caveat", async () => {
+    const fetchMock = mockFetch((url) =>
+      url.endsWith("/api/samples/roomplan")
+        ? json({ map: { ...demoMap, id: "roomplan-1234", name: "Public RoomPlan sample", source: { kind: "roomplan" } }, issues: [], model: { status: "none" }, processing_steps: [] }, 201)
+        : json([]),
+    );
+    render(<Upload />, { wrapper: MemoryRouter });
+    expect(screen.getByText(/did not document whether it came directly from Apple JSONEncoder/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Try the public RoomPlan sample" }));
+    expect(await screen.findByText("Processed Public RoomPlan sample.")).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledWith("/api/samples/roomplan", expect.objectContaining({ method: "POST" }));
+  });
 });
 
 describe("FloorPlanSvg", () => {

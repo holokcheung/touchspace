@@ -128,7 +128,9 @@ def _polygons(geom: BaseGeometry) -> list[Polygon]:
 
 
 def _clean(geom: BaseGeometry) -> BaseGeometry:
-    parts = _polygons(geom.buffer(0))
+    # RoomPlan coordinates can carry tiny floating-point kinks that produce
+    # near-degenerate shells; simplify them before extracting printable parts.
+    parts = _polygons(geom.buffer(0).simplify(0.01, preserve_topology=True))
     return MultiPolygon(parts) if len(parts) != 1 else parts[0]
 
 

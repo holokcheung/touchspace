@@ -47,6 +47,15 @@ export default function Upload() {
     }
   }
 
+  async function loadRoomPlanSample() {
+    setState({ kind: "uploading", name: "the public RoomPlan sample" });
+    try {
+      setState({ kind: "done", res: await api.createRoomPlanSample() });
+    } catch (e) {
+      setState({ kind: "error", message: e instanceof Error ? e.message : String(e), details: [] });
+    }
+  }
+
   function onDrop(e: DragEvent) {
     e.preventDefault();
     setDragging(false);
@@ -99,6 +108,14 @@ export default function Upload() {
           <button type="button" className="btn-secondary mt-2" onClick={loadDemo} disabled={state.kind === "uploading"}>
             Load the demo scan (synthetic)
           </button>
+          <div className="mt-4">
+            <button type="button" className="btn-secondary" onClick={loadRoomPlanSample} disabled={state.kind === "uploading"}>
+              Try the public RoomPlan sample
+            </button>
+            <p className="mx-auto mt-2 max-w-xl text-xs text-muted">
+              This public fixture has RoomPlan CapturedRoom-style fields. Its original author did not document whether it came directly from Apple JSONEncoder or a physical LiDAR scan.
+            </p>
+          </div>
         </div>
       </div>
 

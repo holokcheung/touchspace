@@ -227,6 +227,12 @@ def process_map(fmap: FloorMap, options: ProcessingOptions | None = None) -> Pro
     issues: list[ValidationIssue] = []
     out = fmap.model_copy(deep=True)
 
+    if any(w.metadata.get("unsupported_curve") for w in out.walls):
+        issues.append(ValidationIssue(
+            severity="warning", code="curved_geometry_approximated",
+            message="RoomPlan curved walls are approximated by straight wall segments in the 2D and tactile map.",
+        ))
+
     removed = remove_short_walls(out, opts.min_wall_length_m)
     if removed:
         steps.append(f"Removed {len(removed)} wall fragment(s) shorter than {opts.min_wall_length_m} m.")

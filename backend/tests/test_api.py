@@ -12,6 +12,8 @@ from app.main import app, get_store
 from app.services.storage import MapStore
 from tests.conftest import DEMO_PATH, rect_room
 
+ROOMPLAN_SAMPLE = DEMO_PATH.parents[1] / "sample-data" / "roomplan-real-sample.json"
+
 
 @pytest.fixture
 def client(tmp_path):
@@ -154,3 +156,22 @@ def test_list_maps(client):
     maps = client.get("/api/maps").json()
     assert len(maps) == 2
     assert {m["synthetic"] for m in maps} == {True}
+
+
+def test_upload_roomplan_fixture_and_checked_in_sample(client):
+    uploaded = _upload(client, ROOMPLAN_SAMPLE.read_bytes(), "captured-room.json")
+    assert uploaded.status_code == 201, uploaded.text
+    body = uploaded.json()
+    assert body["map"]["source"]["kind"] == "roomplan"
+    assert len(body["map"]["walls"]) == 20
+    assert len(body["map"]["doors"]) == 4
+    assert all(door["wall_id"] for door in body["map"]["doors"])
+    map_id = body["map"]["id"]
+    generated = client.post(f"/api/maps/{map_id}/generate")
+    assert generated.status_code == 200, generated.text
+    model = trimesh.load(io.BytesIO(client.get(f"/api/maps/{map_id}/stl").content), file_type="stl")
+    assert model.is_watertight
+
+    sampled = client.post("/api/samples/roomplan")
+    assert sampled.status_code == 201, sampled.text
+    assert sampled.json()["map"]["source"]["kind"] == "roomplan"

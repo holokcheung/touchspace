@@ -7,6 +7,7 @@ from typing import Any
 from pydantic import ValidationError
 
 from app.models.map import FloorMap
+from app.services.roomplan_parser import RoomPlanImportError, parse_roomplan_data
 
 
 class ImportError_(ValueError):
@@ -55,7 +56,11 @@ def import_scan(data: Any, *, name: str | None = None) -> FloorMap:
             fmap.name = name
         return fmap
     if fmt == "roomplan":
-        raise ImportError_("Apple RoomPlan files are recognized, but RoomPlan import is not implemented yet.")
+        try:
+            return parse_roomplan_data(data, name=name or "RoomPlan scan")
+        except RoomPlanImportError as exc:
+            raise ImportError_("The file looks like a RoomPlan CapturedRoom export but could not be imported.",
+                               [str(exc)]) from exc
     raise ImportError_(
         "Unrecognized file. Upload a RoomPlan CapturedRoom JSON export or a TouchSpace map JSON.",
         ["Expected a JSON object with a 'walls' list."],
