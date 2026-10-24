@@ -25,7 +25,7 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | 1. Data pipeline: normalized schema, synthetic demo, floor-plan processing, tactile STL generator, tests | Done |
 | 2. FastAPI endpoints + React web app (upload, 2D editor, 3D preview, STL download, demo mode) | Done |
 | 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. iOS app written, not yet built or tested on a device. |
-| 4. Voice explorer and routing | Cartesia voice layer done (TTS/STT endpoints, speak/listen helpers, Read aloud buttons). Routing and the Voice Explorer page are not started yet. |
+| 4. Voice explorer and routing | Done: routing over recorded paths, grounded Q&A, Voice Explorer page, path editor, Cartesia voice, optional Gemini |
 | 5. Polish and docs | Not started |
 
 The demo building in `sample-data/demo-building.json` is **synthetic**. It is not a scan of any real place.
@@ -76,6 +76,7 @@ cd backend
 | Home | Product overview, **Get Started**, **Try Demo**, tactile symbol key |
 | Upload scan | Drag-and-drop or file picker for scan JSON, parsing errors with details, demo scan, list of saved maps |
 | Floor plan | SVG plan with walls, doors, rooms, objects, paths and landmarks. Add, drag, or arrow-key move landmarks. Rename landmarks and rooms, set the starting point, choose which furniture is printed, check the map. Includes a full text description of the plan. |
+| Voice explorer | Ask by voice or text: descriptions, where things are, what's nearby, step-by-step directions over recorded paths. Answers are spoken (Cartesia or the browser), shown as text, and drawn on the plan. |
 | 3D tactile map | Interactive 3D model (rotate, zoom, reset, top view), measurements, print checks, print settings with regenerate, **Download STL**, and a text description of the model |
 
 Accessibility: semantic landmarks and headings, skip link, visible focus outlines, labeled inputs, live status messages, keyboard-movable landmarks, text equivalents for both the 2D plan and the 3D model, color never used alone, light and dark themes, and the Atkinson Hyperlegible font.
@@ -89,6 +90,8 @@ Accessibility: semantic landmarks and headings, skip link, visible focus outline
 | POST | `/api/demo` | Create an editable copy of the synthetic demo building |
 | GET | `/api/maps` | List saved maps |
 | GET / PUT | `/api/maps/{id}` | Read or replace a map. Responses include validation issues and 3D model status. |
+| POST | `/api/maps/{id}/route` | Shortest route between two places over recorded paths, with spoken directions |
+| POST | `/api/maps/{id}/ask` | Answer a question using only this map's data |
 | POST | `/api/tts` | Speak text with Cartesia (503 means use the browser voice) |
 | POST | `/api/stt` | Transcribe a recording with Cartesia |
 | POST | `/api/maps/{id}/generate` | Generate the tactile model, optionally with new `settings` |
@@ -96,6 +99,15 @@ Accessibility: semantic landmarks and headings, skip link, visible focus outline
 | GET | `/api/maps/{id}/stl` | Download the binary STL |
 
 Errors return `{"error": {"code", "message", "details"}}`. Maps are stored as JSON files under `backend/data/` (gitignored).
+
+## More docs
+
+- [docs/voice-explorer.md](docs/voice-explorer.md): routing, grounded answers, the path editor, Gemini
+- [docs/voice.md](docs/voice.md): Cartesia setup
+- [docs/roomplan-import.md](docs/roomplan-import.md): RoomPlan format and coordinates
+- [docs/ACCESSIBILITY_CHECKLIST.md](docs/ACCESSIBILITY_CHECKLIST.md): run before the demo
+- [docs/DEMO.md](docs/DEMO.md): 3-minute pitch script and likely questions
+- [docs/DEVPOST.md](docs/DEVPOST.md): submission draft
 
 ## Tactile model, in short
 

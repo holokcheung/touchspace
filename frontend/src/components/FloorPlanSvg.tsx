@@ -17,13 +17,17 @@ interface Props {
   onSelect?: (id: string | null) => void;
   onMoveLandmark?: (id: string, pos: Point2D) => void;
   label: string;
+  /** Route to draw on top of the plan (plan coordinates, start to end). */
+  route?: Point2D[];
+  /** Places to emphasize (landmark ids), e.g. the ones an answer talks about. */
+  highlightIds?: string[];
 }
 
 // Plan y points up; SVG y points down. Every plan point is drawn at (x, -y).
 const sx = (p: Point2D) => p.x;
 const sy = (p: Point2D) => -p.y;
 
-export default function FloorPlanSvg({ map, layers, selectedId, onSelect, onMoveLandmark, label }: Props) {
+export default function FloorPlanSvg({ map, layers, selectedId, onSelect, onMoveLandmark, label, route, highlightIds = [] }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragging = useRef<string | null>(null);
   const b = planBounds(map);
@@ -171,6 +175,29 @@ export default function FloorPlanSvg({ map, layers, selectedId, onSelect, onMove
         </g>
       )}
 
+      {route && route.length > 1 && (
+        <g aria-hidden="true">
+          <polyline
+            points={route.map((p) => `${sx(p)},${sy(p)}`).join(" ")}
+            fill="none"
+            stroke="var(--focus)"
+            strokeWidth={unit * 0.28}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray={`${unit * 0.6} ${unit * 0.25}`}
+          />
+          <circle cx={sx(route[0])} cy={sy(route[0])} r={unit * 0.35} fill="var(--focus)" />
+          <circle
+            cx={sx(route[route.length - 1])}
+            cy={sy(route[route.length - 1])}
+            r={unit * 0.45}
+            fill="none"
+            stroke="var(--focus)"
+            strokeWidth={unit * 0.18}
+          />
+        </g>
+      )}
+
       {layers.rooms &&
         map.rooms.map((r) => {
           // A landmark with the same name already labels this room.
@@ -208,7 +235,12 @@ export default function FloorPlanSvg({ map, layers, selectedId, onSelect, onMove
               onPointerDown={(e) => onPointerDown(e, lm)}
               onKeyDown={(e) => onKey(e, lm)}
             >
-              <circle r={unit * 0.75} fill="var(--surface)" stroke={selected ? "var(--focus)" : "transparent"} strokeWidth={unit * 0.15} />
+              <circle
+                r={unit * 0.75}
+                fill="var(--surface)"
+                stroke={selected || highlightIds.includes(lm.id) ? "var(--focus)" : "transparent"}
+                strokeWidth={unit * (highlightIds.includes(lm.id) ? 0.22 : 0.15)}
+              />
               <LandmarkGlyph type={lm.type} size={unit * 0.9} color={lm.show_on_tactile ? "var(--plan-landmark)" : "var(--muted)"} />
               <text
                 y={-unit * 1.0}

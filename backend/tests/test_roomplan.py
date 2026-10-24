@@ -196,7 +196,7 @@ def test_public_roomplan_export_imports_and_prints():
     # it must not be named after just one of them.
     assert [r.name for r in fmap.rooms] == ["Room 1"]
     areas = sorted(lm.name for lm in fmap.landmarks if lm.type.value == "room")
-    assert areas == ["Bathroom (unconfirmed)", "Bedroom (unconfirmed)", "Bedroom 2 (unconfirmed)"]
+    assert areas == ["Bathroom (unconfirmed)", "Bedroom 1 (unconfirmed)", "Bedroom 2 (unconfirmed)"]
     assert not any(lm.type.value == "restroom" for lm in fmap.landmarks), "a bathroom guess is not a confirmed restroom"
 
     processed = process_map(fmap)

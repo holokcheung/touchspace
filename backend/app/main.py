@@ -19,8 +19,11 @@ from pydantic import BaseModel, Field
 
 from app.models.map import FloorMap, SourceInfo, ValidationIssue
 from app.models.tactile import TactileReport, TactileSettings
+from app.services.assistant import AskContext, AskResult, answer
 from app.services.floorplan import FloorPlanError, process_map, validate_map
+from app.services.gemini import GeminiConfig, GeminiInterpreter
 from app.services.importers import ImportError_, import_scan
+from app.services.routing import SAFETY_NOTE, RouteResult, RoutingError, plan_route
 from app.services.storage import MapNotFound, MapStore, map_revision, new_map_id
 from app.services.tactile import TactileGenerationError, export_stl, generate_tactile_model, stl_filename
 from app.services.voice import MAX_TTS_CHARS, CartesiaVoice, VoiceConfig, VoiceUnavailable
@@ -81,6 +84,11 @@ def get_voice() -> CartesiaVoice:
     return CartesiaVoice(VoiceConfig.from_env())
 
 
+@lru_cache
+def get_interpreter() -> GeminiInterpreter:
+    return GeminiInterpreter(GeminiConfig.from_env())
+
+
 # --------------------------------------------------------------------------- errors
 
 
@@ -131,6 +139,21 @@ class SpeakRequest(BaseModel):
 
 class TranscriptResponse(BaseModel):
     text: str
+
+
+class RouteRequest(BaseModel):
+    origin: str = Field(min_length=1, description="Landmark id or navigation node id")
+    destination: str = Field(min_length=1, description="Landmark id or navigation node id")
+    avoid_stairs: bool = False
+
+
+class RouteResponse(RouteResult):
+    safety_note: str | None = None
+
+
+class AskRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=500)
+    context: AskContext = Field(default_factory=AskContext)
 
 
 # --------------------------------------------------------------------------- app
@@ -198,12 +221,12 @@ def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None) -> Map
 
 
 @app.get("/api/health")
-def health(voice: CartesiaVoice = Depends(get_voice)) -> dict:
+def health(voice: CartesiaVoice = Depends(get_voice), interpreter: GeminiInterpreter = Depends(get_interpreter)) -> dict:
     return {
         "status": "ok",
         "version": VERSION,
         "features": {
-            "gemini": bool(os.environ.get("GEMINI_API_KEY")),
+            "gemini": interpreter.enabled,
             "cartesia": voice.config.enabled,
         },
     }
@@ -320,6 +343,25 @@ def generate(map_id: str, body: GenerateRequest | None = None, store: MapStore =
         raise ApiError(422, "generation_failed", str(exc), checks) from None
     stored = store.save_model(fmap, export_stl(mesh), report, stl_filename(fmap))
     return ModelStatus(status="ready", generated_at=stored.generated_at, filename=stored.filename, report=report)
+
+
+@app.post("/api/maps/{map_id}/route", response_model=RouteResponse)
+def route(map_id: str, body: RouteRequest, store: MapStore = Depends(get_store)) -> RouteResponse:
+    """Shortest walkable route over the map's recorded paths. `found: false` explains why there is none."""
+    fmap = _load(store, map_id)
+    try:
+        r = plan_route(fmap, body.origin, body.destination, avoid_stairs=body.avoid_stairs)
+    except RoutingError as exc:
+        raise ApiError(422, "unroutable", str(exc)) from None
+    data = r.model_dump(exclude={"spoken"})
+    return RouteResponse(**data, safety_note=SAFETY_NOTE if r.found else None)
+
+
+@app.post("/api/maps/{map_id}/ask", response_model=AskResult)
+def ask(map_id: str, body: AskRequest, store: MapStore = Depends(get_store),
+        interpreter: GeminiInterpreter = Depends(get_interpreter)) -> AskResult:
+    """Answer a spatial question using only facts from this map (Gemini, if configured, only helps parse it)."""
+    return answer(_load(store, map_id), body.question, body.context, interpreter=interpreter)
 
 
 @app.get("/api/maps/{map_id}/model", response_model=ModelStatus)

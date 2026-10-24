@@ -302,12 +302,14 @@ def import_roomplan(data: dict, *, name: str | None = None) -> tuple[FloorMap, l
     # Each recognized section also becomes a named area at its center, so several areas
     # sharing one floor can still be told apart and asked about.
     landmarks: list[Landmark] = []
+    totals = Counter(lbl for lbl, _ in sections)
     seen: Counter[str] = Counter()
     for lbl, center in sections:
         if lbl not in SECTION_NAMES:
             continue
         seen[lbl] += 1
-        label = SECTION_NAMES[lbl] + (f" {seen[lbl]}" if seen[lbl] > 1 else "")
+        # Number every copy when a type repeats ("Bedroom 1", "Bedroom 2"), the way people say it.
+        label = SECTION_NAMES[lbl] + (f" {seen[lbl]}" if totals[lbl] > 1 else "")
         landmarks.append(Landmark(
             id=_short_id("lm_area", f"{lbl}{seen[lbl]}", used_ids), name=f"{label} (unconfirmed)",
             type=LandmarkType.room, position=center, source="detected",

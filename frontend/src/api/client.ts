@@ -1,4 +1,4 @@
-import type { FloorMap, MapResponse, MapSummary, ModelStatus, TactileSettings } from "./types";
+import type { AskContext, AskResult, FloorMap, MapResponse, MapSummary, ModelStatus, RouteResult, TactileSettings } from "./types";
 
 const BASE = import.meta.env.VITE_API_BASE ?? "";
 
@@ -59,6 +59,10 @@ export const api = {
   saveMap: (map: FloorMap) => request<MapResponse>(`/api/maps/${encodeURIComponent(map.id)}`, json("PUT", map)),
   generate: (id: string, settings?: TactileSettings) =>
     request<ModelStatus>(`/api/maps/${encodeURIComponent(id)}/generate`, json("POST", settings ? { settings } : {})),
+  route: (id: string, origin: string, destination: string, avoidStairs = false) =>
+    request<RouteResult>(`/api/maps/${encodeURIComponent(id)}/route`, json("POST", { origin, destination, avoid_stairs: avoidStairs })),
+  ask: (id: string, question: string, context: AskContext) =>
+    request<AskResult>(`/api/maps/${encodeURIComponent(id)}/ask`, json("POST", { question, context })),
   getModel: (id: string) => request<ModelStatus>(`/api/maps/${encodeURIComponent(id)}/model`),
   stlUrl: (id: string, version?: string | null) =>
     `${BASE}/api/maps/${encodeURIComponent(id)}/stl${version ? `?v=${encodeURIComponent(version)}` : ""}`,

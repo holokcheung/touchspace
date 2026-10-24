@@ -12,12 +12,15 @@ export default function MapNav({ map }: { map: FloorMap }) {
           Current map{map.source.kind === "synthetic" ? " (synthetic demo, not a real scan)" : ""}
         </p>
         <h1 className="text-2xl font-bold">{map.name}</h1>
-        <nav aria-label="Map views" className="mt-3 flex gap-1">
+        <nav aria-label="Map views" className="mt-3 flex flex-wrap gap-1">
           <NavLink to={`/maps/${map.id}/edit`} className={tab}>
             Floor plan
           </NavLink>
           <NavLink to={`/maps/${map.id}/preview`} className={tab}>
             3D tactile map
+          </NavLink>
+          <NavLink to={`/maps/${map.id}/voice`} className={tab}>
+            Voice explorer
           </NavLink>
         </nav>
       </div>
