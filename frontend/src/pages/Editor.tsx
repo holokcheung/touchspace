@@ -5,6 +5,7 @@ import { LANDMARK_TYPES, type FloorMap, type Landmark, type Point2D, type Valida
 import FloorPlanSvg, { type PlanLayers } from "../components/FloorPlanSvg";
 import { SYMBOL_NAMES } from "../components/LandmarkGlyph";
 import MapNav from "../components/MapNav";
+import PathsPanel from "../components/PathsPanel";
 import PlanDescription from "../components/PlanDescription";
 import ReadAloud from "../components/ReadAloud";
 import { LiveStatus, Notice } from "../components/Status";
@@ -286,6 +287,8 @@ export default function Editor() {
                 {draft.rooms.length === 0 && <p className="text-sm text-muted">No rooms were detected.</p>}
               </div>
             </section>
+
+            <PathsPanel map={draft} update={update} onStatus={setStatus} />
 
             <ObjectsPanel map={draft} update={update} />
 

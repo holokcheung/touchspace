@@ -120,6 +120,7 @@ def test_ambiguous_names_ask_which_one():
     fmap = process_map(import_scan(data).map).map
     r = answer(fmap, "Where is the bedroom?")
     assert r.intent == "clarify" and "Did you mean" in r.answer and "Bedroom 2" in r.answer
+    assert answer(fmap, "Where is bedroom 1?").place_ids == ["lm_area_bedroom1"]
     # Imported scans have no walking paths yet: no invented directions.
     r = answer(fmap, "How do I get to the bathroom?", AskContext(current_place_id=fmap.landmarks[0].id))
     assert "can't" in r.answer.lower() or "no recorded" in r.answer.lower()
