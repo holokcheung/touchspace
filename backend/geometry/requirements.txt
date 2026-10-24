@@ -1,0 +1,5 @@
+numpy
+shapely>=2.0
+trimesh
+mapbox-earcut
+matplotlib
