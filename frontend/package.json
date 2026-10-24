@@ -1,0 +1,36 @@
+{
+  "name": "touchspace-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-three/drei": "10.1.2",
+    "@react-three/fiber": "9.1.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-router-dom": "7.6.2",
+    "three": "0.177.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.1.8",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.3.0",
+    "@testing-library/user-event": "14.6.1",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.6",
+    "@types/three": "0.177.0",
+    "@vitejs/plugin-react": "4.5.2",
+    "jsdom": "26.1.0",
+    "tailwindcss": "4.1.8",
+    "typescript": "5.8.3",
+    "vite": "6.3.5",
+    "vitest": "3.2.3"
+  }
+}
