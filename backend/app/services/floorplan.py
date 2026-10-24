@@ -84,7 +84,15 @@ def dominant_angle(walls: list[Wall]) -> float:
     c = float(np.sum(weights * np.cos(4 * angles)))
     if math.hypot(s, c) < 1e-9:
         return 0.0
-    return math.atan2(s, c) / 4
+    mean = math.atan2(s, c) / 4
+    # Refine with a length-weighted median around that mean. Real scans have a few walls a
+    # couple of degrees off; the median follows the majority of the wall length instead of
+    # being pulled toward the outliers.
+    offsets = (angles - mean + math.pi / 4) % (math.pi / 2) - math.pi / 4
+    order = np.argsort(offsets)
+    cumulative = np.cumsum(weights[order])
+    median = float(offsets[order][np.searchsorted(cumulative, cumulative[-1] / 2)])
+    return (mean + median + math.pi / 4) % (math.pi / 2) - math.pi / 4
 
 
 def transform_map(fmap: FloorMap, rotation: float, translation: tuple[float, float] = (0.0, 0.0)) -> FloorMap:

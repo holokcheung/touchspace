@@ -1,0 +1,596 @@
+{
+  "_touchspace_synthetic": true,
+  "_touchspace_description": "Synthetic 7 m x 5 m living room in RoomPlan CapturedRoom format. Not a real scan.",
+  "identifier": "15C55CCD-0542-5844-AA77-9B50FCA2BB87",
+  "story": 0,
+  "version": 2,
+  "walls": [
+    {
+      "identifier": "98A98EF4-B6D9-52E7-8B7F-B644DF0B2F59",
+      "category": {
+        "wall": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.390731,
+        0.0,
+        0.920505,
+        0.0,
+        4.921767,
+        -0.05,
+        -3.767559,
+        1.0
+      ],
+      "dimensions": [
+        7.0,
+        2.6,
+        0.0
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "polygonCorners": [],
+      "completedEdges": [],
+      "curve": null
+    },
+    {
+      "identifier": "B1F8F0D9-98B9-5C38-B696-CA58C975E069",
+      "category": {
+        "wall": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        -0.390731,
+        0.0,
+        -0.920505,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        7.166706,
+        -0.05,
+        -7.43638,
+        1.0
+      ],
+      "dimensions": [
+        5.0,
+        2.6,
+        0.0
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "polygonCorners": [],
+      "completedEdges": [],
+      "curve": null
+    },
+    {
+      "identifier": "128E2F3F-3A88-5745-A8BB-181F00AFA29B",
+      "category": {
+        "wall": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        -0.920505,
+        0.0,
+        0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -0.390731,
+        0.0,
+        -0.920505,
+        0.0,
+        2.968111,
+        -0.05,
+        -8.370083,
+        1.0
+      ],
+      "dimensions": [
+        7.0,
+        2.6,
+        0.0
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "polygonCorners": [],
+      "completedEdges": [],
+      "curve": null
+    },
+    {
+      "identifier": "97F0BE3D-9843-5BBF-A421-820E148580ED",
+      "category": {
+        "wall": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.390731,
+        0.0,
+        0.920505,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -0.920505,
+        0.0,
+        0.390731,
+        0.0,
+        0.723172,
+        -0.05,
+        -4.701262,
+        1.0
+      ],
+      "dimensions": [
+        5.0,
+        2.6,
+        0.0
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "polygonCorners": [],
+      "completedEdges": [],
+      "curve": null
+    }
+  ],
+  "doors": [
+    {
+      "identifier": "BE0C0DEA-A776-5F95-A4F0-DE9F56BF3602",
+      "category": {
+        "door": {
+          "isOpen": true
+        }
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.390731,
+        0.0,
+        0.920505,
+        0.0,
+        3.63306,
+        -0.325,
+        -3.220535,
+        1.0
+      ],
+      "dimensions": [
+        0.9,
+        2.05,
+        0.0
+      ],
+      "story": 0,
+      "parentIdentifier": "98A98EF4-B6D9-52E7-8B7F-B644DF0B2F59",
+      "polygonCorners": [],
+      "completedEdges": [],
+      "curve": null
+    }
+  ],
+  "windows": [
+    {
+      "identifier": "7DE0839C-5BE8-58F2-9101-0C69809A2BBC",
+      "category": {
+        "window": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        -0.920505,
+        0.0,
+        0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -0.390731,
+        0.0,
+        -0.920505,
+        0.0,
+        2.968111,
+        0.15,
+        -8.370083,
+        1.0
+      ],
+      "dimensions": [
+        1.8,
+        1.2,
+        0.0
+      ],
+      "story": 0,
+      "parentIdentifier": "128E2F3F-3A88-5745-A8BB-181F00AFA29B",
+      "polygonCorners": [],
+      "completedEdges": [],
+      "curve": null
+    }
+  ],
+  "openings": [
+    {
+      "identifier": "48CA7D72-F9A2-5D86-83C9-7A33D3855A98",
+      "category": {
+        "opening": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        -0.390731,
+        0.0,
+        -0.920505,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        7.069023,
+        -0.25,
+        -7.666506,
+        1.0
+      ],
+      "dimensions": [
+        1.6,
+        2.2,
+        0.0
+      ],
+      "story": 0,
+      "parentIdentifier": "B1F8F0D9-98B9-5C38-B696-CA58C975E069",
+      "polygonCorners": [],
+      "completedEdges": [],
+      "curve": null
+    }
+  ],
+  "floors": [
+    {
+      "identifier": "CE9CBB71-A4B2-5912-A2B2-C198FC8E3133",
+      "category": {
+        "floor": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        -0.390731,
+        0.0,
+        -0.920505,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        3.944939,
+        -1.35,
+        -6.068821,
+        1.0
+      ],
+      "dimensions": [
+        7.0,
+        5.0,
+        0.0
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "polygonCorners": [
+        [
+          -3.5,
+          -2.5,
+          0.0
+        ],
+        [
+          3.5,
+          -2.5,
+          0.0
+        ],
+        [
+          3.5,
+          2.5,
+          0.0
+        ],
+        [
+          -3.5,
+          2.5,
+          0.0
+        ]
+      ],
+      "completedEdges": [],
+      "curve": null
+    }
+  ],
+  "objects": [
+    {
+      "identifier": "C7DA3C2D-1518-53C1-A182-96396525DEBB",
+      "category": {
+        "sofa": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.390731,
+        0.0,
+        0.920505,
+        0.0,
+        1.648956,
+        -0.925,
+        -6.615139,
+        1.0
+      ],
+      "dimensions": [
+        2.1,
+        0.85,
+        0.9
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "attributes": []
+    },
+    {
+      "identifier": "7C7330B9-7902-5742-BCCC-C6BCF72CBE14",
+      "category": {
+        "table": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.390731,
+        0.0,
+        0.920505,
+        0.0,
+        3.997917,
+        -0.975,
+        -6.199945,
+        1.0
+      ],
+      "dimensions": [
+        1.6,
+        0.75,
+        0.9
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "attributes": []
+    },
+    {
+      "identifier": "730976A1-7FFF-52D9-A385-FF90C3C705F8",
+      "category": {
+        "chair": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.390731,
+        0.0,
+        0.920505,
+        0.0,
+        3.758199,
+        -0.9,
+        -5.229102,
+        1.0
+      ],
+      "dimensions": [
+        0.5,
+        0.9,
+        0.5
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "attributes": []
+    },
+    {
+      "identifier": "59DC1AAA-D593-5EB3-B465-912C125BAF12",
+      "category": {
+        "chair": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.390731,
+        0.0,
+        0.920505,
+        0.0,
+        4.862804,
+        -0.9,
+        -5.697979,
+        1.0
+      ],
+      "dimensions": [
+        0.5,
+        0.9,
+        0.5
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "attributes": []
+    },
+    {
+      "identifier": "A8789462-1F1E-51E3-AE08-E823A0016639",
+      "category": {
+        "storage": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        -0.390731,
+        0.0,
+        -0.920505,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        7.384601,
+        -0.4,
+        -5.89933,
+        1.0
+      ],
+      "dimensions": [
+        0.45,
+        1.9,
+        1.2
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "attributes": []
+    },
+    {
+      "identifier": "6B3557AF-CF8B-5F89-B210-0CA30B12E83A",
+      "category": {
+        "television": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.390731,
+        0.0,
+        0.920505,
+        0.0,
+        3.118771,
+        -1.0,
+        -8.271081,
+        1.0
+      ],
+      "dimensions": [
+        1.2,
+        0.7,
+        0.1
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "attributes": []
+    },
+    {
+      "identifier": "38A8222D-3574-56F4-96BF-FFB8483FD052",
+      "category": {
+        "stairs": {}
+      },
+      "confidence": {
+        "high": {}
+      },
+      "transform": [
+        -0.390731,
+        0.0,
+        -0.920505,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.920505,
+        0.0,
+        -0.390731,
+        0.0,
+        5.448195,
+        -0.05,
+        -7.901912,
+        1.0
+      ],
+      "dimensions": [
+        1.0,
+        2.6,
+        2.2
+      ],
+      "story": 0,
+      "parentIdentifier": null,
+      "attributes": []
+    }
+  ],
+  "sections": [
+    {
+      "label": {
+        "livingRoom": {}
+      },
+      "center": [
+        3.367467,
+        -1.35,
+        -6.149607
+      ],
+      "story": 0
+    }
+  ]
+}

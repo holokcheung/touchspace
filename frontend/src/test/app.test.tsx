@@ -82,6 +82,23 @@ describe("Upload", () => {
   });
 });
 
+describe("Upload samples", () => {
+  // Ported from PR #1.
+  it("loads the public RoomPlan sample and shows its provenance caveat", async () => {
+    const fetchMock = mockFetch((url) =>
+      url.endsWith("/api/samples/roomplan")
+        ? json({ map: { ...demoMap, id: "roomplan-1234", name: "Public RoomPlan sample", source: { kind: "roomplan", description: "" } }, issues: [], model: { status: "none" }, processing_steps: [] }, 201)
+        : json([]),
+    );
+    render(<Upload />, { wrapper: MemoryRouter });
+    const button = screen.getByRole("button", { name: "Try the public RoomPlan sample" });
+    expect(button).toHaveAccessibleDescription(/not a scan by our team/);
+    await userEvent.click(button);
+    expect(await screen.findByText("Processed Public RoomPlan sample.")).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledWith("/api/samples/roomplan", expect.objectContaining({ method: "POST" }));
+  });
+});
+
 describe("FloorPlanSvg", () => {
   const layers = { rooms: true, objects: true, paths: true, landmarks: true };
 

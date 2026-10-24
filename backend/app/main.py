@@ -24,7 +24,7 @@ from app.services.importers import ImportError_, import_scan
 from app.services.storage import MapNotFound, MapStore, map_revision, new_map_id
 from app.services.tactile import TactileGenerationError, export_stl, generate_tactile_model, stl_filename
 
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024
 
@@ -35,6 +35,7 @@ MAX_UPLOAD_BYTES = 15 * 1024 * 1024
 class Settings(BaseModel):
     data_dir: Path
     demo_path: Path
+    roomplan_sample_path: Path
     cors_origins: list[str]
 
 
@@ -47,6 +48,7 @@ def get_settings() -> Settings:
     return Settings(
         data_dir=data_dir,
         demo_path=REPO_ROOT / "sample-data" / "demo-building.json",
+        roomplan_sample_path=REPO_ROOT / "sample-data" / "third-party" / "open3dfloorplan-test-roomplan.json",
         cors_origins=[o.strip() for o in origins.split(",") if o.strip()],
     )
 
@@ -147,16 +149,20 @@ def _map_response(store: MapStore, fmap: FloorMap, steps: list[str] | None = Non
 
 def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None) -> MapResponse:
     try:
-        fmap = import_scan(data, name=name)
+        imported = import_scan(data, name=name)
     except ImportError_ as exc:
         raise ApiError(422, "unsupported_scan", str(exc), exc.details) from None
+    fmap = imported.map
     fmap.id = map_id
     try:
         result = process_map(fmap)
     except FloorPlanError as exc:
         raise ApiError(422, "unprocessable_plan", str(exc)) from None
     saved = store.save(result.map)
-    return _map_response(store, saved, result.steps, result.issues)
+    import_issues = [ValidationIssue(severity="warning", code="import_note", message=w) for w in imported.warnings]
+    label = {"roomplan": "Read an Apple RoomPlan export.", "touchspace": "Read a TouchSpace map file."}[imported.format]
+    steps = [label, *result.steps]
+    return _map_response(store, saved, steps, import_issues + result.issues)
 
 
 @app.get("/api/health")
@@ -197,6 +203,22 @@ def create_demo(store: MapStore = Depends(get_store)) -> MapResponse:
     if not path.is_file():
         raise ApiError(500, "demo_missing", "The demo map file is missing from sample-data/.")
     return _ingest(store, json.loads(path.read_text()), map_id=new_map_id("demo"), name=None)
+
+
+@app.post("/api/samples/roomplan", status_code=201, response_model=MapResponse)
+def create_roomplan_sample(store: MapStore = Depends(get_store)) -> MapResponse:
+    """Import the checked-in public RoomPlan export (see sample-data/third-party/README.md).
+
+    Ported from PR #1. It goes through the same import path as an uploaded scan.
+    """
+    path = get_settings().roomplan_sample_path
+    if not path.is_file():
+        raise ApiError(500, "sample_missing", "The RoomPlan sample file is missing from sample-data/third-party/.")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        raise ApiError(500, "sample_invalid", "The checked-in RoomPlan sample file could not be read.") from None
+    return _ingest(store, data, map_id=new_map_id("roomplan"), name="Public RoomPlan sample")
 
 
 @app.get("/api/maps", response_model=list[MapSummary])
