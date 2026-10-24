@@ -40,6 +40,14 @@ None of this replaces testing with blind and low-vision people. We haven't done 
 - [ ] The safety notice is present, and directions end with the cane / guide dog reminder.
 - [ ] "Where am I?" says position isn't tracked.
 
+## Walk-through
+- [ ] "Start sound" works and moves focus to the walk area; the volume slider is labeled and starts low.
+- [ ] In the walk area, arrows walk and turn, Shift+arrows turn 90°, T turns around, Space says what's around you.
+- [ ] With headphones: a wall close on the right muffles only the right ear; walking toward a wall makes ticks speed up.
+- [ ] Bumping into a wall plays a thud and says what's ahead, once (not on every repeat).
+- [ ] Walking out the main entrance stops the noise and starts the two-note "no information" cue; walking back in restores it.
+- [ ] On a phone: the buttons are easy to hit, holding Forward keeps walking, and sound plays with the silent switch on.
+
 ## Printed map (if printed)
 - [ ] The cut corner is at the top left and easy to find.
 - [ ] Door gaps can be found with a fingertip.

@@ -11,19 +11,23 @@
 		664A210B38A19DC84D82744E /* RoomCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0BFEA5157E25AC415922CBA /* RoomCaptureViewController.swift */; };
 		6EF8AE1A4332FB0F04B0BDE3 /* ScanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E6CA568A50D6543E80208 /* ScanStore.swift */; };
 		72AF76DC15A78DFFAD7DFC6B /* ScanFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3405DA1B083CFFA17E0E0E1 /* ScanFlowView.swift */; };
+		7D919D7F1D905D65300AAE8A /* soundscape.json in Resources */ = {isa = PBXBuildFile; fileRef = 378695BC2C74DAD523050703 /* soundscape.json */; };
 		7F1809096A312F7EAA9E2EC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAF79DD0671BDB1C8451BFE /* ContentView.swift */; };
 		83915B2B4D96335725FBD7DF /* ScanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69A6431747ED78317B03E7F /* ScanDetailView.swift */; };
 		9B8C1BEF5BF250D4C66F5929 /* TouchSpaceScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83755948214A986018AE89E0 /* TouchSpaceScannerApp.swift */; };
+		C362B699DAE326F982CBA732 /* SoundscapeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB746274BE888765E1233358 /* SoundscapeSettings.swift */; };
 		DB2276838E9DC02425EEFB4B /* Uploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8B0DE9722E046DE5A8EF31 /* Uploader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		21A3F4E181587A5E33B2A7EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		378695BC2C74DAD523050703 /* soundscape.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = soundscape.json; sourceTree = "<group>"; };
 		5266173F3D5A3D70CE425B31 /* TouchSpaceScanner.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TouchSpaceScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E57F1016896426F21F5EE2D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		83755948214A986018AE89E0 /* TouchSpaceScannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchSpaceScannerApp.swift; sourceTree = "<group>"; };
 		9B8B0DE9722E046DE5A8EF31 /* Uploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uploader.swift; sourceTree = "<group>"; };
 		A0BFEA5157E25AC415922CBA /* RoomCaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomCaptureViewController.swift; sourceTree = "<group>"; };
+		CB746274BE888765E1233358 /* SoundscapeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundscapeSettings.swift; sourceTree = "<group>"; };
 		D69A6431747ED78317B03E7F /* ScanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDetailView.swift; sourceTree = "<group>"; };
 		E3405DA1B083CFFA17E0E0E1 /* ScanFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFlowView.swift; sourceTree = "<group>"; };
 		EBAF79DD0671BDB1C8451BFE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -49,18 +53,37 @@
 				D69A6431747ED78317B03E7F /* ScanDetailView.swift */,
 				E3405DA1B083CFFA17E0E0E1 /* ScanFlowView.swift */,
 				F46E6CA568A50D6543E80208 /* ScanStore.swift */,
+				CB746274BE888765E1233358 /* SoundscapeSettings.swift */,
 				83755948214A986018AE89E0 /* TouchSpaceScannerApp.swift */,
 				9B8B0DE9722E046DE5A8EF31 /* Uploader.swift */,
 			);
 			path = TouchSpaceScanner;
 			sourceTree = "<group>";
 		};
+		96EC2A0F5F6459F09E108E52 /* shared */ = {
+			isa = PBXGroup;
+			children = (
+				378695BC2C74DAD523050703 /* soundscape.json */,
+			);
+			path = shared;
+			sourceTree = "<group>";
+		};
 		A4954BC1AB371194D3E78C4C = {
 			isa = PBXGroup;
 			children = (
+				CD88EEB03CC4ED2C5795466F /* touchspace-ai */,
 				507FBBBE5557AC0F66B9415F /* TouchSpaceScanner */,
 				0E1B9F0DF8E942CDC46ABC5E /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		CD88EEB03CC4ED2C5795466F /* touchspace-ai */ = {
+			isa = PBXGroup;
+			children = (
+				96EC2A0F5F6459F09E108E52 /* shared */,
+			);
+			name = "touchspace-ai";
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -124,6 +147,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3010148A018B699D88C48A1D /* Assets.xcassets in Resources */,
+				7D919D7F1D905D65300AAE8A /* soundscape.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +163,7 @@
 				83915B2B4D96335725FBD7DF /* ScanDetailView.swift in Sources */,
 				72AF76DC15A78DFFAD7DFC6B /* ScanFlowView.swift in Sources */,
 				6EF8AE1A4332FB0F04B0BDE3 /* ScanStore.swift in Sources */,
+				C362B699DAE326F982CBA732 /* SoundscapeSettings.swift in Sources */,
 				9B8C1BEF5BF250D4C66F5929 /* TouchSpaceScannerApp.swift in Sources */,
 				DB2276838E9DC02425EEFB4B /* Uploader.swift in Sources */,
 			);

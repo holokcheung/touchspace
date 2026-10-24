@@ -6,6 +6,7 @@ import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import Upload from "./pages/Upload";
 import VoiceExplorer from "./pages/VoiceExplorer";
+import Walkthrough from "./pages/Walkthrough";
 
 // three.js is large; only load it when someone opens the 3D preview.
 const Preview = lazy(() => import("./pages/Preview"));
@@ -16,6 +17,7 @@ const TITLES: [RegExp, string][] = [
   [/\/edit$/, "Floor plan editor · TouchSpace AI"],
   [/\/preview$/, "3D tactile map · TouchSpace AI"],
   [/\/voice$/, "Voice explorer · TouchSpace AI"],
+  [/\/walk$/, "Walk-through · TouchSpace AI"],
 ];
 
 function useDocumentTitle() {
@@ -36,6 +38,7 @@ export default function App() {
           <Route path="/maps/:mapId/edit" element={<Editor />} />
           <Route path="/maps/:mapId/preview" element={<Preview />} />
           <Route path="/maps/:mapId/voice" element={<VoiceExplorer />} />
+          <Route path="/maps/:mapId/walk" element={<Walkthrough />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

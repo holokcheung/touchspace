@@ -22,6 +22,9 @@ export default function MapNav({ map }: { map: FloorMap }) {
           <NavLink to={`/maps/${map.id}/voice`} className={tab}>
             Voice explorer
           </NavLink>
+          <NavLink to={`/maps/${map.id}/walk`} className={tab}>
+            Walk-through
+          </NavLink>
         </nav>
       </div>
     </div>
