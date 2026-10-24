@@ -25,7 +25,7 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | 1. Data pipeline: normalized schema, synthetic demo, floor-plan processing, tactile STL generator, tests | Done |
 | 2. FastAPI endpoints + React web app (upload, 2D editor, 3D preview, STL download, demo mode) | Done |
 | 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. iOS app written, not yet built or tested on a device. |
-| 4. Voice explorer and routing | Not started |
+| 4. Voice explorer and routing | Cartesia voice layer done (TTS/STT endpoints, speak/listen helpers, Read aloud buttons). Routing and the Voice Explorer page are not started yet. |
 | 5. Polish and docs | Not started |
 
 The demo building in `sample-data/demo-building.json` is **synthetic**. It is not a scan of any real place.
@@ -51,7 +51,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 and click **Try Demo**. No API keys are needed.
+Open http://localhost:5173 and click **Try Demo**. No API keys are needed. To use Cartesia voice, see [docs/voice.md](docs/voice.md).
 
 To try the RoomPlan import path without an iPhone, upload `sample-data/synthetic-roomplan-capturedroom.json`. It is synthetic data in RoomPlan's format. For real scans, see [ios-scanner/README.md](ios-scanner/README.md) and [docs/roomplan-import.md](docs/roomplan-import.md).
 
@@ -89,6 +89,8 @@ Accessibility: semantic landmarks and headings, skip link, visible focus outline
 | POST | `/api/demo` | Create an editable copy of the synthetic demo building |
 | GET | `/api/maps` | List saved maps |
 | GET / PUT | `/api/maps/{id}` | Read or replace a map. Responses include validation issues and 3D model status. |
+| POST | `/api/tts` | Speak text with Cartesia (503 means use the browser voice) |
+| POST | `/api/stt` | Transcribe a recording with Cartesia |
 | POST | `/api/maps/{id}/generate` | Generate the tactile model, optionally with new `settings` |
 | GET | `/api/maps/{id}/model` | Model status (`none` / `ready` / `stale`) and the generation report |
 | GET | `/api/maps/{id}/stl` | Download the binary STL |

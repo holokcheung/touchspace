@@ -4,6 +4,7 @@ import { api } from "../api/client";
 import type { ModelStatus, TactileSettings } from "../api/types";
 import MapNav from "../components/MapNav";
 import ModelViewer, { type ViewerHandle } from "../components/ModelViewer";
+import ReadAloud from "../components/ReadAloud";
 import { LiveStatus, Notice } from "../components/Status";
 import { useMapData } from "../lib/useMapData";
 
@@ -183,6 +184,9 @@ export default function Preview() {
                 <h2 id="desc-title" className="text-lg font-bold">
                   Text description of the tactile map
                 </h2>
+                <div className="mt-2">
+                  <ReadAloud getText={() => report.summary.join(" ")} label="Read the description aloud" />
+                </div>
                 <ul className="mt-3 list-disc space-y-1 pl-5">
                   {report.summary.map((line) => (
                     <li key={line}>{line}</li>

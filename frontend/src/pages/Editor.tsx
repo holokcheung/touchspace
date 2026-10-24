@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api/client";
 import { LANDMARK_TYPES, type FloorMap, type Landmark, type Point2D, type ValidationIssue } from "../api/types";
@@ -6,6 +6,7 @@ import FloorPlanSvg, { type PlanLayers } from "../components/FloorPlanSvg";
 import { SYMBOL_NAMES } from "../components/LandmarkGlyph";
 import MapNav from "../components/MapNav";
 import PlanDescription from "../components/PlanDescription";
+import ReadAloud from "../components/ReadAloud";
 import { LiveStatus, Notice } from "../components/Status";
 import { fmt, nearestNode, planBounds, roomAt } from "../lib/geometry";
 import { useMapData } from "../lib/useMapData";
@@ -34,6 +35,7 @@ export default function Editor() {
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState<null | "save" | "generate">(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const descriptionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (data) {
@@ -211,6 +213,9 @@ export default function Editor() {
             <details className="card mt-4 p-4" open>
               <summary className="cursor-pointer font-bold">Text description of the plan</summary>
               <div className="mt-3">
+                <ReadAloud getText={() => descriptionRef.current?.innerText ?? ""} label="Read the plan aloud" />
+              </div>
+              <div className="mt-3" ref={descriptionRef}>
                 <PlanDescription map={draft} />
               </div>
             </details>

@@ -14,8 +14,8 @@ from typing import Any, Literal
 from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel
+from fastapi.responses import FileResponse, JSONResponse, Response
+from pydantic import BaseModel, Field
 
 from app.models.map import FloorMap, SourceInfo, ValidationIssue
 from app.models.tactile import TactileReport, TactileSettings
@@ -23,10 +23,28 @@ from app.services.floorplan import FloorPlanError, process_map, validate_map
 from app.services.importers import ImportError_, import_scan
 from app.services.storage import MapNotFound, MapStore, map_revision, new_map_id
 from app.services.tactile import TactileGenerationError, export_stl, generate_tactile_model, stl_filename
+from app.services.voice import MAX_TTS_CHARS, CartesiaVoice, VoiceConfig, VoiceUnavailable
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MAX_UPLOAD_BYTES = 15 * 1024 * 1024
+
+
+def _load_dotenv(path: Path) -> None:
+    """Read KEY=value lines from the repo's .env without overriding real environment variables."""
+    if not path.is_file():
+        return
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key, value = key.strip(), value.strip().strip('"').strip("'")
+        if key and value and key not in os.environ:
+            os.environ[key] = value
+
+
+_load_dotenv(REPO_ROOT / ".env")
 
 
 # --------------------------------------------------------------------------- config / dependencies
@@ -56,6 +74,11 @@ def get_settings() -> Settings:
 @lru_cache
 def get_store() -> MapStore:
     return MapStore(get_settings().data_dir)
+
+
+@lru_cache
+def get_voice() -> CartesiaVoice:
+    return CartesiaVoice(VoiceConfig.from_env())
 
 
 # --------------------------------------------------------------------------- errors
@@ -99,6 +122,15 @@ class MapSummary(BaseModel):
 
 class GenerateRequest(BaseModel):
     settings: TactileSettings | None = None
+
+
+class SpeakRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=MAX_TTS_CHARS)
+    speed: float = Field(1.0, ge=0.6, le=1.5)
+
+
+class TranscriptResponse(BaseModel):
+    text: str
 
 
 # --------------------------------------------------------------------------- app
@@ -166,15 +198,42 @@ def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None) -> Map
 
 
 @app.get("/api/health")
-def health() -> dict:
+def health(voice: CartesiaVoice = Depends(get_voice)) -> dict:
     return {
         "status": "ok",
         "version": VERSION,
         "features": {
             "gemini": bool(os.environ.get("GEMINI_API_KEY")),
-            "cartesia": bool(os.environ.get("CARTESIA_API_KEY")),
+            "cartesia": voice.config.enabled,
         },
     }
+
+
+@app.post("/api/tts", response_class=Response)
+def text_to_speech(body: SpeakRequest, voice: CartesiaVoice = Depends(get_voice)) -> Response:
+    """Speak text with Cartesia. 503 means: use the browser's own speech instead."""
+    try:
+        audio = voice.synthesize(body.text, speed=body.speed)
+    except VoiceUnavailable as exc:
+        raise ApiError(503, "voice_unavailable", str(exc)) from None
+    except ValueError as exc:
+        raise ApiError(422, "invalid_text", str(exc)) from None
+    return Response(content=audio, media_type="audio/mpeg", headers={"Cache-Control": "no-store"})
+
+
+@app.post("/api/stt", response_model=TranscriptResponse)
+def speech_to_text(file: UploadFile = File(...), voice: CartesiaVoice = Depends(get_voice)) -> TranscriptResponse:
+    """Transcribe a short recording with Cartesia. 503 means: use browser speech recognition or typing."""
+    # Sync handler on purpose: FastAPI runs it in a worker thread, so the blocking Cartesia call
+    # does not stall other requests.
+    audio = file.file.read()
+    try:
+        text = voice.transcribe(audio, file.filename or "speech.webm", file.content_type)
+    except VoiceUnavailable as exc:
+        raise ApiError(503, "voice_unavailable", str(exc)) from None
+    except ValueError as exc:
+        raise ApiError(422, "invalid_audio", str(exc)) from None
+    return TranscriptResponse(text=text)
 
 
 @app.post("/api/scans", status_code=201, response_model=MapResponse)
