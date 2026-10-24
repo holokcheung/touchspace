@@ -1,0 +1,1173 @@
+{
+  "schema_version": "1.0",
+  "id": "demo-building",
+  "name": "TouchSpace Demo Building (synthetic)",
+  "units": "meters",
+  "source": {
+    "kind": "synthetic",
+    "description": "Invented single-floor layout for demonstrating TouchSpace AI. Not a scan of a real place."
+  },
+  "floor_level": 0,
+  "walls": [
+    {
+      "id": "w_south",
+      "start": {
+        "x": 0,
+        "y": 0
+      },
+      "end": {
+        "x": 16,
+        "y": 0
+      },
+      "thickness": 0.25,
+      "height": 2.7
+    },
+    {
+      "id": "w_east",
+      "start": {
+        "x": 16,
+        "y": 0
+      },
+      "end": {
+        "x": 16,
+        "y": 10
+      },
+      "thickness": 0.25,
+      "height": 2.7
+    },
+    {
+      "id": "w_north",
+      "start": {
+        "x": 16,
+        "y": 10
+      },
+      "end": {
+        "x": 0,
+        "y": 10
+      },
+      "thickness": 0.25,
+      "height": 2.7
+    },
+    {
+      "id": "w_west",
+      "start": {
+        "x": 0,
+        "y": 10
+      },
+      "end": {
+        "x": 0,
+        "y": 0
+      },
+      "thickness": 0.25,
+      "height": 2.7
+    },
+    {
+      "id": "w_hall_s_lobby",
+      "start": {
+        "x": 0,
+        "y": 4
+      },
+      "end": {
+        "x": 7,
+        "y": 4
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_hall_s_stairs",
+      "start": {
+        "x": 7,
+        "y": 4
+      },
+      "end": {
+        "x": 10,
+        "y": 4
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_hall_s_elevator",
+      "start": {
+        "x": 10,
+        "y": 4
+      },
+      "end": {
+        "x": 12,
+        "y": 4
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_hall_s_storage",
+      "start": {
+        "x": 12,
+        "y": 4
+      },
+      "end": {
+        "x": 16,
+        "y": 4
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_hall_n_meeting",
+      "start": {
+        "x": 0,
+        "y": 6
+      },
+      "end": {
+        "x": 6,
+        "y": 6
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_hall_n_restroom",
+      "start": {
+        "x": 6,
+        "y": 6
+      },
+      "end": {
+        "x": 9,
+        "y": 6
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_hall_n_study",
+      "start": {
+        "x": 9,
+        "y": 6
+      },
+      "end": {
+        "x": 16,
+        "y": 6
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_meeting_restroom",
+      "start": {
+        "x": 6,
+        "y": 6
+      },
+      "end": {
+        "x": 6,
+        "y": 10
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_restroom_study",
+      "start": {
+        "x": 9,
+        "y": 6
+      },
+      "end": {
+        "x": 9,
+        "y": 10
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_lobby_stairs",
+      "start": {
+        "x": 7,
+        "y": 0
+      },
+      "end": {
+        "x": 7,
+        "y": 4
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_stairs_elevator",
+      "start": {
+        "x": 10,
+        "y": 0
+      },
+      "end": {
+        "x": 10,
+        "y": 4
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    },
+    {
+      "id": "w_elevator_storage",
+      "start": {
+        "x": 12,
+        "y": 0
+      },
+      "end": {
+        "x": 12,
+        "y": 4
+      },
+      "thickness": 0.12,
+      "height": 2.7
+    }
+  ],
+  "doors": [
+    {
+      "id": "d_main_entrance",
+      "position": {
+        "x": 3.5,
+        "y": 0
+      },
+      "width": 1.6,
+      "wall_id": "w_south"
+    },
+    {
+      "id": "d_exit",
+      "position": {
+        "x": 16,
+        "y": 5
+      },
+      "width": 1.0,
+      "wall_id": "w_east"
+    },
+    {
+      "id": "d_meeting",
+      "position": {
+        "x": 4.5,
+        "y": 6
+      },
+      "width": 1.0,
+      "wall_id": "w_hall_n_meeting"
+    },
+    {
+      "id": "d_restroom",
+      "position": {
+        "x": 7.5,
+        "y": 6
+      },
+      "width": 0.9,
+      "wall_id": "w_hall_n_restroom"
+    },
+    {
+      "id": "d_study",
+      "position": {
+        "x": 11.0,
+        "y": 6
+      },
+      "width": 1.0,
+      "wall_id": "w_hall_n_study"
+    },
+    {
+      "id": "d_stairs",
+      "position": {
+        "x": 8.5,
+        "y": 4
+      },
+      "width": 1.0,
+      "wall_id": "w_hall_s_stairs"
+    },
+    {
+      "id": "d_elevator",
+      "position": {
+        "x": 11.0,
+        "y": 4
+      },
+      "width": 1.1,
+      "wall_id": "w_hall_s_elevator"
+    },
+    {
+      "id": "d_storage",
+      "position": {
+        "x": 14.0,
+        "y": 4
+      },
+      "width": 0.9,
+      "wall_id": "w_hall_s_storage"
+    }
+  ],
+  "openings": [
+    {
+      "id": "o_lobby_hall",
+      "position": {
+        "x": 3.0,
+        "y": 4
+      },
+      "width": 3.0,
+      "wall_id": "w_hall_s_lobby"
+    }
+  ],
+  "windows": [
+    {
+      "id": "win_meeting",
+      "position": {
+        "x": 3.0,
+        "y": 10
+      },
+      "width": 2.0,
+      "wall_id": "w_north"
+    },
+    {
+      "id": "win_study",
+      "position": {
+        "x": 12.5,
+        "y": 10
+      },
+      "width": 2.0,
+      "wall_id": "w_north"
+    }
+  ],
+  "objects": [
+    {
+      "id": "obj_meeting_table",
+      "category": "table",
+      "position": {
+        "x": 3.0,
+        "y": 8.2
+      },
+      "width": 2.4,
+      "depth": 1.1,
+      "height": 0.75,
+      "rotation": 0.0,
+      "label": "Meeting table",
+      "include_in_tactile": true
+    },
+    {
+      "id": "obj_meeting_chair_1",
+      "category": "chair",
+      "position": {
+        "x": 2.2,
+        "y": 7.3
+      },
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.9,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_meeting_chair_2",
+      "category": "chair",
+      "position": {
+        "x": 3.8,
+        "y": 7.3
+      },
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.9,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_meeting_chair_3",
+      "category": "chair",
+      "position": {
+        "x": 2.2,
+        "y": 9.1
+      },
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.9,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_meeting_chair_4",
+      "category": "chair",
+      "position": {
+        "x": 3.8,
+        "y": 9.1
+      },
+      "width": 0.5,
+      "depth": 0.5,
+      "height": 0.9,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_info_desk",
+      "category": "table",
+      "position": {
+        "x": 5.6,
+        "y": 1.4
+      },
+      "width": 1.8,
+      "depth": 0.8,
+      "height": 1.05,
+      "rotation": 0.0,
+      "label": "Information desk counter",
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_lobby_sofa",
+      "category": "sofa",
+      "position": {
+        "x": 1.3,
+        "y": 1.6
+      },
+      "width": 0.9,
+      "depth": 2.0,
+      "height": 0.8,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_toilet",
+      "category": "toilet",
+      "position": {
+        "x": 8.4,
+        "y": 9.4
+      },
+      "width": 0.4,
+      "depth": 0.7,
+      "height": 0.8,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_sink",
+      "category": "sink",
+      "position": {
+        "x": 6.5,
+        "y": 8.0
+      },
+      "width": 0.5,
+      "depth": 0.6,
+      "height": 0.9,
+      "rotation": 1.5708,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_stairs",
+      "category": "stairs",
+      "position": {
+        "x": 8.5,
+        "y": 1.9
+      },
+      "width": 1.4,
+      "depth": 2.8,
+      "height": 3.0,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_study_desk_1",
+      "category": "table",
+      "position": {
+        "x": 11.5,
+        "y": 9.3
+      },
+      "width": 1.6,
+      "depth": 0.7,
+      "height": 0.75,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_study_desk_2",
+      "category": "table",
+      "position": {
+        "x": 14.2,
+        "y": 9.3
+      },
+      "width": 1.6,
+      "depth": 0.7,
+      "height": 0.75,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    },
+    {
+      "id": "obj_storage_shelf",
+      "category": "storage",
+      "position": {
+        "x": 15.5,
+        "y": 2.0
+      },
+      "width": 0.5,
+      "depth": 3.0,
+      "height": 2.0,
+      "rotation": 0.0,
+      "label": null,
+      "include_in_tactile": false
+    }
+  ],
+  "rooms": [
+    {
+      "id": "r_lobby",
+      "name": "Lobby",
+      "polygon": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 0
+        },
+        {
+          "x": 7,
+          "y": 4
+        },
+        {
+          "x": 0,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "id": "r_stairwell",
+      "name": "Stairwell",
+      "polygon": [
+        {
+          "x": 7,
+          "y": 0
+        },
+        {
+          "x": 10,
+          "y": 0
+        },
+        {
+          "x": 10,
+          "y": 4
+        },
+        {
+          "x": 7,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "id": "r_elevator",
+      "name": "Elevator",
+      "polygon": [
+        {
+          "x": 10,
+          "y": 0
+        },
+        {
+          "x": 12,
+          "y": 0
+        },
+        {
+          "x": 12,
+          "y": 4
+        },
+        {
+          "x": 10,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "id": "r_storage",
+      "name": "Storage",
+      "polygon": [
+        {
+          "x": 12,
+          "y": 0
+        },
+        {
+          "x": 16,
+          "y": 0
+        },
+        {
+          "x": 16,
+          "y": 4
+        },
+        {
+          "x": 12,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "id": "r_hallway",
+      "name": "Central Hallway",
+      "polygon": [
+        {
+          "x": 0,
+          "y": 4
+        },
+        {
+          "x": 16,
+          "y": 4
+        },
+        {
+          "x": 16,
+          "y": 6
+        },
+        {
+          "x": 0,
+          "y": 6
+        }
+      ]
+    },
+    {
+      "id": "r_meeting",
+      "name": "Meeting Room A",
+      "polygon": [
+        {
+          "x": 0,
+          "y": 6
+        },
+        {
+          "x": 6,
+          "y": 6
+        },
+        {
+          "x": 6,
+          "y": 10
+        },
+        {
+          "x": 0,
+          "y": 10
+        }
+      ]
+    },
+    {
+      "id": "r_restroom",
+      "name": "Restroom",
+      "polygon": [
+        {
+          "x": 6,
+          "y": 6
+        },
+        {
+          "x": 9,
+          "y": 6
+        },
+        {
+          "x": 9,
+          "y": 10
+        },
+        {
+          "x": 6,
+          "y": 10
+        }
+      ]
+    },
+    {
+      "id": "r_study",
+      "name": "Study Room B",
+      "polygon": [
+        {
+          "x": 9,
+          "y": 6
+        },
+        {
+          "x": 16,
+          "y": 6
+        },
+        {
+          "x": 16,
+          "y": 10
+        },
+        {
+          "x": 9,
+          "y": 10
+        }
+      ]
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "lm_entrance",
+      "name": "Main Entrance",
+      "type": "entrance",
+      "position": {
+        "x": 3.5,
+        "y": 0.6
+      },
+      "nav_node_id": "n_entrance",
+      "description": "Double-width door in the middle of the south wall of the lobby.",
+      "source": "synthetic"
+    },
+    {
+      "id": "lm_info",
+      "name": "Information Desk",
+      "type": "information",
+      "position": {
+        "x": 5.6,
+        "y": 2.2
+      },
+      "nav_node_id": "n_info",
+      "description": "Staffed counter on the east side of the lobby.",
+      "source": "synthetic"
+    },
+    {
+      "id": "lm_hallway",
+      "name": "Central Hallway",
+      "type": "hallway",
+      "position": {
+        "x": 8.0,
+        "y": 5.0
+      },
+      "nav_node_id": "n_hall_restroom",
+      "description": "Two-meter-wide corridor running east to west across the building.",
+      "source": "synthetic"
+    },
+    {
+      "id": "lm_meeting",
+      "name": "Meeting Room A",
+      "type": "room",
+      "position": {
+        "x": 3.0,
+        "y": 8.0
+      },
+      "nav_node_id": "n_meeting",
+      "description": "Room with a large central table and four chairs.",
+      "source": "synthetic"
+    },
+    {
+      "id": "lm_restroom",
+      "name": "Restroom",
+      "type": "restroom",
+      "position": {
+        "x": 7.5,
+        "y": 7.6
+      },
+      "nav_node_id": "n_restroom",
+      "description": "Single restroom on the north side of the hallway.",
+      "source": "synthetic"
+    },
+    {
+      "id": "lm_study",
+      "name": "Study Room B",
+      "type": "room",
+      "position": {
+        "x": 12.5,
+        "y": 8.0
+      },
+      "nav_node_id": "n_study",
+      "description": "Quiet room with two desks along the north wall.",
+      "source": "synthetic"
+    },
+    {
+      "id": "lm_stairs",
+      "name": "Stairs",
+      "type": "stairs",
+      "position": {
+        "x": 8.5,
+        "y": 2.6
+      },
+      "nav_node_id": "n_stairs",
+      "description": "Stairwell entered from the south side of the hallway.",
+      "source": "synthetic"
+    },
+    {
+      "id": "lm_elevator",
+      "name": "Elevator",
+      "type": "elevator",
+      "position": {
+        "x": 11.0,
+        "y": 2.4
+      },
+      "nav_node_id": "n_elevator",
+      "description": "Elevator entered from the south side of the hallway.",
+      "source": "synthetic"
+    },
+    {
+      "id": "lm_exit",
+      "name": "Exit",
+      "type": "exit",
+      "position": {
+        "x": 15.6,
+        "y": 5.0
+      },
+      "nav_node_id": "n_exit",
+      "description": "Door at the east end of the hallway.",
+      "source": "synthetic"
+    }
+  ],
+  "navigation": {
+    "nodes": [
+      {
+        "id": "n_entrance",
+        "position": {
+          "x": 3.5,
+          "y": 0.6
+        },
+        "label": "Inside the main entrance",
+        "kind": "place",
+        "room_id": "r_lobby",
+        "landmark_id": "lm_entrance"
+      },
+      {
+        "id": "n_lobby",
+        "position": {
+          "x": 3.2,
+          "y": 2.2
+        },
+        "label": "Lobby",
+        "kind": "place",
+        "room_id": "r_lobby",
+        "landmark_id": null
+      },
+      {
+        "id": "n_info",
+        "position": {
+          "x": 5.4,
+          "y": 2.4
+        },
+        "label": "In front of the information desk",
+        "kind": "place",
+        "room_id": "r_lobby",
+        "landmark_id": "lm_info"
+      },
+      {
+        "id": "n_hall_lobby",
+        "position": {
+          "x": 3.0,
+          "y": 5.0
+        },
+        "label": "Hallway, at the lobby opening",
+        "kind": "junction",
+        "room_id": "r_hallway",
+        "landmark_id": null
+      },
+      {
+        "id": "n_hall_meeting",
+        "position": {
+          "x": 4.5,
+          "y": 5.0
+        },
+        "label": "Hallway, outside Meeting Room A",
+        "kind": "junction",
+        "room_id": "r_hallway",
+        "landmark_id": null
+      },
+      {
+        "id": "n_hall_restroom",
+        "position": {
+          "x": 7.5,
+          "y": 5.0
+        },
+        "label": "Hallway, outside the restroom",
+        "kind": "junction",
+        "room_id": "r_hallway",
+        "landmark_id": null
+      },
+      {
+        "id": "n_hall_stairs",
+        "position": {
+          "x": 8.5,
+          "y": 5.0
+        },
+        "label": "Hallway, outside the stairwell",
+        "kind": "junction",
+        "room_id": "r_hallway",
+        "landmark_id": null
+      },
+      {
+        "id": "n_hall_study",
+        "position": {
+          "x": 11.0,
+          "y": 5.0
+        },
+        "label": "Hallway, between Study Room B and the elevator",
+        "kind": "junction",
+        "room_id": "r_hallway",
+        "landmark_id": null
+      },
+      {
+        "id": "n_hall_storage",
+        "position": {
+          "x": 14.0,
+          "y": 5.0
+        },
+        "label": "Hallway, outside storage",
+        "kind": "junction",
+        "room_id": "r_hallway",
+        "landmark_id": null
+      },
+      {
+        "id": "n_exit",
+        "position": {
+          "x": 15.6,
+          "y": 5.0
+        },
+        "label": "At the exit door",
+        "kind": "place",
+        "room_id": "r_hallway",
+        "landmark_id": "lm_exit"
+      },
+      {
+        "id": "n_door_meeting",
+        "position": {
+          "x": 4.5,
+          "y": 6.0
+        },
+        "label": "Meeting Room A door",
+        "kind": "door",
+        "room_id": null,
+        "landmark_id": null
+      },
+      {
+        "id": "n_meeting",
+        "position": {
+          "x": 4.6,
+          "y": 7.4
+        },
+        "label": "Meeting Room A",
+        "kind": "place",
+        "room_id": "r_meeting",
+        "landmark_id": "lm_meeting"
+      },
+      {
+        "id": "n_door_restroom",
+        "position": {
+          "x": 7.5,
+          "y": 6.0
+        },
+        "label": "Restroom door",
+        "kind": "door",
+        "room_id": null,
+        "landmark_id": null
+      },
+      {
+        "id": "n_restroom",
+        "position": {
+          "x": 7.5,
+          "y": 7.6
+        },
+        "label": "Restroom",
+        "kind": "place",
+        "room_id": "r_restroom",
+        "landmark_id": "lm_restroom"
+      },
+      {
+        "id": "n_door_study",
+        "position": {
+          "x": 11.0,
+          "y": 6.0
+        },
+        "label": "Study Room B door",
+        "kind": "door",
+        "room_id": null,
+        "landmark_id": null
+      },
+      {
+        "id": "n_study",
+        "position": {
+          "x": 12.5,
+          "y": 7.8
+        },
+        "label": "Study Room B",
+        "kind": "place",
+        "room_id": "r_study",
+        "landmark_id": "lm_study"
+      },
+      {
+        "id": "n_door_stairs",
+        "position": {
+          "x": 8.5,
+          "y": 4.0
+        },
+        "label": "Stairwell door",
+        "kind": "door",
+        "room_id": null,
+        "landmark_id": null
+      },
+      {
+        "id": "n_stairs",
+        "position": {
+          "x": 8.5,
+          "y": 3.5
+        },
+        "label": "Bottom of the stairs",
+        "kind": "place",
+        "room_id": "r_stairwell",
+        "landmark_id": "lm_stairs"
+      },
+      {
+        "id": "n_door_elevator",
+        "position": {
+          "x": 11.0,
+          "y": 4.0
+        },
+        "label": "Elevator door",
+        "kind": "door",
+        "room_id": null,
+        "landmark_id": null
+      },
+      {
+        "id": "n_elevator",
+        "position": {
+          "x": 11.0,
+          "y": 2.8
+        },
+        "label": "Elevator",
+        "kind": "place",
+        "room_id": "r_elevator",
+        "landmark_id": "lm_elevator"
+      },
+      {
+        "id": "n_door_storage",
+        "position": {
+          "x": 14.0,
+          "y": 4.0
+        },
+        "label": "Storage door",
+        "kind": "door",
+        "room_id": null,
+        "landmark_id": null
+      },
+      {
+        "id": "n_storage",
+        "position": {
+          "x": 14.0,
+          "y": 2.5
+        },
+        "label": "Storage",
+        "kind": "place",
+        "room_id": "r_storage",
+        "landmark_id": null
+      }
+    ],
+    "edges": [
+      {
+        "id": "e_entrance__lobby",
+        "a": "n_entrance",
+        "b": "n_lobby",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_lobby__info",
+        "a": "n_lobby",
+        "b": "n_info",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_lobby__hall_lobby",
+        "a": "n_lobby",
+        "b": "n_hall_lobby",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_lobby__hall_meeting",
+        "a": "n_hall_lobby",
+        "b": "n_hall_meeting",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_meeting__hall_restroom",
+        "a": "n_hall_meeting",
+        "b": "n_hall_restroom",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_restroom__hall_stairs",
+        "a": "n_hall_restroom",
+        "b": "n_hall_stairs",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_stairs__hall_study",
+        "a": "n_hall_stairs",
+        "b": "n_hall_study",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_study__hall_storage",
+        "a": "n_hall_study",
+        "b": "n_hall_storage",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_storage__exit",
+        "a": "n_hall_storage",
+        "b": "n_exit",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_meeting__door_meeting",
+        "a": "n_hall_meeting",
+        "b": "n_door_meeting",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_door_meeting__meeting",
+        "a": "n_door_meeting",
+        "b": "n_meeting",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_restroom__door_restroom",
+        "a": "n_hall_restroom",
+        "b": "n_door_restroom",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_door_restroom__restroom",
+        "a": "n_door_restroom",
+        "b": "n_restroom",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_study__door_study",
+        "a": "n_hall_study",
+        "b": "n_door_study",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_door_study__study",
+        "a": "n_door_study",
+        "b": "n_study",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_stairs__door_stairs",
+        "a": "n_hall_stairs",
+        "b": "n_door_stairs",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_door_stairs__stairs",
+        "a": "n_door_stairs",
+        "b": "n_stairs",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_study__door_elevator",
+        "a": "n_hall_study",
+        "b": "n_door_elevator",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_door_elevator__elevator",
+        "a": "n_door_elevator",
+        "b": "n_elevator",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_hall_storage__door_storage",
+        "a": "n_hall_storage",
+        "b": "n_door_storage",
+        "source": "synthetic"
+      },
+      {
+        "id": "e_door_storage__storage",
+        "a": "n_door_storage",
+        "b": "n_storage",
+        "source": "synthetic"
+      }
+    ]
+  },
+  "start_landmark_id": "lm_entrance"
+}
