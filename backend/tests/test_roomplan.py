@@ -101,6 +101,8 @@ def test_semantics_are_mapped_conservatively():
     assert fmap.doors[0].wall_id == fmap.walls[0].id  # via parentIdentifier
     assert fmap.windows and fmap.openings
     assert [r.name for r in fmap.rooms] == ["Living room (unconfirmed)"]
+    areas = [lm for lm in fmap.landmarks if lm.type.value == "room"]
+    assert [a.name for a in areas] == ["Living room (unconfirmed)"] and areas[0].source == "detected"
     assert sum(p.x * q.y - q.x * p.y for p, q in zip(fmap.rooms[0].polygon, fmap.rooms[0].polygon[1:] + fmap.rooms[0].polygon[:1])) / 2 == pytest.approx(35.0, abs=1e-3)
     stairs = [lm for lm in fmap.landmarks if lm.type.value == "stairs"]
     assert len(stairs) == 1 and stairs[0].source == "detected"
@@ -173,6 +175,43 @@ def test_noisy_scans_still_produce_printable_models(seed):
     assert sorted([m.bounds.width, m.bounds.depth]) == pytest.approx([5.0, 7.0], abs=0.25)
     mesh, report = generate_tactile_model(m)
     assert all(c.passed for c in report.checks), [c for c in report.checks if not c.passed]
+
+
+# --------------------------------------------------------------------------- public real-world export
+
+REAL_EXPORT = REPO_ROOT / "sample-data" / "third-party" / "open3dfloorplan-test-roomplan.json"
+
+
+def test_public_roomplan_export_imports_and_prints():
+    """A public CapturedRoom export (see sample-data/third-party/README.md), not synthetic data."""
+    data = json.loads(REAL_EXPORT.read_text())
+    result = import_scan(data)
+    fmap = result.map
+    assert result.format == "roomplan" and fmap.source.kind == "roomplan"
+    assert (len(fmap.walls), len(fmap.doors), len(fmap.windows), len(fmap.objects)) == (20, 4, 4, 13)
+    assert all(d.wall_id for d in fmap.doors), "every door names its wall via parentIdentifier"
+    assert {d.is_open for d in fmap.doors} <= {True, False}
+
+    # One floor outline holds two bedrooms, a bathroom and an unidentified area:
+    # it must not be named after just one of them.
+    assert [r.name for r in fmap.rooms] == ["Room 1"]
+    areas = sorted(lm.name for lm in fmap.landmarks if lm.type.value == "room")
+    assert areas == ["Bathroom (unconfirmed)", "Bedroom (unconfirmed)", "Bedroom 2 (unconfirmed)"]
+    assert not any(lm.type.value == "restroom" for lm in fmap.landmarks), "a bathroom guess is not a confirmed restroom"
+
+    processed = process_map(fmap)
+    assert not [i for i in processed.issues if i.severity == "error"]
+    m = processed.map
+    assert sorted([m.bounds.width, m.bounds.depth]) == pytest.approx([6.54, 7.52], abs=0.05)
+    # This scan's walls are not all parallel (one group sits 3-4° off the rest). Alignment must
+    # follow the majority of the wall length rather than averaging the groups.
+    def off_square(w):
+        a = math.degrees(w.angle) % 90
+        return min(a, 90 - a)
+    squared = sum(w.length for w in m.walls if off_square(w) < 0.5) / sum(w.length for w in m.walls)
+    assert squared > 0.6, f"only {squared:.0%} of wall length is within 0.5° of square"
+    mesh, report = generate_tactile_model(m)
+    assert all(c.passed for c in report.checks)
 
 
 # --------------------------------------------------------------------------- end to end

@@ -36,7 +36,7 @@ RoomPlan uses ARKit world space: meters, +Y up, right-handed. The world's headin
 ## What is deliberately *not* inferred
 
 - **Wall thickness:** RoomPlan surfaces have none. A 0.15 m default is used, and the tactile model uses its own wall width anyway.
-- **Room names:** sections such as `livingRoom` become "Living room (unconfirmed)". Rooms without a section are "Room 1", "Room 2", and so on.
+- **Room names:** each recognized section (`bedroom`, `bathroom`, `kitchen`, `livingRoom`, `diningRoom`) becomes a *detected* named area, such as "Bedroom 2 (unconfirmed)", at its center. A floor outline takes a section's name only when that is the only kind of area inside it. Otherwise it's "Room 1", "Room 2", and so on. A `bathroom` guess is never turned into a restroom landmark.
 - **Entrances, exits, restrooms:** never assumed. The editor asks the user to mark them.
 - **Stairs:** a `stairs` object becomes a *detected* stairs landmark that says it needs confirming.
 - **Walkable routes:** RoomPlan has no navigation graph, so imported maps start with an empty one.
@@ -44,6 +44,7 @@ RoomPlan uses ARKit world space: meters, +Y up, right-handed. The world's headin
 
 ## Robustness
 
+- The plan is squared to the page using the length-weighted *median* wall direction. Real scans have groups of walls a few degrees apart, and averaging them would leave every wall slightly crooked.
 - Elements that can't be read (wrong-length transform, non-finite numbers, zero width) are skipped, and the upload response lists the problems. If no wall is usable, the upload fails with details.
 - Tilted or curved walls produce warnings. Curved walls are straightened to their chord.
 - Tactile generation snaps 2D geometry to a 1 µm grid before extruding. Scan coordinates carry float noise that otherwise makes degenerate triangles.
@@ -61,4 +62,6 @@ RoomPlan uses ARKit world space: meters, +Y up, right-handed. The world's headin
   - 12 randomized noisy scans that must all produce printable models;
   - upload through the API.
 
-**Not yet verified against a real device export.** When someone scans a real room, add the JSON to `sample-data/` (with permission from whoever owns the space) and a regression test for it.
+- `sample-data/third-party/open3dfloorplan-test-roomplan.json` is a **public RoomPlan export** from another MIT-licensed project (see `sample-data/third-party/README.md`). It is a 2-bedroom apartment with 20 walls, 4 doors, 4 windows and 13 objects, and it imports and prints cleanly. Real exports encode section labels as plain strings (`"bedroom"`), and the importer accepts both forms.
+
+**Still to do:** import a scan made by the team with the TouchSpace iOS app, and add it as another regression fixture (with permission from whoever owns the space).

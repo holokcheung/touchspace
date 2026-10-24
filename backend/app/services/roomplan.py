@@ -286,9 +286,12 @@ def import_roomplan(data: dict, *, name: str | None = None) -> tuple[FloorMap, l
         except (ValueError, TypeError, AttributeError) as exc:
             bad(f"sections[{i}]", exc)
 
+    # A floor outline only takes a section's name when that is the only kind of area inside it;
+    # one floor often spans several areas (an apartment with bedrooms and a bathroom).
     rooms: list[Room] = []
     for n, poly in enumerate(floor_polys, start=1):
-        guess = next((SECTION_NAMES[lbl] for lbl, c in sections if lbl in SECTION_NAMES and _point_in(c, poly)), None)
+        inside = {lbl for lbl, c in sections if _point_in(c, poly)}
+        guess = SECTION_NAMES.get(next(iter(inside))) if len(inside) == 1 else None
         rooms.append(Room(
             id=f"r_{n}",
             name=f"{guess} (unconfirmed)" if guess else f"Room {n}",
@@ -296,9 +299,23 @@ def import_roomplan(data: dict, *, name: str | None = None) -> tuple[FloorMap, l
             description="Room type guessed by RoomPlan; please confirm or rename." if guess else "",
         ))
 
+    # Each recognized section also becomes a named area at its center, so several areas
+    # sharing one floor can still be told apart and asked about.
+    landmarks: list[Landmark] = []
+    seen: Counter[str] = Counter()
+    for lbl, center in sections:
+        if lbl not in SECTION_NAMES:
+            continue
+        seen[lbl] += 1
+        label = SECTION_NAMES[lbl] + (f" {seen[lbl]}" if seen[lbl] > 1 else "")
+        landmarks.append(Landmark(
+            id=_short_id("lm_area", f"{lbl}{seen[lbl]}", used_ids), name=f"{label} (unconfirmed)",
+            type=LandmarkType.room, position=center, source="detected",
+            description=f"RoomPlan guessed this area is a {SECTION_NAMES[lbl].lower()}. Confirm or rename it.",
+        ))
+
     # ---- objects
     objects: list[MapObject] = []
-    landmarks: list[Landmark] = []
     for i, el in enumerate(elements["objects"]):
         try:
             m = decode_matrix(el.get("transform"))

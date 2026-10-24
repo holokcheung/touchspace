@@ -55,6 +55,14 @@ def test_dominant_angle_ignores_quarter_turns():
     assert math.degrees(dominant_angle(m.walls)) == pytest.approx(20, abs=1e-6)
 
 
+def test_dominant_angle_follows_majority_of_wall_length():
+    m = rect_room(10, 6, rotation_deg=2.0)  # 32 m of wall at 2°
+    m.walls.append(m.walls[0].model_copy(update={
+        "id": "w_odd", "start": Point2D(x=1, y=1),
+        "end": Point2D(x=1 + 8 * math.cos(math.radians(-3)), y=1 + 8 * math.sin(math.radians(-3)))}))
+    assert math.degrees(dominant_angle(m.walls)) == pytest.approx(2.0, abs=1e-6)
+
+
 def test_snapping_closes_small_corner_gaps():
     m = rect_room(6, 4, door=False)
     m.walls[1].start = Point2D(x=6.07, y=0.05)  # scanner left the SE corner slightly open
