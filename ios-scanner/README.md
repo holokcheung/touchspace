@@ -62,4 +62,5 @@ RoomPlan does not record room names, entrances, exits, restrooms or walkable rou
 | `ScanStore.swift` | Saves the `CapturedRoom` JSON and USDZ in the app's Documents folder |
 | `ScanDetailView.swift` | Scan summary, share, Quick Look, upload |
 | `Uploader.swift` | Multipart `POST /api/scans` to the TouchSpace backend |
+| `SoundscapeSettings.swift` | Decodes `shared/soundscape.json` (bundled) for a future live LiDAR soundscape; not used by a screen yet. See [docs/soundscape.md](../docs/soundscape.md). |
 | `project.yml` | XcodeGen spec for the project |

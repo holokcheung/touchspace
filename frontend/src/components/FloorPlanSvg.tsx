@@ -21,13 +21,15 @@ interface Props {
   route?: Point2D[];
   /** Places to emphasize (landmark ids), e.g. the ones an answer talks about. */
   highlightIds?: string[];
+  /** The walk-through's walker: position, compass heading (0 = north), and what each zone senses. */
+  walker?: { position: Point2D; heading: number; hits: Point2D[] };
 }
 
 // Plan y points up; SVG y points down. Every plan point is drawn at (x, -y).
 const sx = (p: Point2D) => p.x;
 const sy = (p: Point2D) => -p.y;
 
-export default function FloorPlanSvg({ map, layers, selectedId, onSelect, onMoveLandmark, label, route, highlightIds = [] }: Props) {
+export default function FloorPlanSvg({ map, layers, selectedId, onSelect, onMoveLandmark, label, route, highlightIds = [], walker }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragging = useRef<string | null>(null);
   const b = planBounds(map);
@@ -258,6 +260,30 @@ export default function FloorPlanSvg({ map, layers, selectedId, onSelect, onMove
             </g>
           );
         })}
+
+      {walker && (
+        <g aria-hidden="true">
+          {walker.hits.map((h, i) => (
+            <line
+              key={i}
+              x1={sx(walker.position)}
+              y1={sy(walker.position)}
+              x2={sx(h)}
+              y2={sy(h)}
+              stroke="var(--focus)"
+              strokeWidth={unit * 0.06}
+              strokeDasharray={`${unit * 0.15} ${unit * 0.1}`}
+            />
+          ))}
+          {walker.hits.map((h, i) => (
+            <circle key={`h${i}`} cx={sx(h)} cy={sy(h)} r={unit * 0.15} fill="var(--focus)" />
+          ))}
+          <g transform={`translate(${sx(walker.position)} ${sy(walker.position)}) rotate(${walker.heading})`}>
+            <circle r={unit * 0.55} fill="var(--surface)" stroke="var(--focus)" strokeWidth={unit * 0.12} />
+            <polygon points={`0,${-unit * 0.95} ${unit * 0.4},${unit * 0.1} ${-unit * 0.4},${unit * 0.1}`} fill="var(--focus)" />
+          </g>
+        </g>
+      )}
     </svg>
   );
 }

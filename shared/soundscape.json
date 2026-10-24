@@ -1,0 +1,65 @@
+{
+  "$comment": "Shared soundscape settings, read by the web walk-through (frontend/src/lib/soundscape.ts) and the iPhone app (ios-scanner/TouchSpaceScanner/SoundscapeSettings.swift). Distances are meters, angles are degrees (0 = straight ahead, positive = to the right), times are seconds, gains are linear (1 = unchanged). See docs/soundscape.md.",
+  "version": 1,
+  "$zones_comment": "Ahead is narrow on purpose: about body width at 2 meters, so it means \"in my path\", not \"somewhere in front\".",
+  "zones": [
+    { "id": "left", "label": "left", "from_deg": -100, "to_deg": -20 },
+    { "id": "ahead", "label": "ahead", "from_deg": -12, "to_deg": 12 },
+    { "id": "right", "label": "right", "from_deg": 20, "to_deg": 100 }
+  ],
+  "sensing": {
+    "max_range_m": 4.0,
+    "ray_step_deg": 5,
+    "lidar_camera_zones": {
+      "$comment": "The iPhone camera only sees about 60 degrees ahead, so on the phone each zone is a slice of the depth image (fractions of its width) instead of an angle range.",
+      "left": [0.0, 0.3],
+      "ahead": [0.35, 0.65],
+      "right": [0.7, 1.0],
+      "min_confidence": "medium",
+      "stale_after_s": 0.5
+    }
+  },
+  "noise": {
+    "color": "pink",
+    "level": 0.22,
+    "default_volume": 0.5,
+    "smoothing_s": 0.08
+  },
+  "muffle": {
+    "$comment": "Each ear has its own noise. As the nearest surface on that side gets closer than open_at_m, its high frequencies are cut and it gets a little quieter. At muffled_at_m and closer it is fully muffled.",
+    "open_at_m": 2.5,
+    "muffled_at_m": 0.3,
+    "curve": 0.7,
+    "open_cutoff_hz": 9000,
+    "muffled_cutoff_hz": 350,
+    "open_gain": 1.0,
+    "muffled_gain": 0.35,
+    "filter_q": 0.7
+  },
+  "ahead_pulse": {
+    "$comment": "Something straight ahead adds soft ticks in both ears, faster as it gets closer. Nothing ahead within start_at_m means no ticks.",
+    "start_at_m": 2.0,
+    "fastest_at_m": 0.4,
+    "slowest_hz": 1.5,
+    "fastest_hz": 8.0,
+    "tick_hz": 900,
+    "tick_s": 0.04,
+    "level": 0.25
+  },
+  "cues": {
+    "$comment": "Distinct sounds so silence never has to mean anything. 'no_data' repeats while there is no information (outside the map, or the phone lost tracking), so it can't be mistaken for open space.",
+    "bump": { "freqs_hz": [90], "duration_s": 0.16, "vibrate_ms": [60] },
+    "doorway": { "freqs_hz": [520, 780], "duration_s": 0.09, "vibrate_ms": [20, 40, 20] },
+    "no_data": { "freqs_hz": [440, 330], "duration_s": 0.12, "repeat_s": 2.0, "vibrate_ms": [] },
+    "level": 0.3
+  },
+  "walk": {
+    "$comment": "Web walk-through only.",
+    "step_m": 0.25,
+    "turn_deg": 15,
+    "big_turn_deg": 90,
+    "body_radius_m": 0.2,
+    "nearby_landmark_m": 1.2,
+    "hold_repeat_s": 0.22
+  }
+}

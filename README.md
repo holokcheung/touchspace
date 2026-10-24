@@ -16,6 +16,7 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | `backend/` | FastAPI service: RoomPlan import, floor-plan processing, STL generation, routing, voice Q&A |
 | `ios-scanner/` | SwiftUI RoomPlan scanner app |
 | `sample-data/` | Synthetic demo fixtures (not real venue scans) |
+| `shared/` | Settings shared by the web app and the iPhone app (`soundscape.json`) |
 | `docs/` | Architecture and usage docs |
 
 ## Status
@@ -26,6 +27,7 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | 2. FastAPI endpoints + React web app (upload, 2D editor, 3D preview, STL download, demo mode) | Done |
 | 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. iOS app written, not yet built or tested on a device. |
 | 4. Voice explorer and routing | Done: routing over recorded paths, grounded Q&A, Voice Explorer page, path editor, Cartesia voice, optional Gemini |
+| Walk-through soundscape | Done on the web: walk the map with headphones, and the noise is muffled on the side of a nearby wall. Settings shared with the iPhone app; live LiDAR version not built. |
 | 5. Polish and docs | Not started |
 
 The demo building in `sample-data/demo-building.json` is **synthetic**. It is not a scan of any real place.
@@ -77,6 +79,7 @@ cd backend
 | Upload scan | Drag-and-drop or file picker for scan JSON, parsing errors with details, demo scan, list of saved maps |
 | Floor plan | SVG plan with walls, doors, rooms, objects, paths and landmarks. Add, drag, or arrow-key move landmarks. Rename landmarks and rooms, set the starting point, choose which furniture is printed, check the map. Includes a full text description of the plan. |
 | Voice explorer | Ask by voice or text: descriptions, where things are, what's nearby, step-by-step directions over recorded paths. Answers are spoken (Cartesia or the browser), shown as text, and drawn on the plan. |
+| Walk-through | Practice walking through the map with headphones, by keyboard or touch. Each ear's noise is muffled when a wall or furniture is close on that side; ticks mean something is in your path; doors, rooms and landmarks are announced. Simulated from the map, not live sensing. Works on a phone over Wi-Fi. |
 | 3D tactile map | Interactive 3D model (rotate, zoom, reset, top view), measurements, print checks, print settings with regenerate, **Download STL**, and a text description of the model |
 
 Accessibility: semantic landmarks and headings, skip link, visible focus outlines, labeled inputs, live status messages, keyboard-movable landmarks, text equivalents for both the 2D plan and the 3D model, color never used alone, light and dark themes, and the Atkinson Hyperlegible font.
@@ -103,6 +106,7 @@ Errors return `{"error": {"code", "message", "details"}}`. Maps are stored as JS
 ## More docs
 
 - [docs/voice-explorer.md](docs/voice-explorer.md): routing, grounded answers, the path editor, Gemini
+- [docs/soundscape.md](docs/soundscape.md): the walk-through's sound design, shared settings, using it on a phone, plan for live LiDAR
 - [docs/voice.md](docs/voice.md): Cartesia setup
 - [docs/roomplan-import.md](docs/roomplan-import.md): RoomPlan format and coordinates
 - [docs/ACCESSIBILITY_CHECKLIST.md](docs/ACCESSIBILITY_CHECKLIST.md): run before the demo

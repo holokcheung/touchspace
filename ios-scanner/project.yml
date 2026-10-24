@@ -19,6 +19,9 @@ targets:
     platform: iOS
     sources:
       - path: TouchSpaceScanner
+      # Shared with the web walk-through; see docs/soundscape.md.
+      - path: ../shared/soundscape.json
+        buildPhase: resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: ai.touchspace.scanner
