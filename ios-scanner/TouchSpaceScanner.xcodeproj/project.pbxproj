@@ -1,0 +1,339 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3010148A018B699D88C48A1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E57F1016896426F21F5EE2D /* Assets.xcassets */; };
+		664A210B38A19DC84D82744E /* RoomCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0BFEA5157E25AC415922CBA /* RoomCaptureViewController.swift */; };
+		6EF8AE1A4332FB0F04B0BDE3 /* ScanStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E6CA568A50D6543E80208 /* ScanStore.swift */; };
+		72AF76DC15A78DFFAD7DFC6B /* ScanFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3405DA1B083CFFA17E0E0E1 /* ScanFlowView.swift */; };
+		7F1809096A312F7EAA9E2EC7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBAF79DD0671BDB1C8451BFE /* ContentView.swift */; };
+		83915B2B4D96335725FBD7DF /* ScanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69A6431747ED78317B03E7F /* ScanDetailView.swift */; };
+		9B8C1BEF5BF250D4C66F5929 /* TouchSpaceScannerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83755948214A986018AE89E0 /* TouchSpaceScannerApp.swift */; };
+		DB2276838E9DC02425EEFB4B /* Uploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8B0DE9722E046DE5A8EF31 /* Uploader.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		21A3F4E181587A5E33B2A7EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5266173F3D5A3D70CE425B31 /* TouchSpaceScanner.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TouchSpaceScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E57F1016896426F21F5EE2D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		83755948214A986018AE89E0 /* TouchSpaceScannerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchSpaceScannerApp.swift; sourceTree = "<group>"; };
+		9B8B0DE9722E046DE5A8EF31 /* Uploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uploader.swift; sourceTree = "<group>"; };
+		A0BFEA5157E25AC415922CBA /* RoomCaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomCaptureViewController.swift; sourceTree = "<group>"; };
+		D69A6431747ED78317B03E7F /* ScanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanDetailView.swift; sourceTree = "<group>"; };
+		E3405DA1B083CFFA17E0E0E1 /* ScanFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanFlowView.swift; sourceTree = "<group>"; };
+		EBAF79DD0671BDB1C8451BFE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F46E6CA568A50D6543E80208 /* ScanStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStore.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0E1B9F0DF8E942CDC46ABC5E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5266173F3D5A3D70CE425B31 /* TouchSpaceScanner.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		507FBBBE5557AC0F66B9415F /* TouchSpaceScanner */ = {
+			isa = PBXGroup;
+			children = (
+				5E57F1016896426F21F5EE2D /* Assets.xcassets */,
+				EBAF79DD0671BDB1C8451BFE /* ContentView.swift */,
+				21A3F4E181587A5E33B2A7EF /* Info.plist */,
+				A0BFEA5157E25AC415922CBA /* RoomCaptureViewController.swift */,
+				D69A6431747ED78317B03E7F /* ScanDetailView.swift */,
+				E3405DA1B083CFFA17E0E0E1 /* ScanFlowView.swift */,
+				F46E6CA568A50D6543E80208 /* ScanStore.swift */,
+				83755948214A986018AE89E0 /* TouchSpaceScannerApp.swift */,
+				9B8B0DE9722E046DE5A8EF31 /* Uploader.swift */,
+			);
+			path = TouchSpaceScanner;
+			sourceTree = "<group>";
+		};
+		A4954BC1AB371194D3E78C4C = {
+			isa = PBXGroup;
+			children = (
+				507FBBBE5557AC0F66B9415F /* TouchSpaceScanner */,
+				0E1B9F0DF8E942CDC46ABC5E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C6C1AE55DCC1E45D752ADFFD /* TouchSpaceScanner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9C9B8DD3DB5ED7385EFF2661 /* Build configuration list for PBXNativeTarget "TouchSpaceScanner" */;
+			buildPhases = (
+				68888377A64AA206DD447F74 /* Sources */,
+				8C2F153AFCE809613B0D241A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TouchSpaceScanner;
+			packageProductDependencies = (
+			);
+			productName = TouchSpaceScanner;
+			productReference = 5266173F3D5A3D70CE425B31 /* TouchSpaceScanner.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2EE0E8E234CEA34538BFAF2A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					C6C1AE55DCC1E45D752ADFFD = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 5061C0C9FFF6EAC6161FC490 /* Build configuration list for PBXProject "TouchSpaceScanner" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = A4954BC1AB371194D3E78C4C;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 0E1B9F0DF8E942CDC46ABC5E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C6C1AE55DCC1E45D752ADFFD /* TouchSpaceScanner */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8C2F153AFCE809613B0D241A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3010148A018B699D88C48A1D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		68888377A64AA206DD447F74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F1809096A312F7EAA9E2EC7 /* ContentView.swift in Sources */,
+				664A210B38A19DC84D82744E /* RoomCaptureViewController.swift in Sources */,
+				83915B2B4D96335725FBD7DF /* ScanDetailView.swift in Sources */,
+				72AF76DC15A78DFFAD7DFC6B /* ScanFlowView.swift in Sources */,
+				6EF8AE1A4332FB0F04B0BDE3 /* ScanStore.swift in Sources */,
+				9B8C1BEF5BF250D4C66F5929 /* TouchSpaceScannerApp.swift in Sources */,
+				DB2276838E9DC02425EEFB4B /* Uploader.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2C2114276D319F469066C526 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		69FC8AC19AB6D66E2AB29AB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TouchSpaceScanner/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.touchspace.scanner;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8F6FD9E0091141267E88E1E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D7DF16231DD2F20C42F2A72B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TouchSpaceScanner/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.touchspace.scanner;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5061C0C9FFF6EAC6161FC490 /* Build configuration list for PBXProject "TouchSpaceScanner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C2114276D319F469066C526 /* Debug */,
+				8F6FD9E0091141267E88E1E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9C9B8DD3DB5ED7385EFF2661 /* Build configuration list for PBXNativeTarget "TouchSpaceScanner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D7DF16231DD2F20C42F2A72B /* Debug */,
+				69FC8AC19AB6D66E2AB29AB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2EE0E8E234CEA34538BFAF2A /* Project object */;
+}

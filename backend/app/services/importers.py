@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from app.models.map import FloorMap
+from app.services.roomplan import RoomPlanImportError, import_roomplan, looks_like_roomplan
 
 
 class ImportError_(ValueError):
@@ -17,19 +18,22 @@ class ImportError_(ValueError):
         self.details = details or []
 
 
+class ImportResult(BaseModel):
+    map: FloorMap
+    format: str
+    warnings: list[str] = []
+
+
 def detect_format(data: Any) -> str:
     if not isinstance(data, dict):
         return "unknown"
     walls = data.get("walls")
-    if isinstance(walls, list) and walls and isinstance(walls[0], dict):
-        if "start" in walls[0] and "end" in walls[0]:
-            return "touchspace"
-        if "transform" in walls[0] and "dimensions" in walls[0]:
-            return "roomplan"
+    if isinstance(walls, list) and walls and isinstance(walls[0], dict) and "start" in walls[0] and "end" in walls[0]:
+        return "touchspace"
+    if looks_like_roomplan(data):
+        return "roomplan"
     if "schema_version" in data and "source" in data:
         return "touchspace"
-    if any(k in data for k in ("sections", "floors", "openings", "doors")) and "identifier" in data:
-        return "roomplan"
     return "unknown"
 
 
@@ -43,7 +47,7 @@ def _format_validation_error(exc: ValidationError) -> list[str]:
     return lines
 
 
-def import_scan(data: Any, *, name: str | None = None) -> FloorMap:
+def import_scan(data: Any, *, name: str | None = None) -> ImportResult:
     fmt = detect_format(data)
     if fmt == "touchspace":
         try:
@@ -53,9 +57,13 @@ def import_scan(data: Any, *, name: str | None = None) -> FloorMap:
                                _format_validation_error(exc)) from exc
         if name:
             fmap.name = name
-        return fmap
+        return ImportResult(map=fmap, format=fmt)
     if fmt == "roomplan":
-        raise ImportError_("Apple RoomPlan files are recognized, but RoomPlan import is not implemented yet.")
+        try:
+            fmap, warnings = import_roomplan(data, name=name)
+        except RoomPlanImportError as exc:
+            raise ImportError_(str(exc), exc.details) from exc
+        return ImportResult(map=fmap, format=fmt, warnings=warnings)
     raise ImportError_(
         "Unrecognized file. Upload a RoomPlan CapturedRoom JSON export or a TouchSpace map JSON.",
         ["Expected a JSON object with a 'walls' list."],

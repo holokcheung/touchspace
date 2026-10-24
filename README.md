@@ -24,7 +24,7 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | --- | --- |
 | 1. Data pipeline: normalized schema, synthetic demo, floor-plan processing, tactile STL generator, tests | Done |
 | 2. FastAPI endpoints + React web app (upload, 2D editor, 3D preview, STL download, demo mode) | Done |
-| 3. Apple RoomPlan import + iOS scanner | Not started |
+| 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. iOS app written, not yet built or tested on a device. |
 | 4. Voice explorer and routing | Not started |
 | 5. Polish and docs | Not started |
 
@@ -52,6 +52,8 @@ npm run dev
 ```
 
 Open http://localhost:5173 and click **Try Demo**. No API keys are needed.
+
+To try the RoomPlan import path without an iPhone, upload `sample-data/synthetic-roomplan-capturedroom.json`. It is synthetic data in RoomPlan's format. For real scans, see [ios-scanner/README.md](ios-scanner/README.md) and [docs/roomplan-import.md](docs/roomplan-import.md).
 
 **Tests:**
 

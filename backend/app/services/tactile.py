@@ -21,6 +21,7 @@ import re
 from dataclasses import dataclass, field
 
 import numpy as np
+import shapely
 import trimesh
 from shapely import affinity
 from shapely.geometry import LineString, MultiPolygon, Point, Polygon, box
@@ -37,6 +38,7 @@ from app.services.symbols import SYMBOL_NAMES, SYMBOL_ORDER, has_symbol, symbol_
 # fuses them into the base instead of leaving coplanar touching faces.
 EMBED_MM = 0.2
 MIN_PART_AREA_MM2 = 1.0
+PRINT_GRID_MM = 0.001
 WALL_CLEARANCE_MM = 1.2
 SYMBOL_SPACING_MM = 1.5
 LEGEND_GAP_MM = 3.0
@@ -306,10 +308,22 @@ def build_layers(fmap: FloorMap, settings: TactileSettings, warnings: list[str])
 # --------------------------------------------------------------------------- 3D
 
 
+def _printable(geom: BaseGeometry) -> list[Polygon]:
+    """Snap to a 1 µm grid and drop redundant vertices.
+
+    Scan coordinates carry float noise; vertices a few nanometers apart
+    triangulate into degenerate faces and break the boolean union.
+    """
+    snapped = shapely.set_precision(geom, PRINT_GRID_MM).simplify(PRINT_GRID_MM, preserve_topology=True)
+    return _polygons(snapped.buffer(0))
+
+
 def _extrude(geom: BaseGeometry, z0: float, height: float) -> list[trimesh.Trimesh]:
     meshes = []
-    for poly in _polygons(geom):
+    for poly in _printable(geom):
         m = trimesh.creation.extrude_polygon(poly, height)
+        if not m.is_volume:
+            raise TactileGenerationError(f"A {poly.area:.1f} mm² part could not be turned into a printable solid.")
         m.apply_translation([0, 0, z0])
         meshes.append(m)
     return meshes
