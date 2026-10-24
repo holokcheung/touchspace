@@ -1,0 +1,41 @@
+{
+  "coordinateFrameId": "640467b6-7b58-4fc4-a35d-e45ea048ea5d",
+  "landmarks": [
+    {
+      "id": "front-entrance",
+      "name": "Front entrance",
+      "type": "entrance",
+      "position": {
+        "x": 1,
+        "z": 2
+      },
+      "roomId": "lobby",
+      "nodeId": "entry",
+      "provenance": "volunteer"
+    },
+    {
+      "id": "main-exit",
+      "name": "Exit",
+      "type": "exit",
+      "position": {
+        "x": 7,
+        "z": 2
+      },
+      "roomId": "gallery",
+      "nodeId": "exit",
+      "provenance": "volunteer"
+    },
+    {
+      "id": "store-shelf",
+      "name": "Store shelf",
+      "type": "object",
+      "position": {
+        "x": 10,
+        "z": 2
+      },
+      "roomId": "store",
+      "nodeId": "store-center",
+      "provenance": "scan"
+    }
+  ]
+}

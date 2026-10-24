@@ -1,4 +1,10 @@
-# TouchSpace Scanner (iOS)
+# Touchspace AI iOS apps
+
+The current app is [TouchspaceAI.xcodeproj](TouchspaceAI.xcodeproj). See the [main setup guide](../README.md) and [validation guide](../docs/ios-testing.md). Regenerate it with `xcodegen generate --spec project.yml`.
+
+## Legacy RoomPlan scanner reference
+
+The separate `TouchSpaceScanner.xcodeproj` below is preserved for the existing web import workflow. Its generator is `legacy-scanner.yml`.
 
 A small SwiftUI app that scans a room with Apple RoomPlan and exports the result for TouchSpace AI.
 
@@ -32,7 +38,7 @@ If you add or remove Swift files, regenerate the project:
 
 ```bash
 brew install xcodegen
-cd ios-scanner && xcodegen generate
+cd ios-scanner && xcodegen generate --spec legacy-scanner.yml
 ```
 
 ## Sending scans to your computer
@@ -63,4 +69,4 @@ RoomPlan does not record room names, entrances, exits, restrooms or walkable rou
 | `ScanDetailView.swift` | Scan summary, share, Quick Look, upload |
 | `Uploader.swift` | Multipart `POST /api/scans` to the TouchSpace backend |
 | `SoundscapeSettings.swift` | Decodes `shared/soundscape.json` (bundled) for a future live LiDAR soundscape; not used by a screen yet. See [docs/soundscape.md](../docs/soundscape.md). |
-| `project.yml` | XcodeGen spec for the project |
+| `legacy-scanner.yml` | XcodeGen spec for the legacy scanner |

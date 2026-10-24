@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "mapId": "touchspace-demo",
+  "title": "Small venue demo",
+  "floor": "Ground floor",
+  "coverage": "Lobby, gallery, and disconnected store room",
+  "contributor": "Touchspace AI synthetic fixture",
+  "createdAt": "2026-10-24T00:00:00Z",
+  "updatedAt": "2026-10-24T00:00:00Z",
+  "verification": "unverified",
+  "units": "meters",
+  "coordinateFrameId": "640467b6-7b58-4fc4-a35d-e45ea048ea5d",
+  "frameAnchorId": "c5c8c05a-f7ee-4be9-a868-31b319f52b12",
+  "worldMapIncluded": false,
+  "synthetic": true
+}

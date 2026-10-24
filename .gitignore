@@ -27,3 +27,7 @@ ios-scanner/**/DerivedData/
 
 # OS
 .DS_Store
+
+# Swift package build products
+.build/
+.swiftpm/
