@@ -138,9 +138,7 @@ struct SettingsView: View {
     @AppStorage("backendURL") private var backendURL = "http://localhost:8000"
     @Environment(\.dismiss) private var dismiss
     @State private var draft = ""
-    @State private var dotpadDraft = ""
     @State private var error: String?
-    @ObservedObject private var dotpad = DotPadLink.shared
     var body: some View {
         NavigationStack {
             Form {
@@ -149,33 +147,12 @@ struct SettingsView: View {
                     Text("For an iPhone on the same Wi-Fi, use your Mac's LAN address on port 8000. Use HTTPS for a hosted backend. Server API keys stay on the backend.").font(.footnote)
                     if let error { Text(error).foregroundStyle(.red) }
                 }
-                Section("DotPad live view") {
-                    TextField("ws://192.168.1.20:8765/phone?token=…",text:$dotpadDraft).textInputAutocapitalization(.never).autocorrectionDisabled().keyboardType(.URL)
-                        .accessibilityLabel("DotPad bridge address")
-                    Text(dotpadStatus).accessibilityAddTraits(.updatesFrequently)
-                    Text("Run python -m app.live on the Mac connected to the DotPad and type the address it prints. Scans, AR navigation and the 3D walkthrough then show on the DotPad. Leave empty to turn off.").font(.footnote)
-                }
             }.navigationTitle("Settings")
                 .toolbar { ToolbarItem(placement:.confirmationAction) { Button("Save") {
                     guard let url=URL(string:draft), ["http","https"].contains(url.scheme), url.host != nil, url.user == nil, url.password == nil, url.query == nil, url.fragment == nil else { error = "Enter a valid HTTP or HTTPS server URL."; return }
-                    let link = dotpadDraft.trimmingCharacters(in:.whitespaces)
-                    guard link.isEmpty || DotPadLink.validURL(link) != nil else { error = "Enter the DotPad address as ws://… or wss://…, or leave it empty."; return }
-                    backendURL = draft.trimmingCharacters(in:CharacterSet(charactersIn:"/"))
-                    if link != dotpad.configuredURL { dotpad.configure(link) }
-                    dismiss()
+                    backendURL = draft.trimmingCharacters(in:CharacterSet(charactersIn:"/")); dismiss()
                 } } }
-                .onAppear { draft = backendURL; dotpadDraft = dotpad.configuredURL; dotpad.wake() }
-        }
-    }
-}
-
-extension SettingsView {
-    fileprivate var dotpadStatus: String {
-        switch dotpad.state {
-        case .off: return "Off"
-        case .connecting: return dotpad.detail.isEmpty ? "Connecting…" : dotpad.detail
-        case .connected: return "Connected to the Mac · \(dotpad.detail)"
-        case .failed: return dotpad.detail
+                .onAppear { draft = backendURL }
         }
     }
 }

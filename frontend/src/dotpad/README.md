@@ -2,9 +2,13 @@
 
 The walkthrough imports this module through `index.ts`. It owns map-to-pin rendering,
 preview UI, uncontracted English braille, and the physical-device connection. No other
-frontend file imports the vendor SDK.
+frontend file imports the vendor SDK. This is the sole DotPad integration: the browser
+connects directly over Bluetooth or USB; no Python gateway, WebSocket bridge or iOS
+DotPad service is required.
 
 - `pins.ts`: map geometry → 60 × 40 pins → 300 eight-dot cell bytes (north up).
+  Graphic cells use the SDK's column order (bits 0–3 left, 4–7 right); text cells
+  retain standard braille dot numbering.
 - `text.ts`: English letters, capitalization/number indicators and punctuation; pad to
   the device text-line width. Room names shorten as needed to keep the heading.
 - `discovery.ts`: the vendor Bluetooth filter, an explicit unfiltered fallback,

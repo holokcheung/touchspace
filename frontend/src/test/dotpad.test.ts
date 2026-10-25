@@ -148,7 +148,7 @@ describe("DotPad pin grid", () => {
 });
 
 describe("sending to the device", () => {
-  it("packs pins into one byte per 2 × 4 braille cell, in braille dot order", () => {
+  it("packs pins into one byte per 2 × 4 graphic cell, in SDK column order", () => {
     const g = { cols: 60, rows: 40, pins: new Uint8Array(60 * 40) };
     const bytes = toCellBytes(g);
     expect(bytes.length).toBe(30 * 10);
@@ -157,10 +157,22 @@ describe("sending to the device", () => {
     g.pins[3 * 60] = PIN.wall; // dot 7 of cell 0
     g.pins[3 * 60 + 3] = PIN.wall; // dot 8 of cell 1
     const packed = toCellBytes(g);
-    expect(packed[0]).toBe(0b0100_1001);
+    expect(packed[0]).toBe(0b0001_1001);
     expect(packed[1]).toBe(0b1000_0000);
-    expect(toHex(packed).slice(0, 4)).toBe("4980");
+    expect(toHex(packed).slice(0, 4)).toBe("1980");
     expect(toHex(packed)).toHaveLength(600);
+  });
+
+  it("matches the vendor's braille-to-graphic conversion for every individual dot", () => {
+    // SDK 3.0.4 brailleToGraphic maps dots 1,2,3,7 to bits 0–3 and 4,5,6,8 to bits 4–7.
+    const expected = [[0x01, 0x10], [0x02, 0x20], [0x04, 0x40], [0x08, 0x80]];
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 2; col++) {
+        const g = { cols: 60, rows: 40, pins: new Uint8Array(2400) };
+        g.pins[row * 60 + col] = PIN.wall;
+        expect(toCellBytes(g)[0]).toBe(expected[row][col]);
+      }
+    }
   });
 
   it("fits where-you-are on the 20-cell text line", () => {
