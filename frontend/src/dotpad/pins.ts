@@ -270,23 +270,23 @@ export function framePins(
 }
 
 /**
- * One byte per 2 × 4 braille cell, cells row by row. Bits follow standard 8-dot braille
- * numbering: dots 1–3 down the left column, 4–6 down the right, 7 and 8 on the bottom row.
- * Check this against the Dot Pad SDK before trusting it.
+ * One byte per 2 × 4 graphic cell, cells row by row. The vendor SDK's GraphicMode
+ * uses bits 0–3 down the left column and 4–7 down the right column. Text cells
+ * use standard braille numbering instead (text.ts).
  */
 export function toCellBytes(g: PinGrid): Uint8Array {
   const cc = Math.ceil(g.cols / DOTPAD.cellCols);
   const cr = Math.ceil(g.rows / DOTPAD.cellRows);
   const bytes = new Uint8Array(cc * cr);
-  // [column within cell, row within cell] for dots 1..8
+  // [column within cell, row within cell] for graphic bits 0..7
   const dots: [number, number][] = [
     [0, 0],
     [0, 1],
     [0, 2],
+    [0, 3],
     [1, 0],
     [1, 1],
     [1, 2],
-    [0, 3],
     [1, 3],
   ];
   for (let r = 0; r < cr; r++) {
