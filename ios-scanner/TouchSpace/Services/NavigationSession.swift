@@ -18,13 +18,18 @@ import SwiftUI
     init(package:MapPackage,url:URL) throws {
         self.package = package
         localization = try ARLocalization(package:package,worldMap:PackageCodec.worldMap(url,manifest:package.manifest))
-        localization.onPose = { [weak self] pose,time in self?.update(pose,time:time) }
+        localization.onPose = { [weak self] pose,time in
+            DotPadLink.shared.sendMapPose(pose.position,heading:pose.heading)
+            self?.update(pose,time:time)
+        }
         localization.onSuspended = { [weak self] text in
+            DotPadLink.shared.sendNoPose()
             guard let self else { return }
             self.generation += 1; self.planning = false; self.paused = true
             self.audio.stop(); self.audio.say(text,urgent:true)
             self.nextAction = "Guidance suspended. Relocalize, then Resume."
         }
+        DotPadLink.shared.sendMap(package)
     }
     func navigate(to target:Landmark) {
         guard let pose = localization.pose, localization.status == .localized else { error = "Verify automatic localization before starting guidance."; return }
@@ -76,6 +81,6 @@ import SwiftUI
         generation += 1; route = nil; guidance = nil; destination = nil; planning = false; paused = true
         audio.stop(); localization.clearRoute(); nextAction = "Navigation ended."
     }
-    func stop() { end(); localization.stop() }
+    func stop() { end(); localization.stop(); DotPadLink.shared.sendNoPose() }
     func interruptForQuestion() { audio.stop(); if !paused { togglePause() }; audio.stop() }
 }
