@@ -121,6 +121,30 @@ struct ChatReply: Codable {
     var providerUsed: Bool
     var requiresLocalization: Bool
 }
+/// Chat transports virtual coordinates separately from physical AR verification.
+struct SimulatedChatPose: Encodable {
+    var position: MapPoint
+    var heading: Double
+    var coordinateFrameId: UUID
+    var observedAt: String
+}
+struct MapChatRequest: Encodable {
+    var mapId: UUID
+    var sessionId: UUID
+    var message: String
+    var pose: VerifiedPose?
+    var simulatedPose: SimulatedChatPose?
+    var mapPackage: MapPackage
+
+    init(package: MapPackage, session: UUID, message: String, pose: VerifiedPose? = nil, simulatedPose: SimulatedPose? = nil) {
+        mapId = package.id; sessionId = session; self.message = message; mapPackage = package
+        self.pose = simulatedPose == nil ? pose : nil
+        self.simulatedPose = simulatedPose.map {
+            SimulatedChatPose(position:$0.position,heading:$0.heading,coordinateFrameId:package.manifest.coordinateFrameId,
+                              observedAt:ISO8601DateFormatter().string(from:Date()))
+        }
+    }
+}
 struct PlannedRoute {
     var destinationId: String
     var waypoints: [MapPoint]

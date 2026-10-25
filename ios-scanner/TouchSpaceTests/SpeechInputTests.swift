@@ -103,9 +103,10 @@ import XCTest
         let capture = ServerSpeechInput(api:APIClient(baseURL:URL(string:"http://localhost:8000")!),recording:recording,authorize:{true})
         let package = try SimulationTests().package("harbour-clinic")
         let audio = AudioGuidance(); audio.mode = .mute
+        let conversation = UUID()
         let voice = WalkthroughVoice(capture:capture,interrupt:{audio.stop()},answer:{ message in
             XCTAssertTrue(message.lowercased().contains("reception desk"))
-            return try OfflineMapAssistant.answer(message,package:package).answer
+            return try await APIClient(baseURL:URL(string:"http://localhost:8000")!).ask(package:package,session:conversation,message:message).answer
         },speak:{audio.say($0,urgent:true)})
         for _ in 0..<2 {
             voice.press()

@@ -181,15 +181,37 @@ class Pose(Model):
         return self.verified and self.coordinate_frame_id == frame and -1 <= age <= 3
 
 
+class SimulatedPose(Model):
+    """A virtual camera position, never physical localization."""
+    position: Point
+    heading: float = Field(ge=-math.pi, le=math.pi)
+    coordinate_frame_id: UUID
+    observed_at: datetime
+
+    def fresh(self, frame: UUID, now: datetime) -> bool:
+        return (self.observed_at.tzinfo is not None and self.coordinate_frame_id == frame
+                and -1 <= (now - self.observed_at).total_seconds() <= 3)
+
+
 class ChatRequest(Model):
     map_id: UUID
     session_id: UUID
     message: str = Field(min_length=1, max_length=1500)
     pose: Pose | None = None
+    simulated_pose: SimulatedPose | None = None
+    map_package: MapPackage | None = None
+
+    @model_validator(mode="after")
+    def context_matches(self):
+        if self.pose is not None and self.simulated_pose is not None:
+            raise ValueError("Physical and simulated poses cannot be combined")
+        if self.map_package is not None and self.map_package.manifest.id != self.map_id:
+            raise ValueError("Map context must match mapId")
+        return self
 
 
 class NavigationAction(Model):
-    type: Literal["navigate"] = "navigate"
+    type: Literal["navigate", "simulateNavigation"] = "navigate"
     destination_id: str
 
 

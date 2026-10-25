@@ -1,6 +1,8 @@
 """Native app endpoints, isolated from the original scan/print API."""
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import sqlite3
 import time
@@ -15,9 +17,10 @@ from pydantic import Field
 from starlette.concurrency import run_in_threadpool
 
 from .auth import issue, owner
-from .chat import ChatService, MessagesProvider, ProviderConfig
+from .chat import ChatService, ChatUnavailable, MessagesProvider, ProviderConfig
 from .models import ChatRequest, ChatResponse, Model
 from .package import MAX_PACKAGE, PackageError, validate_package
+from .spatial import SpatialError
 from .storage import Catalog
 
 router = APIRouter(prefix="/api/touchspace", tags=["TouchSpace AR"])
@@ -124,6 +127,17 @@ async def upload(request: Request, file: UploadFile = File(), visibility: str = 
 @router.post("/chat", response_model=ChatResponse)
 async def chat(body: ChatRequest, request: Request, authorization: str | None = Header(default=None)):
     budget(request, "chat", 20)
-    package, _, visibility = load(body.map_id, authorization)
-    identity = owner(authorization) if visibility == "private" else None
-    return await get_chat().answer(package, body, identity)
+    if body.map_package is not None:
+        # Imported/demo maps need not be published. Context is validated but never saved.
+        package = body.map_package
+        canonical = json.dumps(package.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+        identity = "inline:" + hashlib.sha256(canonical.encode()).hexdigest()
+    else:
+        package, _, visibility = load(body.map_id, authorization)
+        identity = owner(authorization) if visibility == "private" else None
+    try:
+        return await get_chat().answer(package, body, identity)
+    except ChatUnavailable as exc:
+        raise HTTPException(503, str(exc)) from None
+    except SpatialError as exc:
+        raise HTTPException(422, str(exc)) from None

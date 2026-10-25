@@ -34,7 +34,7 @@ struct MapExplorerView: View {
                 if planning { ProgressView("Planning a validated route") }
                 Text(status).accessibilityIdentifier("route-preview-status")
                 if package.manifest.isSynthetic {
-                    NavigationLink { SimulationEntry(package:package,initialDestination:destinationId.isEmpty ? nil : destinationId) } label: { Label("Open 3D walkthrough",systemImage:"figure.walk") }
+                    NavigationLink { SimulationEntry(package:package,api:api,initialDestination:destinationId.isEmpty ? nil : destinationId) } label: { Label("Open 3D walkthrough",systemImage:"figure.walk") }
                         .buttonStyle(.borderedProminent).controlSize(.large).accessibilityIdentifier("open-walkthrough")
                 }
                 Button("Ask about this map",systemImage:"text.bubble") { asking = true }.buttonStyle(.bordered).controlSize(.large)

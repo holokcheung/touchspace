@@ -4,6 +4,8 @@ import SwiftUI
     let package: MapPackage
     let scene: VirtualMapScene
     let audio = AudioGuidance()
+    private let api: APIClient?
+    private let conversation = UUID()
     lazy var voice: WalkthroughVoice = {
         let (capture,hint) = makeVoiceCapture()
         return WalkthroughVoice(capture:capture,inputHint:hint,interrupt:{ [weak self] in self?.interruptGuidance() },
@@ -20,9 +22,8 @@ import SwiftUI
         }
         #endif
         #if targetEnvironment(simulator)
-        let configured = UserDefaults.standard.string(forKey:"backendURL") ?? "http://localhost:8000"
-        let url = URL(string:configured) ?? URL(string:"http://localhost:8000")!
-        return (ServerSpeechInput(api:APIClient(baseURL:url)),"Hold to ask · speech via your Mac")
+        guard let api else { return (SpeechInput(),"Set a backend URL in Settings to ask") }
+        return (ServerSpeechInput(api:api),"Hold to ask · speech via your Mac")
         #else
         return (SpeechInput(),"Hold to ask · swipe to look")
         #endif
@@ -33,7 +34,8 @@ import SwiftUI
     private var generation = 0
     private var stopped = false
     var destination: Landmark? { package.landmarks.landmarks.first { $0.id == engine.destinationId } }
-    init(package:MapPackage) throws {
+    init(package:MapPackage,api:APIClient? = APIClient.configured) throws {
+        self.api = api
         self.package = package; engine = try SimulationEngine(package:package); scene = try VirtualMapScene(package:package)
         // Face into the space through a confirmed opening, rather than a fixed compass heading.
         let position = engine.pose.position, room = engine.spatial.room(at:engine.pose.position)?.id
@@ -76,21 +78,24 @@ import SwiftUI
         guard !planning, !voice.isBusy else { return }
         engine.turn(radians)
     }
-    /// The assistant uses only saved geometry and an explicitly virtual pose, never physical AR tracking.
+    /// All questions use online chat; virtual coordinates never become physical AR tracking.
     func answer(_ message:String) async throws -> String {
         generation += 1; let expected = generation
         let package = package, pose = engine.pose
-        let result: (ExplorationReply,SimulationEngine?)
+        let reply: ChatReply
+        var planned: SimulationEngine?
         do {
-            result = try await Task.detached(priority:.userInitiated) { () -> (ExplorationReply,SimulationEngine?) in
-                let reply = try OfflineMapAssistant.answer(message,package:package,simulatedPose:pose)
-                var planned: SimulationEngine?
-                if let id = reply.destinationId {
+            guard let api else { throw TouchSpaceError.invalid("Set a valid backend URL in Settings to use map chat.") }
+            reply = try await api.ask(package:package,session:conversation,message:message,simulatedPose:pose)
+            try Task.checkCancellation()
+            guard !stopped, expected == generation else { throw CancellationError() }
+            if let action = reply.actions.first(where:{ $0.type == "simulateNavigation" }) {
+                planned = try await Task.detached(priority:.userInitiated) {
                     var copy = try SimulationEngine(package:package,currentPose:pose)
-                    try copy.plan(to:id); planned = copy
-                }
-                return (reply,planned)
-            }.value
+                    try copy.plan(to:action.destinationId)
+                    return copy
+                }.value
+            }
         } catch {
             try Task.checkCancellation()
             guard !stopped, expected == generation else { throw CancellationError() }
@@ -100,8 +105,8 @@ import SwiftUI
         try Task.checkCancellation()
         guard !stopped, expected == generation else { throw CancellationError() }
         planning = false
-        if let planned = result.1 { engine = planned; remaining = planned.route?.distance ?? 0 }
-        return result.0.answer
+        if let planned { engine = planned; remaining = planned.route?.distance ?? 0 }
+        return reply.answer
     }
     private func interruptGuidance() {
         generation += 1; planning = false; engine.pause(); audio.stop()

@@ -16,7 +16,7 @@ struct HomeView: View {
     @State private var searchGeneration = 0
     @State private var demoMaps: [MapPackage] = []
     @State private var showingDemos = false
-    private var api: APIClient? { URL(string:backendURL).map { APIClient(baseURL:$0) } }
+    private var api: APIClient? { APIClient.configured }
     var body: some View {
         NavigationStack {
             List {
@@ -109,7 +109,7 @@ struct MapDetailView: View {
             Section {
                 NavigationLink { MapExplorerView(package:package,api:api) } label: { Label("Explore map",systemImage:"map") }.accessibilityIdentifier("explore-map")
                 if package.manifest.isSynthetic {
-                    NavigationLink { SimulationEntry(package:package) } label: { Label("3D walkthrough",systemImage:"figure.walk") }.accessibilityIdentifier("demo-walkthrough")
+                    NavigationLink { SimulationEntry(package:package,api:api) } label: { Label("3D walkthrough",systemImage:"figure.walk") }.accessibilityIdentifier("demo-walkthrough")
                     Text("Explore in first person: swipe to turn, use the chevrons to move, and hold the microphone for spoken map questions. This is a virtual space.").font(.footnote)
                 } else {
                     NavigationLink { LiveEntry(package:package,url:library.url(for:package.id),api:api) } label: { Label("Start AR navigation",systemImage:"viewfinder") }

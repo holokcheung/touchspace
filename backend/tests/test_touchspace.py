@@ -18,8 +18,8 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.touchspace import api
-from app.touchspace.chat import ChatService, MessagesProvider, ProviderConfig, SpatialTools
-from app.touchspace.models import ChatRequest, MapPackage, Point, Pose
+from app.touchspace.chat import ChatService, ChatUnavailable, MessagesProvider, ProviderConfig, SpatialTools
+from app.touchspace.models import ChatRequest, MapPackage, Point, Pose, SimulatedPose
 from app.touchspace.package import PackageError, check_worldmap, validate_package
 from app.touchspace.spatial import SpatialEngine, SpatialError
 from app.touchspace.storage import Catalog
@@ -30,6 +30,18 @@ FIXTURE = json.loads((Path(__file__).resolve().parents[2]/"shared/fixtures/route
 @pytest.fixture
 def package():
     return MapPackage.model_validate(copy.deepcopy(FIXTURE["package"]))
+
+
+def service_for(*calls):
+    """A typed LLM response, followed by completion. Never interpret keywords in tests."""
+    def handler(request):
+        body = json.loads(request.content)
+        if body.get("tool_choice"):
+            return httpx.Response(200, json={"content": [
+                {"type": "tool_use", "id": f"call-{i}", "name": name, "input": args}
+                for i, (name, args) in enumerate(calls)]})
+        return httpx.Response(200, json={"content": [{"type": "text", "text": "Done"}]})
+    return ChatService(MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(handler)))
 
 
 def archive_for(package):
@@ -142,7 +154,7 @@ def client(tmp_path,monkeypatch):
     monkeypatch.setenv("TOUCHSPACE_PUBLISH_CODE","test-pair-code")
     catalog=Catalog(tmp_path)
     monkeypatch.setattr(api,"get_catalog",lambda:catalog)
-    monkeypatch.setattr(api,"get_chat",lambda:ChatService(MessagesProvider(ProviderConfig(None))))
+    monkeypatch.setattr(api,"get_chat",lambda:service_for(("overview", {})))
     api._budgets.clear()
     with TestClient(app) as client:
         yield client
@@ -236,14 +248,19 @@ def test_invalid_provider_tool_cannot_create_actions(package,bad_call):
     assert "Unknown" in reply.answer or "Invalid" in reply.answer
 
 
-def test_provider_failure_fallback_and_no_pose_action(package):
+def test_provider_failure_does_not_use_keyword_fallback(package):
     def handler(request):
         raise httpx.ReadTimeout("mock timeout")
-    service=ChatService(MessagesProvider(ProviderConfig("mock"),httpx.MockTransport(handler)))
-    req=question(package,"Is Help desk on my right?")
-    reply=asyncio.run(service.answer(package,req,None))
-    assert "right" in reply.answer and not reply.actions
-    reply=asyncio.run(service.answer(package,question(package,"Navigate to Help desk",pose=False),None))
+    service = ChatService(MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(handler)))
+    with pytest.raises(ChatUnavailable, match="language model"):
+        asyncio.run(service.answer(package, question(package, "Is Help desk on my right?"), None))
+    with pytest.raises(ChatUnavailable, match="API key"):
+        asyncio.run(ChatService(MessagesProvider(ProviderConfig(None))).answer(package, question(package), None))
+
+
+def test_llm_tool_still_requires_verified_pose(package):
+    reply = asyncio.run(service_for(("route", {"landmarkId": "desk", "navigate": True})).answer(
+        package, question(package, "Could you escort me to the desk?", pose=False), None))
     assert not reply.actions and reply.requires_localization
 
 
@@ -295,14 +312,14 @@ def test_confirmed_passage_bridges_only_wall_thickness(package):
     assert not SpatialEngine(package).walkable(Point(x=4,z=2.7))
 
 
-def test_navigation_action_requires_explicit_user_request(package):
-    for text in ["Describe the map","Do not navigate to Help desk"]:
-        tools=SpatialTools(package,question(package,text))
-        tools.execute("route",{"landmarkId":"desk","navigate":True})
-        assert not tools.actions
-    tools=SpatialTools(package,question(package,"Please guide me to Help desk"))
-    tools.execute("route",{"landmarkId":"desk","navigate":True})
-    assert tools.actions[0].destination_id == "desk"
+def test_navigation_intent_comes_from_typed_llm_arguments(package):
+    # Paraphrases need no matching magic words; distance-only requests create no action.
+    for navigate in (False, True):
+        reply = asyncio.run(service_for(("route", {"landmarkId": "desk", "navigate": navigate})).answer(
+            package, question(package, "Could you escort me to the service counter?"), None))
+        assert bool(reply.actions) == navigate
+        if navigate:
+            assert reply.actions[0].type == "navigate"
 
 
 def test_public_read_ignores_expired_publishing_credential(client,package):
@@ -323,10 +340,143 @@ def test_chunked_upload_limit_is_413_during_multipart_read(client,monkeypatch):
     assert response.status_code == 413
 
 
-def test_provider_cannot_arbitrarily_resolve_duplicate_destination_label(package):
-    duplicate=package.landmarks.landmarks[0].model_copy(update={"id":"other-desk","room_id":"west","position":Point(x=1,z=2.5)})
+def test_llm_clarifies_duplicate_destination_labels(package):
+    duplicate = package.landmarks.landmarks[0].model_copy(update={"id": "other-desk", "room_id": "west", "position": Point(x=1, z=2.5)})
     package.landmarks.landmarks.append(duplicate)
-    tools=SpatialTools(package,question(package,"Navigate to Help desk"))
-    with pytest.raises(SpatialError,match="Which one"):
-        tools.execute("route",{"landmarkId":"desk","navigate":True})
-    assert not tools.actions
+    reply = asyncio.run(service_for(("clarify", {"question": "Which Help desk: West room or East room?"})).answer(
+        package, question(package, "Where is Help desk?"), None))
+    assert "Which Help desk" in reply.answer and not reply.actions
+
+
+def test_inline_context_answers_without_catalog_upload(client, package, monkeypatch):
+    monkeypatch.setattr(api, "get_chat", lambda: service_for(("landmark", {"landmarkId": "desk"})))
+    body = question(package, "Where could I get assistance?", pose=False).model_dump(mode="json", by_alias=True)
+    body["mapPackage"] = package.model_dump(mode="json", by_alias=True)
+    response = client.post("/api/touchspace/chat", json=body)
+    assert response.status_code == 200
+    assert response.json()["providerUsed"] and "Help desk is in East room" in response.json()["answer"]
+    assert client.get("/api/touchspace/maps").json() == []
+    body["mapId"] = str(uuid4())
+    assert client.post("/api/touchspace/chat", json=body).status_code == 422
+
+
+def test_chat_reports_provider_unavailable_as_503(client, package, monkeypatch):
+    monkeypatch.setattr(api, "get_chat", lambda: ChatService(MessagesProvider(ProviderConfig(None))))
+    body = question(package, "Where is Help desk?", pose=False).model_dump(mode="json", by_alias=True)
+    body["mapPackage"] = package.model_dump(mode="json", by_alias=True)
+    response = client.post("/api/touchspace/chat", json=body)
+    assert response.status_code == 503 and "API key" in response.json()["detail"]
+
+
+def test_chat_rejects_text_only_provider_without_keyword_fallback(package):
+    provider = MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(
+        lambda _: httpx.Response(200, json={"content": [{"type": "text", "text": "999 metres left"}]})))
+    with pytest.raises(ChatUnavailable):
+        asyncio.run(ChatService(provider).answer(package, question(package, "Where is Help desk?"), None))
+
+
+def virtual_question(package, message="Could you escort me to the service counter?"):
+    req = question(package, message, pose=False)
+    req.simulated_pose = SimulatedPose(position=Point(x=1, z=2.5), heading=0,
+        coordinate_frame_id=package.manifest.coordinate_frame_id, observed_at=datetime.now(timezone.utc))
+    return req
+
+
+def test_virtual_tools_and_actions_never_claim_physical_tracking(package):
+    package.manifest.provenance = "synthetic-fixture"
+    req = virtual_question(package)
+    reply = asyncio.run(service_for(("position", {}), ("bearing", {"landmarkId": "desk"}),
+        ("route", {"landmarkId": "desk", "navigate": True})).answer(package, req, None))
+    assert reply.provider_used
+    assert "virtual position" in reply.answer and "virtual camera" in reply.answer
+    assert "Simulation route" in reply.answer
+    assert [a.type for a in reply.actions] == ["simulateNavigation"]
+    assert reply.actions[0].destination_id == "desk"
+    # A fixture cannot use a physical pose even when the caller asserts verification.
+    with pytest.raises(SpatialError, match="synthetic fixture"):
+        SpatialTools(package, question(package)).pose()
+
+
+def test_virtual_pose_validation_and_exclusive_contract(package):
+    req = virtual_question(package)
+    with pytest.raises(SpatialError, match="only supported"):
+        SpatialTools(package, req).pose()
+    package.manifest.provenance = "synthetic-fixture"
+    req.simulated_pose.coordinate_frame_id = uuid4()
+    with pytest.raises(SpatialError, match="coordinate frame"):
+        SpatialTools(package, req).pose()
+    req.simulated_pose.coordinate_frame_id = package.manifest.coordinate_frame_id
+    req.simulated_pose.observed_at -= timedelta(seconds=10)
+    with pytest.raises(SpatialError, match="fresh virtual"):
+        SpatialTools(package, req).pose()
+    req.simulated_pose.observed_at = datetime.now(timezone.utc)
+    req.simulated_pose.position = Point(x=-10, z=-10)
+    with pytest.raises(SpatialError, match="outside navigable"):
+        SpatialTools(package, req).pose()
+    body = req.model_dump(mode="json")
+    body["pose"] = question(package).pose.model_dump(mode="json")
+    with pytest.raises(ValueError, match="cannot be combined"):
+        ChatRequest.model_validate(body)
+
+
+def test_chat_context_declared_and_chunked_size_limits(client):
+    assert client.post("/api/touchspace/chat", content=b"{}", headers={"Content-Length": str(3*1024*1024)}).status_code == 413
+    chunks = iter([b" "*65536 for _ in range(33)])
+    assert client.post("/api/touchspace/chat", content=chunks, headers={"Content-Type": "application/json"}).status_code == 413
+
+
+def test_inline_context_rejects_invalid_navigation_geometry(client, package):
+    from app.touchspace.models import Node, Edge
+    package.navigation.nodes = [Node(id="a", position=Point(x=1, z=2.5), room_id="west"),
+                                Node(id="b", position=Point(x=3.5, z=2.5), room_id="west")]
+    package.navigation.edges = [Edge(source="a", target="b", confirmed=True, clearance=.3)]
+    body = question(package, pose=False).model_dump(mode="json", by_alias=True)
+    body["mapPackage"] = package.model_dump(mode="json", by_alias=True)
+    response = client.post("/api/touchspace/chat", json=body)
+    assert response.status_code == 422 and "graph edge" in response.json()["detail"]
+
+
+@pytest.mark.parametrize("payload", [[], {"content": [None]}, {"content": "invalid"}])
+def test_malformed_provider_response_is_unavailable_without_keyword_fallback(package, payload):
+    provider = MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(lambda _: httpx.Response(200, json=payload)))
+    with pytest.raises(ChatUnavailable):
+        asyncio.run(ChatService(provider).answer(package, question(package, "Where is Help desk?"), None))
+
+
+def test_online_follow_up_uses_llm_history_and_previous_destination(package):
+    requests = []
+    def handler(request):
+        body = json.loads(request.content)
+        if body.get("tool_choice"):
+            requests.append(body)
+            name, args = ("landmark", {"landmarkId": "desk"}) if len(requests) == 1 else ("route", {"landmarkId": "desk", "navigate": True})
+            return httpx.Response(200, json={"content": [{"type": "tool_use", "id": "t", "name": name, "input": args}]})
+        return httpx.Response(200, json={"content": [{"type": "text", "text": "Done"}]})
+    service = ChatService(MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(handler)))
+    req = question(package, "Where could I get assistance?")
+    asyncio.run(service.answer(package, req, None))
+    req.message = "I'd appreciate an escort there."
+    reply = asyncio.run(service.answer(package, req, None))
+    assert reply.provider_used and reply.actions[0].destination_id == "desk"
+    assert '"previousDestinationId": "desk"' in requests[1]["system"]
+    assert requests[1]["messages"][0]["content"] == "Where could I get assistance?"
+
+
+def test_inline_conversation_survives_dictionary_key_order(client, package, monkeypatch):
+    service = service_for(("landmark", {"landmarkId": "desk"}))
+    monkeypatch.setattr(api, "get_chat", lambda: service)
+    package.manifest.checksums = {"geometry.json": "a", "landmarks.json": "b"}
+    body = question(package, pose=False).model_dump(mode="json", by_alias=True)
+    body["mapPackage"] = package.model_dump(mode="json", by_alias=True)
+    assert client.post("/api/touchspace/chat", json=body).status_code == 200
+    body["mapPackage"]["manifest"]["checksums"] = {"landmarks.json": "b", "geometry.json": "a"}
+    body["message"] = "What about there?"
+    assert client.post("/api/touchspace/chat", json=body).status_code == 200
+    assert len(service.sessions) == 1
+    assert len(next(iter(service.sessions.values())).turns) == 4
+
+
+def test_clarification_or_failed_tool_suppresses_actions(package):
+    reply = asyncio.run(service_for(("route", {"landmarkId": "desk", "navigate": True}),
+        ("clarify", {"question": "Which destination do you mean?"})).answer(package, question(package), None))
+    assert not reply.actions

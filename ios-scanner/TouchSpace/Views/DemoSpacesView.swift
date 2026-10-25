@@ -18,7 +18,7 @@ struct DemoSpacesView: View {
                             .font(.subheadline).foregroundStyle(.secondary)
                         FloorPlanView(package:map,showLandmarkLabels:false).frame(height:190)
                         NavigationLink {
-                            SimulationEntry(package:map)
+                            SimulationEntry(package:map,api:api)
                         } label: {
                             Label("Start 3D walkthrough",systemImage:"figure.walk")
                                 .frame(maxWidth:.infinity,minHeight:32)
@@ -37,7 +37,7 @@ struct DemoSpacesView: View {
                     .padding().frame(maxWidth:.infinity,alignment:.leading)
                     .background(.quaternary.opacity(0.4),in:RoundedRectangle(cornerRadius:18))
                 }
-                Text("These offline demos use virtual positions and saved map geometry.")
+                Text("These demos use virtual positions and saved map geometry. Questions require an online map assistant.")
                     .font(.footnote).foregroundStyle(.secondary)
             }.padding()
         }

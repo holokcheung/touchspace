@@ -3,6 +3,12 @@ import Security
 
 struct APIClient {
     var baseURL: URL
+    var session: URLSession = .shared
+    static var configured: APIClient? {
+        let value = UserDefaults.standard.string(forKey:"backendURL") ?? "http://localhost:8000"
+        guard let url = URL(string:value), ["http","https"].contains(url.scheme?.lowercased() ?? ""), url.host != nil else { return nil }
+        return APIClient(baseURL:url)
+    }
     var token: String? { CredentialStore.get("token.\(baseURL.absoluteString)") }
     func endpoint(_ path: String) -> URL { baseURL.appendingPathComponent("api/touchspace/"+path) }
     func request(_ path: String, method: String = "GET", data: Data? = nil, contentType: String = "application/json") async throws -> Data {
@@ -14,7 +20,7 @@ struct APIClient {
         return try await send(request)
     }
     func send(_ request: URLRequest) async throws -> Data {
-        let (data,response) = try await URLSession.shared.data(for:request)
+        let (data,response) = try await session.data(for:request)
         guard let response = response as? HTTPURLResponse else { throw TouchSpaceError.invalid("No response from server.") }
         guard (200..<300).contains(response.statusCode) else {
             // Never include request headers, prompts or raw provider errors in UI/logs.
@@ -33,7 +39,7 @@ struct APIClient {
     func download(_ id: UUID) async throws -> URL {
         var request = URLRequest(url:endpoint("maps/\(id.uuidString)/download"))
         if let token { request.setValue("Bearer \(token)",forHTTPHeaderField:"Authorization") }
-        let (temp,response) = try await URLSession.shared.download(for:request)
+        let (temp,response) = try await session.download(for:request)
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { throw TouchSpaceError.invalid("Map download failed.") }
         guard (try temp.resourceValues(forKeys:[.fileSizeKey]).fileSize ?? PackageCodec.maximum+1) <= PackageCodec.maximum else { throw TouchSpaceError.invalid("Download exceeds 64 MB.") }
         let destination = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString+".touchspacemap")
@@ -81,10 +87,13 @@ struct APIClient {
             throw TouchSpaceError.invalid("Cannot reach local transcription. Start the TouchSpace backend on your Mac and check the server URL in Settings.")
         }
     }
-    func ask(map: UUID, session: UUID, message: String, pose: VerifiedPose?) async throws -> ChatReply {
-        struct Question: Encodable { var mapId: UUID; var sessionId: UUID; var message: String; var pose: VerifiedPose? }
-        let body = try JSONEncoder().encode(Question(mapId:map,sessionId:session,message:message,pose:pose))
-        return try JSONDecoder().decode(ChatReply.self,from:await request("chat",method:"POST",data:body))
+    func ask(package: MapPackage, session: UUID, message: String, pose: VerifiedPose? = nil, simulatedPose: SimulatedPose? = nil) async throws -> ChatReply {
+        let body = try JSONEncoder().encode(MapChatRequest(package:package,session:session,message:message,pose:pose,simulatedPose:simulatedPose))
+        do {
+            return try JSONDecoder().decode(ChatReply.self,from:await request("chat",method:"POST",data:body))
+        } catch let error as URLError where error.code != .cancelled {
+            throw TouchSpaceError.invalid("Cannot reach map chat. Check your connection and the backend URL in Settings.")
+        }
     }
 }
 

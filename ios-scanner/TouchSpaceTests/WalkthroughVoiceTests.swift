@@ -2,6 +2,41 @@
 import XCTest
 @testable import TouchSpace
 
+final class ChatURLProtocol: URLProtocol {
+    static var handler: ((URLRequest) throws -> (Int,[String:Any]))?
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        do {
+            let (status,body) = try Self.handler!(request)
+            let response = HTTPURLResponse(url:request.url!,statusCode:status,httpVersion:nil,headerFields:["Content-Type":"application/json"])!
+            client?.urlProtocol(self,didReceive:response,cacheStoragePolicy:.notAllowed)
+            client?.urlProtocol(self,didLoad:try JSONSerialization.data(withJSONObject:body))
+            client?.urlProtocolDidFinishLoading(self)
+        } catch { client?.urlProtocol(self,didFailWithError:error) }
+    }
+    override func stopLoading() { }
+    static func api(_ handler:@escaping (URLRequest) throws -> (Int,[String:Any])) -> APIClient {
+        self.handler = handler
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [ChatURLProtocol.self]
+        return APIClient(baseURL:URL(string:"https://chat.test")!,session:URLSession(configuration:configuration))
+    }
+    static func body(_ request:URLRequest) throws -> [String:Any] {
+        var data = request.httpBody ?? Data()
+        if let stream = request.httpBodyStream {
+            stream.open(); defer { stream.close() }
+            var buffer = [UInt8](repeating:0,count:4096)
+            while stream.hasBytesAvailable {
+                let count = stream.read(&buffer,maxLength:buffer.count)
+                if count <= 0 { break }
+                data.append(contentsOf:buffer.prefix(count))
+            }
+        }
+        return try XCTUnwrap(JSONSerialization.jsonObject(with:data) as? [String:Any])
+    }
+}
+
 @MainActor final class WalkthroughVoiceTests: XCTestCase {
     final class Capture: VoiceCapture {
         var beginCount = 0, cancelCount = 0
@@ -86,7 +121,17 @@ import XCTest
     }
     func testSpokenNavigationUsesCurrentVirtualPoseAndNeverStartsAutoplay() async throws {
         let package = try SimulationTests().package("harbour-clinic")
-        let session = try SimulationSession(package:package); session.audio.mode = .mute
+        var requests: [[String:Any]] = []
+        let api = ChatURLProtocol.api { request in
+            XCTAssertEqual(request.url?.path,"/api/touchspace/chat")
+            XCTAssertEqual(request.httpMethod,"POST")
+            let body = try ChatURLProtocol.body(request); requests.append(body)
+            XCTAssertNotNil(body["mapPackage"]); XCTAssertNil(body["pose"])
+            XCTAssertNotNil(body["simulatedPose"])
+            let destination = requests.count == 1 ? "clinic-treatment" : "clinic-supplies"
+            return (200,["answer":"Simulation route to Treatment bed.","actions":[["type":"simulateNavigation","destinationId":destination]],"providerUsed":true,"requiresLocalization":false])
+        }
+        let session = try SimulationSession(package:package,api:api); session.audio.mode = .mute
         session.start(initialDestination:nil)
         XCTAssertNil(session.engine.route)
         session.move(0.5)
@@ -102,7 +147,39 @@ import XCTest
         do { _ = try await session.answer("Take me to Staff supplies"); XCTFail("Unknown door must refuse navigation") }
         catch { XCTAssertTrue(error.localizedDescription.contains("No validated route")) }
         XCTAssertNil(session.engine.route); XCTAssertNil(session.destination)
+        XCTAssertEqual(requests.count,2)
+        XCTAssertEqual(requests[0]["sessionId"] as? String,requests[1]["sessionId"] as? String)
+        let virtual = try XCTUnwrap(requests[0]["simulatedPose"] as? [String:Any])
+        let point = try XCTUnwrap(virtual["position"] as? [String:Double])
+        XCTAssertEqual(point["x"],start.position.x); XCTAssertEqual(point["z"],start.position.z)
         session.stop()
     }
+    func testOnlineFailureDoesNotFallBackToKeywordAnswers() async throws {
+        let package = try SimulationTests().package("harbour-clinic")
+        for status in [503, 401] {
+            let api = ChatURLProtocol.api { _ in (status,["detail":"Map chat unavailable."]) }
+            let session = try SimulationSession(package:package,api:api)
+            do { _ = try await session.answer("Where is Reception desk?"); XCTFail("Must report the online error") }
+            catch { XCTAssertTrue(error.localizedDescription.contains("Map chat unavailable")) }
+            XCTAssertNil(session.engine.route)
+            session.stop()
+        }
+        let api = ChatURLProtocol.api { _ in throw URLError(.notConnectedToInternet) }
+        let session = try SimulationSession(package:package,api:api)
+        do { _ = try await session.answer("Where is Reception desk?"); XCTFail("Must report network failure") }
+        catch { XCTAssertTrue(error.localizedDescription.contains("Cannot reach map chat")) }
+        session.stop()
+    }
+    func testWalkthroughIgnoresPhysicalNavigationActions() async throws {
+        let package = try SimulationTests().package("harbour-clinic")
+        let api = ChatURLProtocol.api { _ in
+            (200,["answer":"A reply.","actions":[["type":"navigate","destinationId":"clinic-treatment"]],"providerUsed":true,"requiresLocalization":false])
+        }
+        let session = try SimulationSession(package:package,api:api)
+        _ = try await session.answer("Show me the treatment area")
+        XCTAssertNil(session.engine.route)
+        session.stop()
+    }
+
 }
 #endif

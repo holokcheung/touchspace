@@ -41,7 +41,6 @@
 		C3486580C78A1422C7B25890 /* WalkthroughVoiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E095138E2B8BF8A08E8B9AB4 /* WalkthroughVoiceTests.swift */; };
 		CFB3BAEC84F8BB97151469AF /* LocalizationVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0827CFA92ABCB993123CB6BF /* LocalizationVerifier.swift */; };
 		D6A88391C419F1FC2D387B5C /* RoomScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C3B7B1E619C29B5AC3CAD /* RoomScanner.swift */; };
-		DFB1543AF5C830EFF6D08FA0 /* OfflineMapAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389312CE0821EE1F1571B846 /* OfflineMapAssistant.swift */; };
 		E99BABE2FD2A7A10BC6AC619 /* reception-question.wav in Resources */ = {isa = PBXBuildFile; fileRef = 30B7D7C2F144C5F90522C928 /* reception-question.wav */; };
 		EA8F612E17D93BB6F5034E3D /* PackageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B63E759140392DAEBC13ADD /* PackageTests.swift */; };
 		ECA703E941FBA85B973AD462 /* GuidanceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB65297DF133E199CE0797 /* GuidanceEngine.swift */; };
@@ -73,7 +72,6 @@
 		30B7D7C2F144C5F90522C928 /* reception-question.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "reception-question.wav"; sourceTree = "<group>"; };
 		37817220ACEA24E43D5C4055 /* SimulationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationView.swift; sourceTree = "<group>"; };
 		379C3B7B1E619C29B5AC3CAD /* RoomScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomScanner.swift; sourceTree = "<group>"; };
-		389312CE0821EE1F1571B846 /* OfflineMapAssistant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineMapAssistant.swift; sourceTree = "<group>"; };
 		3B63E759140392DAEBC13ADD /* PackageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageTests.swift; sourceTree = "<group>"; };
 		3B94D3B51AC6CCB0DBE3E8D9 /* AudioGuidance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGuidance.swift; sourceTree = "<group>"; };
 		3DA5DD19B7ED7B73C3F60A6A /* TouchSpaceUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TouchSpaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -177,7 +175,6 @@
 				93F8A0F2EF6A05FB74FAF26A /* JSONGuard.swift */,
 				0827CFA92ABCB993123CB6BF /* LocalizationVerifier.swift */,
 				AA11C9D392A5EAFB807025A7 /* Models.swift */,
-				389312CE0821EE1F1571B846 /* OfflineMapAssistant.swift */,
 				CD2A496FEB4198C0547CB1EA /* PolygonMesh.swift */,
 				7890D4BEB06667EC2FFA751E /* SimulationEngine.swift */,
 				D426525F9884F1D59106B857 /* SpatialEngine.swift */,
@@ -406,7 +403,6 @@
 				4BE564972E0AA68971008151 /* MapExplorerView.swift in Sources */,
 				487576B00D1D231133236AEC /* Models.swift in Sources */,
 				787726128D1605AD677040CE /* NavigationSession.swift in Sources */,
-				DFB1543AF5C830EFF6D08FA0 /* OfflineMapAssistant.swift in Sources */,
 				8A9D758AAB559FDE075B2B58 /* PackageCodec.swift in Sources */,
 				9821DE933ACDF99086647607 /* PolygonMesh.swift in Sources */,
 				D6A88391C419F1FC2D387B5C /* RoomScanner.swift in Sources */,

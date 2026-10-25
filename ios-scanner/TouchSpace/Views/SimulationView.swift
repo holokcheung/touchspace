@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SimulationEntry: View {
     let package: MapPackage
+    var api: APIClient? = APIClient.configured
     var initialDestination: String? = nil
     @State private var session: SimulationSession?
     @State private var error: String?
@@ -18,7 +19,7 @@ struct SimulationEntry: View {
         }
         .task {
             guard session == nil else { return }
-            do { session = try SimulationSession(package:package) } catch { self.error = error.localizedDescription }
+            do { session = try SimulationSession(package:package,api:api) } catch { self.error = error.localizedDescription }
         }
     }
 }

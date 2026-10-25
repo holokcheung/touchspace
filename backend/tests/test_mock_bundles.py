@@ -18,6 +18,7 @@ from app.touchspace.models import ChatRequest, Point, Pose
 from app.touchspace.package import PackageError, check_worldmap, check_synthetic_worldmap, validate_package
 from app.touchspace.spatial import SpatialEngine, SpatialError
 from app.touchspace.storage import Catalog
+from tests.test_touchspace import service_for
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "sample-data/mock-maps"
@@ -86,7 +87,7 @@ def test_catalog_download_and_grounded_qa_with_actual_bundle(bundle,tmp_path,mon
     catalog=Catalog(tmp_path)
     catalog.save(validated,owner="fixture-test",visibility="public")
     monkeypatch.setattr(api,"get_catalog",lambda:catalog)
-    monkeypatch.setattr(api,"get_chat",lambda:ChatService(MessagesProvider(ProviderConfig(None))))
+    monkeypatch.setattr(api,"get_chat",lambda:service_for(("overview", {})))
     api._budgets.clear()
     with TestClient(app) as client:
         response=client.get("/api/touchspace/maps?q=synthetic")
@@ -99,6 +100,7 @@ def test_catalog_download_and_grounded_qa_with_actual_bundle(bundle,tmp_path,mon
         assert "Synthetic test map" in response.json()["answer"]
         assert not response.json()["actions"]
         place=validated.map.landmarks.landmarks[1]
+        monkeypatch.setattr(api,"get_chat",lambda:service_for(("landmark", {"landmarkId": place.id})))
         response=client.post("/api/touchspace/chat",json={"mapId":map_id,"sessionId":str(uuid4()),"message":"Where is "+place.name+"?"})
         assert place.name in response.json()["answer"]
         assert not response.json()["actions"]
@@ -113,7 +115,7 @@ def test_clinic_unknown_staff_door_refuses_route():
 def test_library_duplicate_name_requires_clarification():
     package=validate_package((FIXTURES/"neighbourhood-library.touchspacemap").read_bytes()).map
     request=ChatRequest(map_id=package.manifest.id,session_id=uuid4(),message="Where is Study desk?")
-    reply=asyncio.run(ChatService(MessagesProvider(ProviderConfig(None))).answer(package,request,None))
+    reply=asyncio.run(service_for(("clarify", {"question": "Which destination: Study desk in Reading room or Children's room?"})).answer(package,request,None))
     assert "Which destination" in reply.answer
     assert "Reading room" in reply.answer and "Children's room" in reply.answer
     assert not reply.actions
