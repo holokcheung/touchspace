@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="660" viewBox="0 0 1160 660">
+<rect width="1160" height="660" fill="#fff"/>
+<text x="30" y="30" font-family="sans-serif" font-size="24" font-weight="bold">Neighbourhood Library (Synthetic)</text>
+<text x="30" y="57" font-family="sans-serif" font-size="14">FICTIONAL TEST DATA · metres on X/Z floor plane · no physical AR localization</text>
+<polygon points="30.00,90.00 294.00,90.00 294.00,266.00 30.00,266.00" fill="#dcf0ff" stroke="#aaa"/>
+<rect x="795" y="94" width="16" height="16" fill="#dcf0ff" stroke="#888"/>
+<text x="820" y="107" font-family="sans-serif" font-size="14">Entrance and returns</text>
+<polygon points="294.00,90.00 470.00,90.00 470.00,266.00 294.00,266.00" fill="#fbe9d0" stroke="#aaa"/>
+<rect x="795" y="119" width="16" height="16" fill="#fbe9d0" stroke="#888"/>
+<text x="820" y="132" font-family="sans-serif" font-size="14">Children&#x27;s room</text>
+<polygon points="30.00,266.00 470.00,266.00 470.00,530.00 30.00,530.00" fill="#e2f4e3" stroke="#aaa"/>
+<rect x="795" y="144" width="16" height="16" fill="#e2f4e3" stroke="#888"/>
+<text x="820" y="157" font-family="sans-serif" font-size="14">Reading room</text>
+<polygon points="470.00,90.00 734.00,90.00 734.00,530.00 470.00,530.00" fill="#eee1fb" stroke="#aaa"/>
+<rect x="795" y="169" width="16" height="16" fill="#eee1fb" stroke="#888"/>
+<text x="820" y="182" font-family="sans-serif" font-size="14">Book stacks</text>
+<polygon points="60.80,112.00 170.80,112.00 170.80,147.20 60.80,147.20" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="316.00,116.40 443.60,116.40 443.60,147.20 316.00,147.20" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="162.00,332.00 294.00,332.00 294.00,411.20 162.00,411.20" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="74.00,442.00 131.20,442.00 131.20,494.80 74.00,494.80" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="206.00,468.40 417.20,468.40 417.20,503.60 206.00,503.60" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="522.80,134.00 549.20,134.00 549.20,472.80 522.80,472.80" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="597.60,134.00 624.00,134.00 624.00,472.80 597.60,472.80" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="672.40,134.00 698.80,134.00 698.80,420.00 672.40,420.00" fill="#7c8591" stroke="#4b5563"/>
+<line x1="30.0" y1="90.0" x2="734.0" y2="90.0" stroke="#182433" stroke-width="6"/>
+<line x1="734.0" y1="90.0" x2="734.0" y2="530.0" stroke="#182433" stroke-width="6"/>
+<line x1="734.0" y1="530.0" x2="30.0" y2="530.0" stroke="#182433" stroke-width="6"/>
+<line x1="30.0" y1="530.0" x2="30.0" y2="90.0" stroke="#182433" stroke-width="6"/>
+<line x1="294.0" y1="90.0" x2="294.0" y2="266.0" stroke="#182433" stroke-width="6"/>
+<line x1="30.0" y1="266.0" x2="470.0" y2="266.0" stroke="#182433" stroke-width="6"/>
+<line x1="470.0" y1="90.0" x2="470.0" y2="530.0" stroke="#182433" stroke-width="6"/>
+<line x1="118.0" y1="266.0" x2="179.6" y2="266.0" stroke="#059669" stroke-width="7"/>
+<line x1="338.0" y1="266.0" x2="395.20000000000005" y2="266.0" stroke="#059669" stroke-width="7"/>
+<line x1="470.0" y1="354.0" x2="470.0" y2="415.6" stroke="#059669" stroke-width="7"/>
+<line x1="470.0" y1="160.4" x2="470.0" y2="213.2" stroke="#be123c" stroke-width="7"/>
+<line x1="734.0" y1="446.4" x2="734.0" y2="508.0" stroke="#c77800" stroke-width="7"/>
+<polyline points="82.80,213.20 96.00,213.20 140.00,257.20 144.40,261.60 148.80,266.00 153.20,270.40 166.40,283.60 368.80,283.60 461.20,376.00 465.60,380.40 470.00,384.80 474.40,389.20 509.60,424.40 509.60,486.00 562.40,486.00 562.40,393.60 566.80,389.20 566.80,380.40 571.20,376.00 573.40,376.00" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-dasharray="7 4"/>
+<circle cx="82.8" cy="213.2" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="82.8" y="218.2" text-anchor="middle" font-family="sans-serif" font-size="13">1</text>
+<text x="795" y="335" font-family="sans-serif" font-size="14">1. Main entrance</text>
+<circle cx="188.4" cy="173.6" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="188.4" y="178.6" text-anchor="middle" font-family="sans-serif" font-size="13">2</text>
+<text x="795" y="360" font-family="sans-serif" font-size="14">2. Returns desk</text>
+<circle cx="135.6" cy="424.4" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="135.6" y="429.4" text-anchor="middle" font-family="sans-serif" font-size="13">3</text>
+<text x="795" y="385" font-family="sans-serif" font-size="14">3. Study desk</text>
+<circle cx="404.0" cy="200.0" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="404.0" y="205.0" text-anchor="middle" font-family="sans-serif" font-size="13">4</text>
+<text x="795" y="410" font-family="sans-serif" font-size="14">4. Study desk</text>
+<circle cx="373.2" cy="442.0" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="373.2" y="447.0" text-anchor="middle" font-family="sans-serif" font-size="13">5</text>
+<text x="795" y="435" font-family="sans-serif" font-size="14">5. Quiet reading corner</text>
+<circle cx="573.4" cy="376.0" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="573.4" y="381.0" text-anchor="middle" font-family="sans-serif" font-size="13">6</text>
+<text x="795" y="460" font-family="sans-serif" font-size="14">6. Travel books</text>
+<circle cx="690.0" cy="490.4" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="690.0" y="495.4" text-anchor="middle" font-family="sans-serif" font-size="13">7</text>
+<text x="795" y="485" font-family="sans-serif" font-size="14">7. Unscanned staff-area boundary</text>
+<text x="30" y="585" font-family="sans-serif" font-size="14">Green: confirmed doorway · Orange: unknown / blocked to routing · Red: confirmed blocked</text>
+<text x="30" y="610" font-family="sans-serif" font-size="14">Grey: furniture footprints · Blue dashed: validated sample route · Outside floor polygons: unknown</text>
+<text x="30" y="635" font-family="sans-serif" font-size="14">Coverage: partial · Clearance: 0.30 m · Grid: 0.10 m · Verification: unverified</text>
+</svg>

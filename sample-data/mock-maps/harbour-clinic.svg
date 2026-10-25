@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="660" viewBox="0 0 1160 660">
+<rect width="1160" height="660" fill="#fff"/>
+<text x="30" y="30" font-family="sans-serif" font-size="24" font-weight="bold">Harbour Community Clinic (Synthetic)</text>
+<text x="30" y="57" font-family="sans-serif" font-size="14">FICTIONAL TEST DATA · metres on X/Z floor plane · no physical AR localization</text>
+<polygon points="30.00,90.00 294.00,90.00 294.00,354.00 30.00,354.00" fill="#dcf0ff" stroke="#aaa"/>
+<rect x="795" y="94" width="16" height="16" fill="#dcf0ff" stroke="#888"/>
+<text x="820" y="107" font-family="sans-serif" font-size="14">Reception and waiting</text>
+<polygon points="30.00,354.00 294.00,354.00 294.00,530.00 30.00,530.00" fill="#fbe9d0" stroke="#aaa"/>
+<rect x="795" y="119" width="16" height="16" fill="#fbe9d0" stroke="#888"/>
+<text x="820" y="132" font-family="sans-serif" font-size="14">Consultation room</text>
+<polygon points="294.00,90.00 426.00,90.00 426.00,530.00 294.00,530.00" fill="#e2f4e3" stroke="#aaa"/>
+<rect x="795" y="144" width="16" height="16" fill="#e2f4e3" stroke="#888"/>
+<text x="820" y="157" font-family="sans-serif" font-size="14">Main corridor</text>
+<polygon points="426.00,90.00 558.00,90.00 558.00,310.00 426.00,310.00" fill="#eee1fb" stroke="#aaa"/>
+<rect x="795" y="169" width="16" height="16" fill="#eee1fb" stroke="#888"/>
+<text x="820" y="182" font-family="sans-serif" font-size="14">Accessible restroom</text>
+<polygon points="426.00,310.00 690.00,310.00 690.00,530.00 426.00,530.00" fill="#fce0e3" stroke="#aaa"/>
+<rect x="795" y="194" width="16" height="16" fill="#fce0e3" stroke="#888"/>
+<text x="820" y="207" font-family="sans-serif" font-size="14">Treatment room</text>
+<polygon points="558.00,90.00 690.00,90.00 690.00,310.00 558.00,310.00" fill="#e3e7ea" stroke="#aaa"/>
+<rect x="795" y="219" width="16" height="16" fill="#e3e7ea" stroke="#888"/>
+<text x="820" y="232" font-family="sans-serif" font-size="14">Staff supplies</text>
+<polygon points="65.20,125.20 188.40,125.20 188.40,169.20 65.20,169.20" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="47.60,244.00 78.40,244.00 78.40,332.00 47.60,332.00" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="162.00,301.20 258.80,301.20 258.80,332.00 162.00,332.00" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="135.60,222.00 175.20,222.00 175.20,279.20 135.60,279.20" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="65.20,384.80 148.80,384.80 148.80,420.00 65.20,420.00" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="60.80,464.00 148.80,464.00 148.80,503.60 60.80,503.60" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="452.40,112.00 487.60,112.00 487.60,142.80 452.40,142.80" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="496.40,244.00 540.40,244.00 540.40,292.40 496.40,292.40" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="470.00,468.40 580.00,468.40 580.00,508.00 470.00,508.00" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="641.60,340.80 672.40,340.80 672.40,424.40 641.60,424.40" fill="#7c8591" stroke="#4b5563"/>
+<polygon points="602.00,112.00 663.60,112.00 663.60,147.20 602.00,147.20" fill="#7c8591" stroke="#4b5563"/>
+<line x1="30.0" y1="90.0" x2="690.0" y2="90.0" stroke="#182433" stroke-width="6"/>
+<line x1="690.0" y1="90.0" x2="690.0" y2="530.0" stroke="#182433" stroke-width="6"/>
+<line x1="690.0" y1="530.0" x2="30.0" y2="530.0" stroke="#182433" stroke-width="6"/>
+<line x1="30.0" y1="530.0" x2="30.0" y2="90.0" stroke="#182433" stroke-width="6"/>
+<line x1="30.0" y1="354.0" x2="294.0" y2="354.0" stroke="#182433" stroke-width="6"/>
+<line x1="294.0" y1="90.0" x2="294.0" y2="530.0" stroke="#182433" stroke-width="6"/>
+<line x1="426.0" y1="90.0" x2="426.0" y2="530.0" stroke="#182433" stroke-width="6"/>
+<line x1="558.0" y1="90.0" x2="558.0" y2="310.0" stroke="#182433" stroke-width="6"/>
+<line x1="426.0" y1="310.0" x2="690.0" y2="310.0" stroke="#182433" stroke-width="6"/>
+<line x1="294.0" y1="186.8" x2="294.0" y2="248.4" stroke="#059669" stroke-width="7"/>
+<line x1="294.0" y1="398.0" x2="294.0" y2="455.20000000000005" stroke="#059669" stroke-width="7"/>
+<line x1="426.0" y1="169.2" x2="426.0" y2="226.4" stroke="#059669" stroke-width="7"/>
+<line x1="426.0" y1="380.4" x2="426.0" y2="442.0" stroke="#059669" stroke-width="7"/>
+<line x1="602.0" y1="310.0" x2="654.8" y2="310.0" stroke="#c77800" stroke-width="7"/>
+<polyline points="74.00,195.60 87.20,208.80 188.40,208.80 210.40,230.80 285.20,230.80 289.60,230.80 294.00,230.80 298.40,230.80 307.20,230.80 408.40,332.00 408.40,393.60 412.80,398.00 417.20,398.00 421.60,398.00 426.00,398.00 430.40,398.00 443.60,398.00 448.00,402.40 452.40,402.40 456.80,406.80 461.20,406.80 465.60,411.20 470.00,411.20 474.40,415.60 478.80,415.60 483.20,420.00 492.00,420.00 496.40,424.40 500.80,424.40 505.20,428.80 509.60,428.80 514.00,433.20 518.40,433.20 522.80,437.60 531.60,437.60 536.00,442.00" fill="none" stroke="#1d4ed8" stroke-width="3" stroke-dasharray="7 4"/>
+<circle cx="74.0" cy="195.6" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="74.0" y="200.6" text-anchor="middle" font-family="sans-serif" font-size="13">1</text>
+<text x="795" y="335" font-family="sans-serif" font-size="14">1. Main entrance</text>
+<circle cx="197.2" cy="195.6" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="197.2" y="200.6" text-anchor="middle" font-family="sans-serif" font-size="13">2</text>
+<text x="795" y="360" font-family="sans-serif" font-size="14">2. Reception desk</text>
+<circle cx="206.0" cy="442.0" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="206.0" y="447.0" text-anchor="middle" font-family="sans-serif" font-size="13">3</text>
+<text x="795" y="385" font-family="sans-serif" font-size="14">3. Consultation room</text>
+<circle cx="487.6" cy="200.0" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="487.6" y="205.0" text-anchor="middle" font-family="sans-serif" font-size="13">4</text>
+<text x="795" y="410" font-family="sans-serif" font-size="14">4. Accessible restroom</text>
+<circle cx="536.0" cy="442.0" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="536.0" y="447.0" text-anchor="middle" font-family="sans-serif" font-size="13">5</text>
+<text x="795" y="435" font-family="sans-serif" font-size="14">5. Treatment bed</text>
+<circle cx="624.0" cy="191.2" r="11" fill="#fff" stroke="#111827" stroke-width="1.5"/>
+<text x="624.0" y="196.2" text-anchor="middle" font-family="sans-serif" font-size="13">6</text>
+<text x="795" y="460" font-family="sans-serif" font-size="14">6. Staff supplies</text>
+<text x="30" y="585" font-family="sans-serif" font-size="14">Green: confirmed doorway · Orange: unknown / blocked to routing · Red: confirmed blocked</text>
+<text x="30" y="610" font-family="sans-serif" font-size="14">Grey: furniture footprints · Blue dashed: validated sample route · Outside floor polygons: unknown</text>
+<text x="30" y="635" font-family="sans-serif" font-size="14">Coverage: contiguous-zone · Clearance: 0.30 m · Grid: 0.10 m · Verification: unverified</text>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "checksums": {
+    "geometry.json": "fc2730f4c0f5b4db14e357487c12082710bc6fc79293d2a3ee5ca41ce9f4774d",
+    "landmarks.json": "9a019a3e4c150f48cd455815b11bea5c2e93225e7eaf38777a8291d92df4701c",
+    "navigation.json": "7a54580234a852f47b79e9489baa74b9339d943f33047f2586805d0a62ae504f",
+    "worldmap.archive": "ba730460b72b3149790d664d07094938bb88aed5e7cfef3147f16d6a4240bc2a"
+  },
+  "contributor": "TouchSpace synthetic test fixtures",
+  "coordinateFrameId": "3a253054-920f-5e31-b716-b61ae89d2810",
+  "coverage": "contiguous-zone",
+  "createdAt": "2026-10-25T00:00:00Z",
+  "floor": "Ground floor",
+  "frameAnchorId": "44793195-49db-55e1-8a96-b0dac768246d",
+  "id": "55482d3a-6da9-5801-a93f-8d9fe60776e5",
+  "provenance": "synthetic-fixture",
+  "schemaVersion": "1.0",
+  "venue": "Harbour Community Clinic (Synthetic)",
+  "verification": "unverified"
+}

@@ -4,6 +4,12 @@
 
 TouchSpace AI turns real indoor spaces into 3D-printable tactile maps for blind and visually impaired people, and pairs them with a voice assistant that answers questions about the space. Built for Cal Hacks 13.0.
 
+## Native iOS AR app
+
+The SwiftUI app now lives in [`ios-scanner/`](ios-scanner/README.md). It captures RoomPlan geometry and AR world data in one `.touchspacemap` package, supports offline map exploration, and restores the saved frame for camera-overlay navigation with local speech. Complete bundles use `/api/touchspace/maps`; the original JSON scan/print API below remains available.
+
+See [setup, architecture and physical-device validation](docs/IOS_MVP.md). Simulator builds and automated tests do not validate real-world relocalization or capture; those require a physical device at the scanned venue.
+
 ## Workflow
 
 Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process Geometry → Generate Tactile Map → Preview 3D → Download STL → Print
@@ -25,7 +31,7 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | --- | --- |
 | 1. Data pipeline: normalized schema, synthetic demo, floor-plan processing, tactile STL generator, tests | Done |
 | 2. FastAPI endpoints + React web app (upload, 2D editor, 3D preview, STL download, demo mode) | Done |
-| 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. iOS app written, not yet built or tested on a device. |
+| 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. Native app builds for simulator; capture and saved-world restore still require device validation. |
 | 4. Voice explorer and routing | Done: routing over recorded paths, grounded Q&A, Voice Explorer page, path editor, Cartesia voice, optional Gemini |
 | Walk-through soundscape | Done on the web: walk the map with headphones, and the noise is muffled on the side of a nearby wall. Settings shared with the iPhone app; live LiDAR version not built. |
 | 5. Polish and docs | Not started |

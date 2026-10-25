@@ -1,0 +1,303 @@
+{
+  "clearance": 0.3,
+  "doors": [
+    {
+      "end": {
+        "x": 6.0,
+        "z": 3.6
+      },
+      "id": "waiting-hall-door",
+      "roomIds": [
+        "waiting",
+        "hall"
+      ],
+      "start": {
+        "x": 6.0,
+        "z": 2.2
+      },
+      "traversability": "confirmed",
+      "wallId": "west-hall"
+    },
+    {
+      "end": {
+        "x": 6.0,
+        "z": 8.3
+      },
+      "id": "consult-hall-door",
+      "roomIds": [
+        "consult",
+        "hall"
+      ],
+      "start": {
+        "x": 6.0,
+        "z": 7.0
+      },
+      "traversability": "confirmed",
+      "wallId": "west-hall"
+    },
+    {
+      "end": {
+        "x": 9.0,
+        "z": 3.1
+      },
+      "id": "restroom-hall-door",
+      "roomIds": [
+        "wc",
+        "hall"
+      ],
+      "start": {
+        "x": 9.0,
+        "z": 1.8
+      },
+      "traversability": "confirmed",
+      "wallId": "east-hall"
+    },
+    {
+      "end": {
+        "x": 9.0,
+        "z": 8.0
+      },
+      "id": "treatment-hall-door",
+      "roomIds": [
+        "treatment",
+        "hall"
+      ],
+      "start": {
+        "x": 9.0,
+        "z": 6.6
+      },
+      "traversability": "confirmed",
+      "wallId": "east-hall"
+    },
+    {
+      "end": {
+        "x": 14.2,
+        "z": 5.0
+      },
+      "id": "supplies-door",
+      "roomIds": [
+        "store",
+        "treatment"
+      ],
+      "start": {
+        "x": 13.0,
+        "z": 5.0
+      },
+      "traversability": "unknown",
+      "wallId": "south-treatment"
+    }
+  ],
+  "edges": [
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-clinic-entrance",
+      "target": "node-clinic-reception"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-clinic-entrance",
+      "target": "waiting-hall-door-waiting"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-clinic-reception",
+      "target": "waiting-hall-door-waiting"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-clinic-consult",
+      "target": "consult-hall-door-consult"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-clinic-restroom",
+      "target": "restroom-hall-door-wc"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-clinic-treatment",
+      "target": "treatment-hall-door-treatment"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "waiting-hall-door-hall",
+      "target": "waiting-hall-door-waiting"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "waiting-hall-door-hall",
+      "target": "consult-hall-door-hall"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "waiting-hall-door-hall",
+      "target": "restroom-hall-door-hall"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "waiting-hall-door-hall",
+      "target": "treatment-hall-door-hall"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "consult-hall-door-hall",
+      "target": "consult-hall-door-consult"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "consult-hall-door-hall",
+      "target": "restroom-hall-door-hall"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "consult-hall-door-hall",
+      "target": "treatment-hall-door-hall"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "restroom-hall-door-wc",
+      "target": "restroom-hall-door-hall"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "restroom-hall-door-hall",
+      "target": "treatment-hall-door-hall"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "treatment-hall-door-treatment",
+      "target": "treatment-hall-door-hall"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node-clinic-entrance",
+      "position": {
+        "x": 1.0,
+        "z": 2.4
+      },
+      "roomId": "waiting"
+    },
+    {
+      "id": "node-clinic-reception",
+      "position": {
+        "x": 3.8,
+        "z": 2.4
+      },
+      "roomId": "waiting"
+    },
+    {
+      "id": "node-clinic-consult",
+      "position": {
+        "x": 4.0,
+        "z": 8.0
+      },
+      "roomId": "consult"
+    },
+    {
+      "id": "node-clinic-restroom",
+      "position": {
+        "x": 10.4,
+        "z": 2.5
+      },
+      "roomId": "wc"
+    },
+    {
+      "id": "node-clinic-treatment",
+      "position": {
+        "x": 11.5,
+        "z": 8.0
+      },
+      "roomId": "treatment"
+    },
+    {
+      "id": "node-clinic-supplies",
+      "position": {
+        "x": 13.5,
+        "z": 2.3
+      },
+      "roomId": "store"
+    },
+    {
+      "id": "waiting-hall-door-hall",
+      "position": {
+        "x": 6.6,
+        "z": 2.9000000000000004
+      },
+      "roomId": "hall"
+    },
+    {
+      "id": "waiting-hall-door-waiting",
+      "position": {
+        "x": 5.4,
+        "z": 2.9000000000000004
+      },
+      "roomId": "waiting"
+    },
+    {
+      "id": "consult-hall-door-hall",
+      "position": {
+        "x": 6.6,
+        "z": 7.65
+      },
+      "roomId": "hall"
+    },
+    {
+      "id": "consult-hall-door-consult",
+      "position": {
+        "x": 5.4,
+        "z": 7.65
+      },
+      "roomId": "consult"
+    },
+    {
+      "id": "restroom-hall-door-wc",
+      "position": {
+        "x": 9.6,
+        "z": 2.45
+      },
+      "roomId": "wc"
+    },
+    {
+      "id": "restroom-hall-door-hall",
+      "position": {
+        "x": 8.4,
+        "z": 2.45
+      },
+      "roomId": "hall"
+    },
+    {
+      "id": "treatment-hall-door-treatment",
+      "position": {
+        "x": 9.6,
+        "z": 7.3
+      },
+      "roomId": "treatment"
+    },
+    {
+      "id": "treatment-hall-door-hall",
+      "position": {
+        "x": 8.4,
+        "z": 7.3
+      },
+      "roomId": "hall"
+    }
+  ],
+  "resolution": 0.1
+}

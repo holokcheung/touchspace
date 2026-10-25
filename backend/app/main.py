@@ -47,6 +47,7 @@ def _load_dotenv(path: Path) -> None:
             os.environ[key] = value
 
 
+_load_dotenv(REPO_ROOT / "backend" / ".env")
 _load_dotenv(REPO_ROOT / ".env")
 
 
@@ -381,3 +382,10 @@ def download_stl(map_id: str, store: MapStore = Depends(get_store)) -> FileRespo
         filename=status.filename,
         headers={"X-Model-Stale": "true" if status.status == "stale" else "false", "Cache-Control": "no-store"},
     )
+
+
+# Native iOS map features keep their own schema and storage, preserving scan/print APIs.
+from app.touchspace.api import router as touchspace_router
+from app.touchspace.limits import UploadLimitMiddleware
+app.add_middleware(UploadLimitMiddleware)
+app.include_router(touchspace_router)
