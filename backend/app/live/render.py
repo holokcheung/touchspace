@@ -28,7 +28,7 @@ SYMBOLS = {
 }
 WALKER = _S(["X.X", ".X.", "X.X"])
 
-EMPTY, WALL, SYMBOL, WALKER_PIN = 0, 1, 2, 3
+EMPTY, WALL, SYMBOL, WALKER_PIN, HEADING_PIN, OBJECT = 0, 1, 2, 3, 4, 5
 
 
 @dataclass
@@ -47,15 +47,16 @@ class Layout:
         return round(c), round(r)
 
 
-def layout_for(bounds: tuple[float, float, float, float], cols: int, rows: int) -> Layout:
+def layout_for(bounds: tuple[float, float, float, float], cols: int, rows: int,
+               min_extent: float = MIN_EXTENT_M) -> Layout:
     min_x, min_y, max_x, max_y = bounds
     # Grow small plans around their center so one wall isn't drawn edge to edge.
-    if max_x - min_x < MIN_EXTENT_M:
+    if max_x - min_x < min_extent:
         cx = (min_x + max_x) / 2
-        min_x, max_x = cx - MIN_EXTENT_M / 2, cx + MIN_EXTENT_M / 2
-    if max_y - min_y < MIN_EXTENT_M:
+        min_x, max_x = cx - min_extent / 2, cx + min_extent / 2
+    if max_y - min_y < min_extent:
         cy = (min_y + max_y) / 2
-        min_y, max_y = cy - MIN_EXTENT_M / 2, cy + MIN_EXTENT_M / 2
+        min_y, max_y = cy - min_extent / 2, cy + min_extent / 2
     w, h = max_x - min_x, max_y - min_y
     usable_c, usable_r = cols - 1 - 2 * MARGIN_PINS, rows - 1 - 2 * MARGIN_PINS
     scale = min(usable_c / w, usable_r / h)
@@ -122,7 +123,26 @@ def _place_symbol(grid: Grid, want: tuple[int, int], placed: list[tuple[int, int
     return want
 
 
-def render(plan: Plan | None, pose: Pose | None, cols: int = 60, rows: int = 40) -> Grid:
+ZOOMS = (1, 2, 4, 8)
+# Heading pointer: two pins in the facing direction, one flat pin away from the X.
+_DIRS = ((0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1))  # N, NE, E, ... in (col, row)
+
+
+def view_bounds(bounds, cols: int, rows: int, zoom: int, center: Pt | None):
+    """The part of the map a zoomed view shows: centered on `center`, kept inside the map."""
+    fit = layout_for(bounds, cols, rows)
+    vw = (cols - 1 - 2 * MARGIN_PINS) / (fit.scale * zoom)
+    vh = (rows - 1 - 2 * MARGIN_PINS) / (fit.scale * zoom)
+    x0, y0, x1, y1 = bounds
+    cx, cy = center if center is not None else ((x0 + x1) / 2, (y0 + y1) / 2)
+    cx = (x0 + x1) / 2 if x1 - x0 <= vw else min(max(cx, x0 + vw / 2), x1 - vw / 2)
+    cy = (y0 + y1) / 2 if y1 - y0 <= vh else min(max(cy, y0 + vh / 2), y1 - vh / 2)
+    return cx - vw / 2, cy - vh / 2, cx + vw / 2, cy + vh / 2
+
+
+def render(plan: Plan | None, pose: Pose | None, cols: int = 60, rows: int = 40,
+           zoom: int = 1, center: Pt | None = None) -> Grid:
+    """`zoom` 1 fits the whole map; 2/4/8 show a part of it around `center` (or the pose)."""
     grid = Grid(cols, rows)
     bounds = plan.bounds() if plan else None
     if pose is not None:
@@ -140,7 +160,11 @@ def render(plan: Plan | None, pose: Pose | None, cols: int = 60, rows: int = 40)
         bounds = (x0, y0, x1, y1)
     if bounds is None:
         return grid
-    layout = layout_for(bounds, cols, rows)
+    if zoom > 1:
+        follow = (pose.x, pose.y) if pose is not None else center
+        layout = layout_for(view_bounds(bounds, cols, rows, zoom, follow), cols, rows, min_extent=0)
+    else:
+        layout = layout_for(bounds, cols, rows)
     placed: list[tuple[int, int]] = []
 
     if plan:
@@ -159,6 +183,11 @@ def render(plan: Plan | None, pose: Pose | None, cols: int = 60, rows: int = 40)
             for c, r in line_pins(a2, b2):
                 if grid.get(c, r) == WALL:
                     grid.set(c, r, EMPTY)
+        for poly in plan.obstacles:
+            for a, b in zip(poly, poly[1:] + poly[:1]):
+                for c, r in line_pins(layout.exact(a), layout.exact(b)):
+                    if grid.get(c, r) == EMPTY:
+                        grid.set(c, r, OBJECT)
         for kind, pos in plan.symbols:
             if kind in SYMBOLS:
                 at = _place_symbol(grid, layout.pin(pos), placed)
@@ -171,12 +200,15 @@ def render(plan: Plan | None, pose: Pose | None, cols: int = 60, rows: int = 40)
         # A symbol touching the X would feel like one shape; drop the whole symbol while standing
         # on it (the braille line says where you are). Centers 4 apart keep a flat pin between.
         for pc, pr in placed:
-            if max(abs(pc - c), abs(pr - r)) <= 3:
+            if max(abs(pc - c), abs(pr - r)) <= 5:
                 for dr in (-1, 0, 1):
                     for dc in (-1, 0, 1):
                         if grid.get(pc + dc, pr + dr) == SYMBOL:
                             grid.set(pc + dc, pr + dr, EMPTY)
         grid.stamp(WALKER, c, r, WALKER_PIN)
+        dc, dr = _DIRS[round(math.degrees(pose.heading) / 45) % 8]
+        for d in (3, 4):
+            grid.set(c + dc * d, r + dr * d, HEADING_PIN)
     return grid
 
 

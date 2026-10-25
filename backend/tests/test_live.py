@@ -180,9 +180,7 @@ def test_websocket_token_status_and_errors(mock_output):
 
 
 def test_walking_outside_the_scan_rescales_in_steps():
-    a = render(BOX, Pose(7.1, 2, 0)).raised()
-    b = render(BOX, Pose(7.3, 2, 0)).raised()
-    walls = lambda g: [[p for p in row] for row in g]  # noqa: E731
-    # Same scale: the walls (everything except the X area) stay put.
-    diff = sum(x != y for ra, rb in zip(walls(a), walls(b)) for x, y in zip(ra, rb))
-    assert diff <= 10
+    from app.live.render import WALL
+    walls = lambda g: [[p == WALL for p in row] for row in g.pins]  # noqa: E731
+    # Same scale while walking 20 cm outside the scan: the walls stay put.
+    assert walls(render(BOX, Pose(7.1, 2, 0))) == walls(render(BOX, Pose(7.3, 2, 0)))

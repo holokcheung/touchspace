@@ -45,6 +45,8 @@ class Scene:
     plan: Plan | None
     pose: Pose | None
     live: bool  # still scanning: say "scanning" rather than "off map"
+    zoom: int = 1
+    center: tuple[float, float] | None = None  # zoomed view center when there is no pose
     # Raw (graphics, braille) for the pad's geometry instead of a map, e.g. the test pattern.
     override: Callable[[Geometry], tuple[bytes, bytes]] | None = None
 
@@ -93,7 +95,7 @@ class DotPadOutput:
         if scene.override:
             g, b = scene.override(geometry)
             return g, b, None, ""
-        grid = render(scene.plan, scene.pose, geometry.pin_width, geometry.pin_height)
+        grid = render(scene.plan, scene.pose, geometry.pin_width, geometry.pin_height, scene.zoom, scene.center)
         text = status_text(scene.plan, scene.pose, scene.live, geometry.braille_cells)
         return pack(grid.raised(), geometry, self.bit_order), braille_cells(text, geometry.braille_cells), grid, text
 

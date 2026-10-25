@@ -15,8 +15,8 @@ and the way the phone faces ("kitchen ne"). While scanning, walls appear as Room
 
 ## Checked so far / not checked
 
-- Checked on a Mac: phone protocol, rendering, mock DotPad, reconnects, wrong-token rejection
-  (`backend/tests/test_live.py`, 19 tests); the Swift `DotPadLink` compiled for macOS and streamed a
+- Checked on a Mac: both phone protocols, rendering, mock DotPad, reconnects, wrong-token rejection
+  (`backend/tests/test_live.py`, `test_live_v1.py`: 23 tests); the Swift `DotPadLink` compiled for macOS and streamed a
   map + poses to the bridge, which drew them correctly.
 - **Not checked:** the real DotPad, the iOS app build (no Xcode on this Mac), and RoomPlan/ARKit
   on a phone. The bit order follows Dot Inc's own `brailleToGraphic` helper in Web SDK 3.0.4
@@ -26,7 +26,7 @@ and the way the phone faces ("kitchen ne"). While scanning, walls appear as Room
 
 ```sh
 cd backend
-.venv/bin/python -m pip install -e ../dotpad-sdk
+.venv/bin/python -m pip install -r requirements.txt -e ../dotpad-sdk
 mkdir -p ~/dotpad-vendor
 curl -L -o ~/dotpad-vendor/DotPadSDK-3.0.4.js \
   https://raw.githubusercontent.com/dotincorp/dotpad-sdk-guide/main/Web/3.0.4/DemoApp/src/sdk/DotPadSDK-3.0.4.js
@@ -96,7 +96,25 @@ The phone must reach the Mac on port 8765.
 
 The token stops other people on the network from drawing on your DotPad. `--no-token` turns it off.
 
-## Messages (for anyone adding another sender)
+## James's contract (`/v1`, docs/DOTPAD_API.md on `ios-app`)
+
+The same bridge also serves James's proxy contract, so an iOS client written against it works too:
+
+| Call | Notes |
+|---|---|
+| `POST /v1/sessions` `{displayId, mode}` | `displayId` is printed at start (`--display-id`, default `dotpad`) |
+| `PUT /v1/sessions/{id}/map` `{mapRevision, coordinateFrameId, floorPlan}` | full FloorMap validation, wall_id required on doors, revision conflicts → 409 |
+| `DELETE /v1/sessions/{id}` | clears the pins |
+| `WS /v1/sessions/{id}/stream` | poses with `seq`, `valid`/`lost`; `stale` after 2 s; status on every change and each second |
+
+`Authorization: Bearer <token>` (the token printed at start). The DotPad's F1/F2 keys zoom through
+1, 2, 4, 8, following the position. Where the contract is silent: a new session replaces an old one
+that has no open stream (so an app restart can't lock the display), and `?token=` also works.
+Tests: `backend/tests/test_live_v1.py`.
+
+The X now has a two-pin pointer one flat pin away, showing which way the phone faces.
+
+## Messages for `/phone` (the simpler route the `ios-live-dotpad` branch uses)
 
 JSON text frames to `/phone?token=...`. Plan coordinates: x right, y up; ARKit/iOS points map as
 (x, z) → (x, −z). Heading: radians clockwise from "up" (ARKit −Z), the iOS app's convention.

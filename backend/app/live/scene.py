@@ -38,6 +38,7 @@ class Plan:
     gaps: list[Seg] = field(default_factory=list)  # doors and openings, as segments on walls
     rooms: list[tuple[str, list[Pt]]] = field(default_factory=list)
     symbols: list[tuple[str, Pt]] = field(default_factory=list)  # (landmark type, position)
+    obstacles: list[list[Pt]] = field(default_factory=list)  # outlines of furniture marked for tactile
 
     def bounds(self) -> tuple[float, float, float, float] | None:
         pts = [p for w in self.walls for p in w] + [p for _, poly in self.rooms for p in poly]
@@ -104,7 +105,16 @@ def plan_from_floormap(fmap: FloorMap) -> Plan:
         gaps=gaps,
         rooms=[(r.name, [p.as_tuple() for p in r.polygon]) for r in fmap.rooms],
         symbols=[(lm.type.value, lm.position.as_tuple()) for lm in fmap.landmarks if lm.show_on_tactile is not False],
+        obstacles=[_footprint(o) for o in fmap.objects if o.include_in_tactile and not o.hidden],
     )
+
+
+def _footprint(o) -> list[Pt]:
+    """Rotated rectangle of a MapObject (rotation: radians CCW from +x)."""
+    c, s = math.cos(o.rotation), math.sin(o.rotation)
+    hw, hd = o.width / 2, o.depth / 2
+    return [(o.position.x + dx * c - dy * s, o.position.y + dx * s + dy * c)
+            for dx, dy in ((-hw, -hd), (hw, -hd), (hw, hd), (-hw, hd))]
 
 
 def plan_from_roomplan(data: dict, name: str = "Live scan") -> Plan:

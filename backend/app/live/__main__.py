@@ -25,6 +25,7 @@ from .output import BIT_ORDERS, DotPadOutput, Scene, pack
 from .render import braille_cells
 from .scene import plan_from_floormap, plan_from_roomplan
 from .server import LiveState, create_app
+from .v1 import ProxyState, create_router
 
 
 def test_pattern(cols: int = 60, rows: int = 40) -> list[list[bool]]:
@@ -83,6 +84,7 @@ def main() -> None:
     p.add_argument("--map", type=Path, help="start with this map (FloorMap or RoomPlan JSON) until the phone sends one")
     p.add_argument("--token", help="phone must send ?token=...; default: a random one, printed below")
     p.add_argument("--no-token", action="store_true", help="accept any phone on the network")
+    p.add_argument("--display-id", default="dotpad", help="displayId the iOS app sends to POST /v1/sessions")
     p.add_argument("--bit-order", choices=BIT_ORDERS, default="graphic",
                    help="pin bit layout inside each 2x4 cell; flip to 'braille' if the test pattern looks scrambled")
     p.add_argument("--min-interval", type=float, default=0.25, help="seconds between DotPad frames")
@@ -130,11 +132,15 @@ def main() -> None:
     state = LiveState(output, plan)
     token = None if args.no_token else (args.token or secrets.token_hex(3))
     app = create_app(state, token)
+    app.include_router(create_router(ProxyState(output, token=token, display_id=args.display_id)))
 
     query = f"?token={token}" if token else ""
     print("\nPhone URL (type it into the app's DotPad setting):")
     for addr in lan_addresses() or ["<this-mac-ip>"]:
         print(f"  ws://{addr}:{args.port}/phone{query}")
+    print("\nOr James's contract (docs/DOTPAD_API.md):")
+    for addr in lan_addresses() or ["<this-mac-ip>"]:
+        print(f"  http://{addr}:{args.port}/v1   displayId={args.display_id!r}" + (f"   Authorization: Bearer {token}" if token else ""))
     print("If venue Wi-Fi blocks phone-to-laptop traffic, put the Mac on the iPhone's Personal Hotspot,")
     print(f"or run `ngrok http {args.port}` and use wss://<id>.ngrok-free.app/phone{query}\n")
 
