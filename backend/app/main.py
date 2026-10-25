@@ -1,4 +1,4 @@
-"""TouchSpace AI HTTP API.
+"""TouchSpace HTTP API.
 
 Run locally:  uvicorn app.main:app --reload --port 8000
 """
@@ -166,7 +166,7 @@ class AskRequest(BaseModel):
 # --------------------------------------------------------------------------- app
 
 
-app = FastAPI(title="TouchSpace AI API", version=VERSION)
+app = FastAPI(title="TouchSpace API", version=VERSION)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_settings().cors_origins,

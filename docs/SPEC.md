@@ -1,4 +1,4 @@
-# TouchSpace AI — iOS + Backend MVP Specification
+# TouchSpace — iOS + Backend MVP Specification
 
 **For coding agent · Existing monorepo · Implementation brief**
 
@@ -174,7 +174,7 @@ Additional requirements:
 - Avoid constant audio that masks environmental sounds.
 - Do not call an LLM every frame.
 
-## 4. Backend Integration — Use Existing TouchSpace AI Module
+## 4. Backend Integration — Use Existing TouchSpace Module
 
 The reference backend **already** contains:
 
