@@ -22,7 +22,7 @@ struct ScannerView: View {
                                 if scanner.scanning { scanner.finishRoom() } else { scanner.startRoom() }
                             }.disabled(!permitted || scanner.processing)
                             if scanner.package != nil { Button("Review",systemImage:"checklist") { reviewing = true }.disabled(scanner.scanning || scanner.processing) }
-                        }.buttonStyle(.borderedProminent).controlSize(.large).padding()
+                        }.buttonStyle(.borderedProminent).tint(.touchSpaceMintFill).controlSize(.large).padding()
                     }
                 }
             }

@@ -75,7 +75,7 @@ private struct LiveCameraContent: View {
                     Button("End",systemImage:"xmark.circle") { session.stop(); dismiss() }
                     Button("Destinations",systemImage:"mappin.and.ellipse") { destinations = true }
                     Button(minimap ? "Hide plan" : "Plan",systemImage:"map") { minimap.toggle() }
-                }
+                }.tint(.touchSpaceMintFill)
                 Picker("Guidance audio",selection:$audio.mode) { ForEach(AudioGuidance.Mode.allCases) { Text($0.rawValue).tag($0) } }.pickerStyle(.menu)
             }
             .buttonStyle(.borderedProminent).controlSize(.large).padding().frame(maxWidth:.infinity).background(.regularMaterial)

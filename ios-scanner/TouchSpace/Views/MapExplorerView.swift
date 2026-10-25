@@ -35,7 +35,7 @@ struct MapExplorerView: View {
                 Text(status).accessibilityIdentifier("route-preview-status")
                 if package.manifest.isSynthetic {
                     NavigationLink { SimulationEntry(package:package,api:api,initialDestination:destinationId.isEmpty ? nil : destinationId) } label: { Label("Open 3D walkthrough",systemImage:"figure.walk") }
-                        .buttonStyle(.borderedProminent).controlSize(.large).accessibilityIdentifier("open-walkthrough")
+                        .buttonStyle(.borderedProminent).tint(.touchSpaceMintFill).controlSize(.large).accessibilityIdentifier("open-walkthrough")
                 }
                 Button("Ask about this map",systemImage:"text.bubble") { asking = true }.buttonStyle(.bordered).controlSize(.large)
                 ForEach(package.geometry.rooms) { room in
