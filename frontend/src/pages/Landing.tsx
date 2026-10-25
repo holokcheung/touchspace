@@ -1,112 +1,228 @@
-import { useState } from "react";
+import { useEffect, useState, type DragEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "../api/client";
-import { Notice } from "../components/Status";
-
-const STEPS = [
-  {
-    title: "Scan your space",
-    body: "Walk a room with a LiDAR iPhone or iPad. Apple RoomPlan captures walls, doors, openings and furniture, and the TouchSpace scanner exports it as JSON.",
-  },
-  {
-    title: "Generate a tactile map",
-    body: "We clean up the floor plan, keep doorways open, add standard landmark symbols and a legend, and produce a watertight STL ready for any FDM printer.",
-  },
-  {
-    title: "Explore with voice",
-    body: "Ask where the restroom is or how to get to the exit. Answers come only from the map's verified landmarks and walkable paths.",
-  },
-];
+import { ApiError, api } from "../api/client";
+import type { MapResponse, MapSummary } from "../api/types";
+import Icon from "../components/Icon";
 
 export default function Landing() {
   const navigate = useNavigate();
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function startDemo() {
-    setBusy(true);
-    setError(null);
+  const [maps, setMaps] = useState<MapSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState("");
+  const [error, setError] = useState("");
+  const [dragging, setDragging] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    api
+      .listMaps()
+      .then((data) => {
+        if (alive) setMaps(data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, []);
+  async function open(label: string, action: () => Promise<MapResponse>) {
+    if (busy) return;
+    setBusy(label);
+    setError("");
     try {
-      const res = await api.createDemo();
-      navigate(`/maps/${res.map.id}/edit`);
+      const { map } = await action();
+      navigate(`/maps/${encodeURIComponent(map.id)}/walk`);
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
-      setBusy(false);
+      setError(
+        e instanceof ApiError
+          ? [e.message, ...e.details].join(" ")
+          : e instanceof Error
+            ? e.message
+            : String(e),
+      );
+      setBusy("");
     }
   }
-
+  function upload(file: File) {
+    if (
+      !file.name.toLowerCase().endsWith(".json") &&
+      file.type !== "application/json"
+    ) {
+      setError(
+        `"${file.name}" is not a JSON file. Choose a RoomPlan or TouchSpace JSON map.`,
+      );
+      return;
+    }
+    void open("Opening your scan…", () => api.uploadScan(file));
+  }
+  function drop(e: DragEvent) {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file && !busy) upload(file);
+  }
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:py-20">
-      <section aria-labelledby="hero-title" className="max-w-3xl">
-        <h1 id="hero-title" className="text-4xl font-bold tracking-tight sm:text-6xl">
-          TouchSpace AI
-        </h1>
-        <p className="mt-4 text-2xl font-bold text-accent sm:text-3xl">
-          Scan a Space. Feel the Layout. Explore with Confidence.
-        </p>
-        <p className="mt-6 text-lg text-muted sm:text-xl">
-          Transform real indoor environments into accessible, 3D-printable tactile maps with AI-powered voice
-          assistance.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link to="/upload" className="btn-primary px-6 text-lg">
-            Get Started
-          </Link>
-          <button type="button" className="btn-secondary px-6 text-lg" onClick={startDemo} disabled={busy}>
-            {busy ? "Loading demo…" : "Try Demo"}
-          </button>
+    <div
+      className="spaces-page"
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
+      onDragLeave={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node))
+          setDragging(false);
+      }}
+      onDrop={drop}
+    >
+      <header className="spaces-header">
+        <Link to="/" className="wordmark">
+          <img src="/favicon.svg" alt="" />
+          TouchSpace<span>EXPLORE WITH CONFIDENCE</span>
+        </Link>
+        <span className="web-edition">WEB WALKTHROUGH</span>
+      </header>
+      <div className="spaces-content">
+        <div className="spaces-intro">
+          <span className="eyebrow">A LITTLE FAMILIARITY GOES A LONG WAY</span>
+          <h1>
+            Know the space.
+            <br />
+            <em>Before you get there.</em>
+          </h1>
+          <p>
+            Step inside a map. Find your way with spatial sound,
+            <br className="hidden sm:block" /> a first-person view, and a guide
+            you can talk to.
+          </p>
         </div>
-        <p className="mt-3 text-sm text-muted">
-          The demo uses a synthetic floor plan we made up. It is not a scan of a real building.
-        </p>
-        {error && (
-          <div className="mt-4">
-            <Notice tone="error" title="Could not start the demo">
-              {error}
-            </Notice>
+        <section className="featured-space" aria-labelledby="demo-title">
+          <div className="space-illustration" aria-hidden="true">
+            <div className="illustration-grid" />
+            <div className="mini-room room-one" />
+            <div className="mini-room room-two" />
+            <div className="mini-room room-three" />
+            <div className="mini-room room-four" />
+            <div className="mini-door" />
+            <div className="mini-walker" />
+            <span className="illustration-label">
+              YOUR NEXT STEP, MADE FAMILIAR.
+            </span>
           </div>
-        )}
-      </section>
-
-      <section aria-labelledby="how-title" className="mt-16">
-        <h2 id="how-title" className="text-2xl font-bold">
-          How it works
-        </h2>
-        <ol className="mt-6 grid gap-4 md:grid-cols-3">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="card p-6">
-              <p className="text-sm font-bold uppercase tracking-wide text-accent">Step {i + 1}</p>
-              <h3 className="mt-2 text-xl font-bold">{s.title}</h3>
-              <p className="mt-2 text-muted">{s.body}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section aria-labelledby="symbols-title" className="mt-16">
-        <h2 id="symbols-title" className="text-2xl font-bold">
-          Tactile symbol key
-        </h2>
-        <p className="mt-2 max-w-3xl text-muted">
-          Symbols differ in shape, not just size, so they can be told apart by touch. These are prototype choices
-          that still need testing with tactile map readers.
-        </p>
-        <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3">
-          {[
-            ["Solid triangle", "Entrance"],
-            ["Solid square", "Exit"],
-            ["Solid circle", "Restroom"],
-            ["Three parallel bars", "Stairs"],
-            ["Hollow ring", "Elevator"],
-            ["Plus sign", "Information"],
-          ].map(([shape, meaning]) => (
-            <div key={shape} className="flex gap-2">
-              <dt className="font-bold">{shape}:</dt>
-              <dd>{meaning}</dd>
+          <div className="featured-content">
+            <span className="eyebrow">START EXPLORING</span>
+            <h2 id="demo-title">A space to practice.</h2>
+            <p>
+              Walk through our demo building. Explore the rooms, listen for
+              doorways, and ask your guide where to go.
+            </p>
+            <button
+              className="btn-primary"
+              disabled={Boolean(busy)}
+              onClick={() => void open("Opening demo…", api.createDemo)}
+            >
+              Try Demo <span aria-hidden="true">↗</span>
+            </button>
+            <span className="demo-note">
+              Synthetic layout · no account or API key needed
+            </span>
+          </div>
+        </section>
+        <section className="your-spaces" aria-labelledby="spaces-title">
+          <div className="spaces-section-heading">
+            <div>
+              <span className="eyebrow">PICK UP WHERE YOU LEFT OFF</span>
+              <h2 id="spaces-title">Your spaces</h2>
             </div>
-          ))}
-        </dl>
-      </section>
+            <label
+              className={`btn-secondary cursor-pointer ${busy ? "opacity-50" : ""}`}
+            >
+              <span aria-hidden="true">＋</span> Import a scan
+              <input
+                aria-label="Choose a file"
+                type="file"
+                accept=".json,application/json"
+                className="sr-only"
+                disabled={Boolean(busy)}
+                onChange={(e) => {
+                  if (e.target.files?.[0]) upload(e.target.files[0]);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+          </div>
+          {loading ? (
+            <p className="text-sm text-muted">Loading saved spaces…</p>
+          ) : maps.length ? (
+            <ul className="space-list">
+              {maps.map((m) => (
+                <li key={m.id}>
+                  <Link to={`/maps/${encodeURIComponent(m.id)}/walk`}>
+                    <span className="space-card-icon">
+                      <Icon name="map" />
+                    </span>
+                    <span>
+                      <strong>{m.name}</strong>
+                      <small>
+                        {m.synthetic ? "Demo layout" : "Imported map"} ·{" "}
+                        {m.landmarks} places
+                      </small>
+                    </span>
+                    <span aria-hidden="true">↗</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="spaces-empty">
+              <Icon name="map" />
+              <p>
+                Your saved spaces will appear here.
+                <br />
+                <span>
+                  Import a RoomPlan or TouchSpace JSON map to walk through it.
+                </span>
+              </p>
+            </div>
+          )}
+          <button
+            className="sample-link"
+            disabled={Boolean(busy)}
+            aria-describedby="sample-note"
+            onClick={() =>
+              void open("Opening apartment…", api.createRoomPlanSample)
+            }
+          >
+            Or explore the public RoomPlan sample{" "}
+            <span aria-hidden="true">↗</span>
+          </button>
+          <p id="sample-note" className="sample-note">
+            Apartment scan from an open-source project, not a scan by our team.
+            Room labels are unconfirmed.
+          </p>
+        </section>
+        {busy && (
+          <p role="status" className="library-status">
+            {busy}
+          </p>
+        )}
+        {error && (
+          <p role="alert" className="library-error">
+            {error}
+          </p>
+        )}
+        <footer className="spaces-footer">
+          <span>
+            <Icon name="audio" /> Best explored with headphones
+          </span>
+          <span>Virtual practice from recorded maps</span>
+        </footer>
+      </div>
+      {dragging && (
+        <div className="drop-overlay">
+          Drop your JSON map to enter the space
+        </div>
+      )}
     </div>
   );
 }

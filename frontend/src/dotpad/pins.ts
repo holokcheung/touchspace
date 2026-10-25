@@ -2,13 +2,12 @@
  * The map as a DotPad pin grid: raised walls, gaps at doors, a 3 × 3 pin symbol per landmark,
  * and an X where the walker stands. North is up, like the printed map.
  *
- * Grid size and the byte layout in toCellBytes() follow the Dot Pad's published specs
- * (60 × 40 graphic pins, 8-dot braille cells, 20-cell text line) and still need checking
- * against the real device and SDK.
+ * Hardware transport lives in device.ts; this file only produces tactile frames.
  */
+import { brailleBytes } from "./text";
 import type { FloorMap, LandmarkType, Point2D } from "../api/types";
-import { gapEnds, planBounds, roomAt, wallPieces } from "./geometry";
-import { compassName, type Pose } from "./soundscape";
+import { gapEnds, planBounds, roomAt, wallPieces } from "../lib/geometry";
+import { compassName, type Pose } from "../lib/soundscape";
 
 export const DOTPAD = {
   cols: 60,
@@ -46,7 +45,9 @@ const s3 = (rows: string[]) => rows.map((r) => [...r].map((c) => c === "X"));
  * 3 × 3 symbols, as close to the printed ones as 9 pins allow. Rooms, hallways and "other"
  * get no symbol: at this size extra marks would only clutter.
  */
-export const PIN_SYMBOLS: Partial<Record<LandmarkType, { name: string; pattern: boolean[][] }>> = {
+export const PIN_SYMBOLS: Partial<
+  Record<LandmarkType, { name: string; pattern: boolean[][] }>
+> = {
   entrance: { name: "triangle", pattern: s3([".X.", "X.X", "XXX"]) },
   exit: { name: "solid square", pattern: s3(["XXX", "XXX", "XXX"]) },
   restroom: {
@@ -64,7 +65,11 @@ export const PIN_SYMBOLS: Partial<Record<LandmarkType, { name: string; pattern: 
 /** "X marks the spot": no landmark symbol uses it. */
 export const WALKER_SYMBOL = { name: "X", pattern: s3(["X.X", ".X.", "X.X"]) };
 
-export function layoutFor(map: FloorMap, cols = DOTPAD.cols, rows = DOTPAD.rows): PinLayout {
+export function layoutFor(
+  map: FloorMap,
+  cols = DOTPAD.cols,
+  rows = DOTPAD.rows,
+): PinLayout {
   const b = planBounds(map);
   const w = Math.max(b.max_x - b.min_x, 1e-6);
   const h = Math.max(b.max_y - b.min_y, 1e-6);
@@ -81,7 +86,10 @@ export function layoutFor(map: FloorMap, cols = DOTPAD.cols, rows = DOTPAD.rows)
   };
 }
 
-export function toPin(layout: PinLayout, p: Point2D): { col: number; row: number } {
+export function toPin(
+  layout: PinLayout,
+  p: Point2D,
+): { col: number; row: number } {
   return {
     col: Math.round(layout.originCol + (p.x - layout.minX) * layout.scale),
     row: Math.round(layout.originRow + (layout.maxY - p.y) * layout.scale),
@@ -93,7 +101,8 @@ function emptyGrid(cols: number, rows: number): PinGrid {
 }
 
 function setPin(g: PinGrid, col: number, row: number, kind: PinKind) {
-  if (col >= 0 && row >= 0 && col < g.cols && row < g.rows) g.pins[row * g.cols + col] = kind;
+  if (col >= 0 && row >= 0 && col < g.cols && row < g.rows)
+    g.pins[row * g.cols + col] = kind;
 }
 
 export function pinAt(g: PinGrid, col: number, row: number): PinKind {
@@ -102,8 +111,14 @@ export function pinAt(g: PinGrid, col: number, row: number): PinKind {
 }
 
 /** Pins along a segment, in pin coordinates (fractional), sampled finely enough to stay connected. */
-function linePins(a: { col: number; row: number }, b: { col: number; row: number }): [number, number][] {
-  const n = Math.max(1, Math.ceil(Math.hypot(b.col - a.col, b.row - a.row) * 4));
+function linePins(
+  a: { col: number; row: number },
+  b: { col: number; row: number },
+): [number, number][] {
+  const n = Math.max(
+    1,
+    Math.ceil(Math.hypot(b.col - a.col, b.row - a.row) * 4),
+  );
   const out = new Map<string, [number, number]>();
   for (let i = 0; i <= n; i++) {
     const c = Math.round(a.col + ((b.col - a.col) * i) / n);
@@ -120,8 +135,16 @@ function exact(layout: PinLayout, p: Point2D) {
   };
 }
 
-function stamp(g: PinGrid, pattern: boolean[][], col: number, row: number, kind: PinKind) {
-  pattern.forEach((line, dr) => line.forEach((on, dc) => on && setPin(g, col - 1 + dc, row - 1 + dr, kind)));
+function stamp(
+  g: PinGrid,
+  pattern: boolean[][],
+  col: number,
+  row: number,
+  kind: PinKind,
+) {
+  pattern.forEach((line, dr) =>
+    line.forEach((on, dc) => on && setPin(g, col - 1 + dc, row - 1 + dr, kind)),
+  );
 }
 
 /** Pins that stay the same while walking: walls with door gaps, and landmark symbols. */
@@ -137,7 +160,8 @@ export function mapPins(
   for (const wall of map.walls) {
     const own = gaps.filter((g) => g.wall_id === wall.id);
     for (const [a, b] of wallPieces(wall, own)) {
-      for (const [c, r] of linePins(exact(layout, a), exact(layout, b))) setPin(grid, c, r, PIN.wall);
+      for (const [c, r] of linePins(exact(layout, a), exact(layout, b)))
+        setPin(grid, c, r, PIN.wall);
     }
   }
 
@@ -160,7 +184,8 @@ export function mapPins(
       col: b.col + (b.col - a.col) * grow,
       row: b.row + (b.row - a.row) * grow,
     };
-    for (const [c, r] of linePins(a2, b2)) if (pinAt(grid, c, r) === PIN.wall) setPin(grid, c, r, PIN.empty);
+    for (const [c, r] of linePins(a2, b2))
+      if (pinAt(grid, c, r) === PIN.wall) setPin(grid, c, r, PIN.empty);
   }
 
   const placed: PlacedSymbol[] = [];
@@ -186,11 +211,19 @@ export interface PlacedSymbol {
  * Nearest spot to the landmark where its 3 × 3 symbol, plus a one-pin border, touches no wall
  * and no other symbol, so symbols never merge with walls or each other.
  */
-function placeSymbol(grid: PinGrid, want: { col: number; row: number }, placed: PlacedSymbol[]) {
+function placeSymbol(
+  grid: PinGrid,
+  want: { col: number; row: number },
+  placed: PlacedSymbol[],
+) {
   const clear = (c: number, r: number) => {
     if (c < 1 || r < 1 || c > grid.cols - 2 || r > grid.rows - 2) return false;
-    for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) if (pinAt(grid, c + dc, r + dr) !== PIN.empty) return false;
-    return placed.every((p) => Math.max(Math.abs(p.col - c), Math.abs(p.row - r)) >= 4);
+    for (let dr = -2; dr <= 2; dr++)
+      for (let dc = -2; dc <= 2; dc++)
+        if (pinAt(grid, c + dc, r + dr) !== PIN.empty) return false;
+    return placed.every(
+      (p) => Math.max(Math.abs(p.col - c), Math.abs(p.row - r)) >= 4,
+    );
   };
   for (let radius = 0; radius <= 4; radius++) {
     let best: { col: number; row: number; d: number } | null = null;
@@ -228,7 +261,8 @@ export function framePins(
     if (Math.max(Math.abs(p.col - col), Math.abs(p.row - row)) > 3) continue;
     for (let dr = -1; dr <= 1; dr++) {
       for (let dc = -1; dc <= 1; dc++)
-        if (pinAt(grid, p.col + dc, p.row + dr) === PIN.symbol) setPin(grid, p.col + dc, p.row + dr, PIN.empty);
+        if (pinAt(grid, p.col + dc, p.row + dr) === PIN.symbol)
+          setPin(grid, p.col + dc, p.row + dr, PIN.empty);
     }
   }
   stamp(grid, WALKER_SYMBOL.pattern, col, row, PIN.walker);
@@ -268,60 +302,37 @@ export function toCellBytes(g: PinGrid): Uint8Array {
 }
 
 export function toHex(bytes: Uint8Array): string {
-  return [...bytes].map((b) => b.toString(16).padStart(2, "0").toUpperCase()).join("");
+  return [...bytes]
+    .map((b) => b.toString(16).padStart(2, "0").toUpperCase())
+    .join("");
 }
 
 /** Short text for the 20-cell braille line: where you are and which way you face. */
-export function statusLine(map: FloorMap, pose: Pose | null, cells = DOTPAD.textCells): string {
+export function statusLine(
+  map: FloorMap,
+  pose: Pose | null,
+  cells = DOTPAD.textCells,
+): string {
   if (!pose) return "";
   const room = roomAt(map, pose.position)?.name ?? "off map";
-  const dir = compassName(pose.heading).replace("north", "N").replace("south", "S").replace("east", "E").replace("west", "W");
+  const dir = compassName(pose.heading)
+    .replace("north", "N")
+    .replace("south", "S")
+    .replace("east", "E")
+    .replace("west", "W");
   const roomText = room.replace(/\s*\(unconfirmed\)/i, "");
   const tail = ` ${dir}`;
-  return (roomText.length + tail.length > cells ? roomText.slice(0, cells - tail.length) : roomText) + tail;
+  return (
+    (roomText.length + tail.length > cells
+      ? roomText.slice(0, cells - tail.length)
+      : roomText) + tail
+  );
 }
 
-const BRAILLE_LETTERS: Record<string, number[]> = {
-  a: [1],
-  b: [1, 2],
-  c: [1, 4],
-  d: [1, 4, 5],
-  e: [1, 5],
-  f: [1, 2, 4],
-  g: [1, 2, 4, 5],
-  h: [1, 2, 5],
-  i: [2, 4],
-  j: [2, 4, 5],
-  k: [1, 3],
-  l: [1, 2, 3],
-  m: [1, 3, 4],
-  n: [1, 3, 4, 5],
-  o: [1, 3, 5],
-  p: [1, 2, 3, 4],
-  q: [1, 2, 3, 4, 5],
-  r: [1, 2, 3, 5],
-  s: [2, 3, 4],
-  t: [2, 3, 4, 5],
-  u: [1, 3, 6],
-  v: [1, 2, 3, 6],
-  w: [2, 4, 5, 6],
-  x: [1, 3, 4, 6],
-  y: [1, 3, 4, 5, 6],
-  z: [1, 3, 5, 6],
-};
-
-/**
- * Uncontracted braille as Unicode, for the on-screen preview only (capital and number signs
- * are left out). The device's own SDK should do the real translation.
- */
+/** Unicode preview of the same uncontracted English cells sent to the device. */
 export function previewBraille(text: string): string {
-  const digits = "jabcdefghi";
-  return [...text.toLowerCase()]
-    .map((ch) => {
-      const d = /\d/.test(ch) ? BRAILLE_LETTERS[digits[Number(ch)]] : BRAILLE_LETTERS[ch];
-      if (!d) return ch === " " ? "⠀" : ch;
-      return String.fromCodePoint(0x2800 + d.reduce((m, n) => m | (1 << (n - 1)), 0));
-    })
+  return brailleBytes(text)
+    .map((cell) => String.fromCodePoint(0x2800 + cell))
     .join("");
 }
 

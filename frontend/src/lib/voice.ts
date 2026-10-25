@@ -24,6 +24,7 @@ export interface SpeechHandle {
 
 let cartesiaState: Promise<boolean> | null = null;
 let current: SpeechHandle | null = null;
+let speechGeneration = 0;
 const audioCache = new Map<string, string>(); // text -> object URL, so Replay is instant and free
 
 /** Whether the server has Cartesia configured. Cached for the page's lifetime. */
@@ -36,10 +37,15 @@ export function cartesiaAvailable(): Promise<boolean> {
 }
 
 export function browserSpeechAvailable(): boolean {
-  return typeof window !== "undefined" && "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
+  return (
+    typeof window !== "undefined" &&
+    "speechSynthesis" in window &&
+    typeof SpeechSynthesisUtterance !== "undefined"
+  );
 }
 
 export function stopSpeaking(): void {
+  speechGeneration++;
   current?.stop();
   current = null;
 }
@@ -89,29 +95,56 @@ function speakWithBrowser(text: string, speed: number): SpeechHandle {
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.rate = speed;
   utterance.lang = "en-US";
+  let finish: () => void = () => {};
   const done = new Promise<void>((resolve) => {
+    finish = resolve;
     utterance.onend = () => resolve();
     utterance.onerror = () => resolve();
   });
   synth.speak(utterance);
-  return { engine: "browser", done, stop: () => synth.cancel() };
+  return {
+    engine: "browser",
+    done,
+    stop: () => {
+      synth.cancel();
+      finish();
+    },
+  };
 }
 
 /** Speak text aloud, stopping anything already playing. Never throws; check `engine`. */
-export async function speak(text: string, opts: { speed?: number } = {}): Promise<SpeechHandle> {
+export async function speak(
+  text: string,
+  opts: { speed?: number } = {},
+): Promise<SpeechHandle> {
   stopSpeaking();
+  const generation = speechGeneration;
+  const empty: SpeechHandle = {
+    engine: "none",
+    done: Promise.resolve(),
+    stop: () => {},
+  };
   const speed = opts.speed ?? 1;
   const clean = text.replace(/\s+/g, " ").trim().slice(0, 2000);
-  if (!clean) return { engine: "none", done: Promise.resolve(), stop: () => {} };
+  if (!clean)
+    return { engine: "none", done: Promise.resolve(), stop: () => {} };
 
   if (await cartesiaAvailable()) {
     try {
-      current = await playUrl(await cartesiaAudioUrl(clean, speed));
+      const url = await cartesiaAudioUrl(clean, speed);
+      if (generation !== speechGeneration) return empty;
+      const handle = await playUrl(url);
+      if (generation !== speechGeneration) {
+        handle.stop();
+        return empty;
+      }
+      current = handle;
       return current;
     } catch {
       // Network error, quota, or autoplay block: fall through to the browser voice.
     }
   }
+  if (generation !== speechGeneration) return empty;
   current = speakWithBrowser(clean, speed);
   return current;
 }
@@ -122,6 +155,7 @@ export interface Listener {
   engine: VoiceEngine;
   start: () => Promise<void>;
   stop: () => Promise<void>;
+  cancel: () => void;
 }
 
 interface ListenerCallbacks {
@@ -136,14 +170,17 @@ type BrowserRecognition = {
   maxAlternatives: number;
   start: () => void;
   stop: () => void;
-  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onresult:
+    | ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void)
+    | null;
   onerror: ((e: { error: string }) => void) | null;
   onend: (() => void) | null;
 };
 
 function browserRecognitionCtor(): (new () => BrowserRecognition) | null {
   const w = window as unknown as Record<string, unknown>;
-  return (w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null) as (new () => BrowserRecognition) | null;
+  return (w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null) as
+    (new () => BrowserRecognition) | null;
 }
 
 export function browserRecognitionAvailable(): boolean {
@@ -151,7 +188,11 @@ export function browserRecognitionAvailable(): boolean {
 }
 
 function recordingAvailable(): boolean {
-  return typeof window !== "undefined" && typeof MediaRecorder !== "undefined" && Boolean(navigator.mediaDevices?.getUserMedia);
+  return (
+    typeof window !== "undefined" &&
+    typeof MediaRecorder !== "undefined" &&
+    Boolean(navigator.mediaDevices?.getUserMedia)
+  );
 }
 
 /**
@@ -162,41 +203,76 @@ export async function createListener(cb: ListenerCallbacks): Promise<Listener> {
   if ((await cartesiaAvailable()) && recordingAvailable()) {
     let recorder: MediaRecorder | null = null;
     let chunks: Blob[] = [];
+    let cancelled = false;
     return {
       engine: "cartesia",
+      cancel: () => {
+        cancelled = true;
+        if (recorder) {
+          if (recorder.state !== "inactive") recorder.stop();
+          recorder.stream.getTracks().forEach((t) => t.stop());
+          recorder = null;
+        }
+      },
       start: async () => {
+        let stream: MediaStream | null = null;
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+          });
+          if (cancelled) {
+            stream.getTracks().forEach((t) => t.stop());
+            return;
+          }
           chunks = [];
           recorder = new MediaRecorder(stream);
           recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
           recorder.start();
           cb.onStateChange?.(true);
         } catch {
-          cb.onError?.("Microphone access was blocked. You can type your question instead.");
+          stream?.getTracks().forEach((track) => track.stop());
+          cb.onError?.(
+            "Microphone access was blocked. You can type your question instead.",
+          );
         }
       },
       stop: async () => {
         const rec = recorder;
         if (!rec) return;
         recorder = null;
-        const stopped = new Promise<void>((resolve) => (rec.onstop = () => resolve()));
+        const stopped = new Promise<void>(
+          (resolve) => (rec.onstop = () => resolve()),
+        );
         rec.stop();
         rec.stream.getTracks().forEach((t) => t.stop());
         await stopped;
+        if (cancelled) return;
         cb.onStateChange?.(false);
         const blob = new Blob(chunks, { type: rec.mimeType || "audio/webm" });
-        const ext = blob.type.includes("mp4") ? "mp4" : blob.type.includes("ogg") ? "ogg" : "webm";
+        const ext = blob.type.includes("mp4")
+          ? "mp4"
+          : blob.type.includes("ogg")
+            ? "ogg"
+            : "webm";
         const form = new FormData();
         form.append("file", blob, `question.${ext}`);
         try {
-          const res = await fetch(`${BASE}/api/stt`, { method: "POST", body: form });
+          const res = await fetch(`${BASE}/api/stt`, {
+            method: "POST",
+            body: form,
+          });
           if (!res.ok) throw new Error(String(res.status));
           const { text } = await res.json();
+          if (cancelled) return;
           if (text) cb.onResult(text);
-          else cb.onError?.("No speech was detected. Try again or type your question.");
+          else
+            cb.onError?.(
+              "No speech was detected. Try again or type your question.",
+            );
         } catch {
-          cb.onError?.("Could not transcribe the recording. You can type your question instead.");
+          cb.onError?.(
+            "Could not transcribe the recording. You can type your question instead.",
+          );
         }
       },
     };
@@ -212,7 +288,12 @@ export async function createListener(cb: ListenerCallbacks): Promise<Listener> {
       const text = e.results[0]?.[0]?.transcript;
       if (text) cb.onResult(text);
     };
-    rec.onerror = (e) => cb.onError?.(e.error === "not-allowed" ? "Microphone access was blocked. You can type your question instead." : "Speech recognition failed. You can type your question instead.");
+    rec.onerror = (e) =>
+      cb.onError?.(
+        e.error === "not-allowed"
+          ? "Microphone access was blocked. You can type your question instead."
+          : "Speech recognition failed. You can type your question instead.",
+      );
     rec.onend = () => cb.onStateChange?.(false);
     return {
       engine: "browser",
@@ -221,12 +302,26 @@ export async function createListener(cb: ListenerCallbacks): Promise<Listener> {
         cb.onStateChange?.(true);
       },
       stop: async () => rec.stop(),
+      cancel: () => {
+        rec.onresult = null;
+        rec.onerror = null;
+        rec.onend = null;
+        try {
+          rec.stop();
+        } catch {
+          /* already stopped */
+        }
+      },
     };
   }
 
   return {
     engine: "none",
-    start: async () => cb.onError?.("Voice input is not available in this browser. Please type your question."),
+    start: async () =>
+      cb.onError?.(
+        "Voice input is not available in this browser. Please type your question.",
+      ),
     stop: async () => {},
+    cancel: () => {},
   };
 }

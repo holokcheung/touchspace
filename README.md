@@ -30,9 +30,9 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | Phase | State |
 | --- | --- |
 | 1. Data pipeline: normalized schema, synthetic demo, floor-plan processing, tactile STL generator, tests | Done |
-| 2. FastAPI endpoints + React web app (upload, 2D editor, 3D preview, STL download, demo mode) | Done |
+| 2. FastAPI endpoints + React web app | Done; web UI consolidated into a space library and first-person walkthrough. Editing and STL APIs remain on the backend. |
 | 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. Native app builds for simulator; capture and saved-world restore still require device validation. |
-| 4. Voice explorer and routing | Done: routing over recorded paths, grounded Q&A, Voice Explorer page, path editor, Cartesia voice, optional Gemini |
+| 4. Voice and routing | Recorded-path routing and grounded Q&A are integrated into the walkthrough with hold-Space voice input and typed fallback. Cartesia and optional Gemini remain supported. |
 | Walk-through soundscape | Done on the web: walk the map with headphones, and the noise is muffled on the side of a nearby wall. Settings shared with the iPhone app; live LiDAR version not built. |
 | 5. Polish and docs | Not started |
 
@@ -59,7 +59,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 and click **Try Demo**. No API keys are needed. To use Cartesia voice, see [docs/voice.md](docs/voice.md).
+Open http://localhost:5173 and click **Try Demo** to enter the walkthrough. No API keys are needed. To use Cartesia voice, see [docs/voice.md](docs/voice.md).
 
 To try the RoomPlan import path without an iPhone, upload `sample-data/synthetic-roomplan-capturedroom.json`. It is synthetic data in RoomPlan's format. For real scans, see [ios-scanner/README.md](ios-scanner/README.md) and [docs/roomplan-import.md](docs/roomplan-import.md).
 
@@ -79,16 +79,41 @@ cd backend
 
 ## Web app
 
-| Page | What it does |
-| --- | --- |
-| Home | Product overview, **Get Started**, **Try Demo**, tactile symbol key |
-| Upload scan | Drag-and-drop or file picker for scan JSON, parsing errors with details, demo scan, list of saved maps |
-| Floor plan | SVG plan with walls, doors, rooms, objects, paths and landmarks. Add, drag, or arrow-key move landmarks. Rename landmarks and rooms, set the starting point, choose which furniture is printed, check the map. Includes a full text description of the plan. |
-| Voice explorer | Ask by voice or text: descriptions, where things are, what's nearby, step-by-step directions over recorded paths. Answers are spoken (Cartesia or the browser), shown as text, and drawn on the plan. |
-| Walk-through | Practice walking through the map with headphones, by keyboard or touch. Each ear's noise is muffled when a wall or furniture is close on that side; ticks mean something is in your path; doors, rooms and landmarks are announced. Simulated from the map, not live sensing. Works on a phone over Wi-Fi. |
-| 3D tactile map | Interactive 3D model (rotate, zoom, reset, top view), measurements, print checks, print settings with regenerate, **Download STL**, and a text description of the model |
+The web app centers on **practicing navigation**. Choose a saved space, import a
+RoomPlan/TouchSpace JSON map, or try a demo, then enter a full-screen first-person
+Three.js walkthrough. Old editor, print preview and voice-explorer links redirect into
+the walkthrough. The backend's editing and tactile/STL APIs remain available.
 
-Accessibility: semantic landmarks and headings, skip link, visible focus outlines, labeled inputs, live status messages, keyboard-movable landmarks, text equivalents for both the 2D plan and the 3D model, color never used alone, light and dark themes, and the Atkinson Hyperlegible font.
+- **Move:** arrow keys or W/S and A/D. Shift turns 90°, T turns around. Drag to look;
+  hold the on-screen movement controls on touch devices. Collision checks use the
+  same walls, doorway gaps and furniture as the audio simulation.
+- **Ask:** hold **Space** while speaking and release to send, or hold the microphone.
+  Enter on the microphone toggles recording for keyboard/assistive-technology users.
+  A typed question is always available. Speech uses Cartesia when configured, with
+  browser recognition/synthesis fallbacks. Local surroundings answers use the exact
+  virtual position and heading; other questions use the existing grounded map Q&A.
+- **Floor plan:** a collapsible side panel follows your position and shows recorded
+  routes, landmarks, a start-location picker, stair avoidance and a readable/spoken
+  map description. Routes explicitly identify the recorded landmark they start from;
+  they do not invent a path from an arbitrary virtual point to the graph.
+- **Spatial audio:** headphone noise muffles near walls/furniture on either side,
+  ticks warn about obstacles ahead, and doorway/bump/out-of-map cues remain.
+  Sound ducks while you use the assistant. Volume and spoken announcements live in
+  the Audio panel.
+- **DotPad:** an independent [module](frontend/src/dotpad/README.md) retains the pin
+  preview and uses the vendor Web SDK 3.0.0 to send graphics and room/heading braille
+  to a 60 × 40 pin DotPad over Bluetooth or USB. Hardware needs Chrome on localhost
+  or HTTPS; physical-device validation is still required.
+
+The separate floor-plan/path editing, print settings, STL download, marketing sections,
+and standalone Voice Explorer UI have been removed from the web navigation. Map
+import, both samples, saved maps, keyboard/touch controls, audio cues, text descriptions,
+and grounded Q&A remain together in the navigation workflow.
+
+`npm run build:walk` still produces a self-contained HTML walkthrough with bundled
+maps, 3D, audio and the DotPad module. Without a backend its assistant describes local
+surroundings; connected map Q&A requires the main app. This is virtual practice from
+recorded maps, not live position tracking or obstacle sensing.
 
 ## API
 
