@@ -101,7 +101,7 @@ the walkthrough. The backend's editing and tactile/STL APIs remain available.
   Sound ducks while you use the assistant. Volume and spoken announcements live in
   the Audio panel.
 - **DotPad:** an independent [module](frontend/src/dotpad/README.md) retains the pin
-  preview and uses the vendor Web SDK 3.0.0 to send graphics and room/heading braille
+  preview and uses the vendor Web SDK 3.0.4 to send graphics and room/heading braille
   to a 60 × 40 pin DotPad over Bluetooth or USB. Hardware needs Chrome on localhost
   or HTTPS; physical-device validation is still required.
 

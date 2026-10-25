@@ -12,7 +12,7 @@ const sdk = vi.hoisted(() => ({
   scan: vi.fn(),
   connect: vi.fn(),
 }));
-vi.mock("../dotpad/vendor/DotPadSDK-3.0.0.js", () => ({
+vi.mock("../dotpad/vendor/DotPadSDK-3.0.4.js", () => ({
   DataCodes: {
     Connected: "Connected",
     Disconnected: "Disconnected",
@@ -50,11 +50,12 @@ beforeEach(() => {
   vi.stubGlobal("isSecureContext", true);
   Object.defineProperty(navigator, "bluetooth", {
     configurable: true,
-    value: {},
+    value: { requestDevice: sdk.scan },
   });
   Object.defineProperty(navigator, "serial", { configurable: true, value: {} });
   sdk.scan.mockResolvedValue({});
   sdk.connect.mockResolvedValue(device);
+  sdk.text.mockResolvedValue(undefined);
 });
 afterEach(() => {
   vi.useRealTimers();
@@ -86,6 +87,42 @@ describe("DotPad vendor SDK integration", () => {
     connection.dispose();
     expect(sdk.disconnect).toHaveBeenCalled();
     expect(sdk.callback).toBeNull();
+  });
+  it("passes the all-device fallback through to Chrome and preserves the SDK connection", async () => {
+    const selected = { name: "KM2-300A" };
+    sdk.scan.mockResolvedValueOnce(selected);
+    const connection = new DotPadConnection(vi.fn());
+    await connection.connect("bluetooth", "all");
+    expect(sdk.scan).toHaveBeenCalledWith({
+      acceptAllDevices: true,
+      optionalServices: ["49535343-fe7d-4ae5-8fa9-9fafd205e455"],
+    });
+    expect(sdk.connect).toHaveBeenCalledWith(selected);
+    connection.dispose();
+  });
+  it("reconnects a known DotPad without requesting another Bluetooth picker", async () => {
+    const remembered = { id: "saved-dotpad", name: "DotPad320X_BD35" };
+    const connection = new DotPadConnection(vi.fn());
+    await connection.reconnectBluetooth(remembered);
+    expect(sdk.scan).not.toHaveBeenCalled();
+    expect(sdk.connect).toHaveBeenCalledWith(remembered);
+    connection.dispose();
+  });
+  it("shows blocked Bluetooth permissions and allows a later retry", async () => {
+    const state = vi.fn();
+    sdk.scan.mockRejectedValueOnce(
+      new DOMException("Blocked", "SecurityError"),
+    );
+    const connection = new DotPadConnection(state);
+    await connection.connect("bluetooth");
+    expect(state).toHaveBeenLastCalledWith(
+      "disconnected",
+      expect.stringMatching(/Bluetooth access was blocked/),
+    );
+    expect(sdk.connect).not.toHaveBeenCalled();
+    await connection.connect("bluetooth");
+    expect(sdk.connect).toHaveBeenCalledOnce();
+    connection.dispose();
   });
   it("uses the USB picker and rejects an incompatible board", async () => {
     const state = vi.fn();

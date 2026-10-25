@@ -4,9 +4,15 @@ import {
   DotPadScanner,
   DotPadSDK,
   type DotDevice,
-} from "./vendor/DotPadSDK-3.0.0.js";
+} from "./vendor/DotPadSDK-3.0.4.js";
 import { DOTPAD, toCellBytes, toHex, type PinGrid } from "./pins";
 import { statusCells } from "./text";
+import {
+  selectBluetoothDevice,
+  bluetoothErrorMessage,
+  type BluetoothDiscovery,
+  type KnownDotPad,
+} from "./discovery";
 
 export type DeviceState = "disconnected" | "connecting" | "connected";
 export type Transport = "bluetooth" | "usb";
@@ -79,7 +85,11 @@ export class DotPadConnection {
     return this.state === "disconnected";
   }
 
-  async connect(transport: Transport): Promise<void> {
+  async connect(
+    transport: Transport,
+    discovery: BluetoothDiscovery = "dotpad",
+    knownDevice?: KnownDotPad,
+  ): Promise<void> {
     if (this.disposed || this.state !== "disconnected") return;
     if (!supportedTransports().includes(transport)) {
       this.onState(
@@ -93,7 +103,7 @@ export class DotPadConnection {
     try {
       // Keep the picker in the originating button gesture (no lazy import before it).
       const selected = await (transport === "bluetooth"
-        ? this.scanner.startBleScan()
+        ? (knownDevice ?? selectBluetoothDevice(discovery))
         : this.scanner.startUsbScan());
       if (this.disposed) return;
       if (!selected) {
@@ -124,9 +134,17 @@ export class DotPadConnection {
       if (!this.disposed)
         this.onState(
           "disconnected",
-          error instanceof Error ? error.message : "DotPad connection failed.",
+          transport === "bluetooth"
+            ? bluetoothErrorMessage(error)
+            : error instanceof Error
+              ? error.message
+              : "DotPad connection failed.",
         );
     }
+  }
+
+  reconnectBluetooth(device: KnownDotPad): Promise<void> {
+    return this.connect("bluetooth", "dotpad", device);
   }
 
   update(grid: PinGrid, text: string): void {
@@ -148,11 +166,19 @@ export class DotPadConnection {
       );
       const cells = this.device.numberBrailleCellColumns;
       if (cells > 0)
-        this.sdk.displayTextData(
-          toHex(statusCells(this.latest.text, cells)),
-          this.device,
-          DisplayMode.TextMode,
-        );
+        void this.sdk
+          .displayTextData(
+            toHex(statusCells(this.latest.text, cells)),
+            this.device,
+            DisplayMode.TextMode,
+          )
+          .catch(() => {
+            if (!this.disposed)
+              this.onState(
+                this.state,
+                "Could not update the DotPad text line. Reconnect to try again.",
+              );
+          });
     } catch {
       this.onState(
         this.state,

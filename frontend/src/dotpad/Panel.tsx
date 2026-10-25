@@ -5,6 +5,7 @@ import {
   type DeviceState,
 } from "./device";
 import type { PinGrid } from "./pins";
+import { knownDotPads, type KnownDotPad } from "./discovery";
 import Preview from "./Preview";
 
 export default function DotPadPanel(props: {
@@ -16,13 +17,28 @@ export default function DotPadPanel(props: {
   const connection = useRef<DotPadConnection | null>(null);
   const [state, setState] = useState<DeviceState>("disconnected");
   const [error, setError] = useState("");
+  const [knownDevices, setKnownDevices] = useState<KnownDotPad[]>([]);
   useEffect(() => {
+    let active = true;
+    const refreshKnownDevices = () => {
+      void knownDotPads()
+        .then((devices) => {
+          if (active) setKnownDevices(devices);
+        })
+        .catch(() => {});
+    };
+    refreshKnownDevices();
     const device = new DotPadConnection((next, message) => {
       setState(next);
       setError(message ?? "");
+      if (next !== "connecting") refreshKnownDevices();
     });
     connection.current = device;
+    const refreshOnFocus = () => refreshKnownDevices();
+    window.addEventListener("focus", refreshOnFocus);
     return () => {
+      active = false;
+      window.removeEventListener("focus", refreshOnFocus);
       device.dispose();
       connection.current = null;
     };
@@ -55,6 +71,20 @@ export default function DotPadPanel(props: {
           </>
         ) : (
           <>
+            {knownDevices.map((device) => (
+              <button
+                key={device.id}
+                className="btn-primary"
+                disabled={
+                  state === "connecting" || !transports.includes("bluetooth")
+                }
+                onClick={() =>
+                  void connection.current?.reconnectBluetooth(device)
+                }
+              >
+                Reconnect {device.name ?? "DotPad"}
+              </button>
+            ))}
             <button
               className="btn-primary"
               disabled={
@@ -63,6 +93,17 @@ export default function DotPadPanel(props: {
               onClick={() => void connection.current?.connect("bluetooth")}
             >
               Connect Bluetooth
+            </button>
+            <button
+              className="btn-secondary"
+              disabled={
+                state === "connecting" || !transports.includes("bluetooth")
+              }
+              onClick={() =>
+                void connection.current?.connect("bluetooth", "all")
+              }
+            >
+              Show all Bluetooth devices
             </button>
             <button
               className="btn-secondary"
@@ -81,6 +122,17 @@ export default function DotPadPanel(props: {
             ? "Connecting to DotPad…"
             : "DotPad disconnected · preview available"}
       </p>
+      {state === "disconnected" && transports.includes("bluetooth") && (
+        <p className="text-sm text-muted">
+          If your DotPad disappears after the first scan, use Reconnect above
+          for a device already authorized on this site. Otherwise restart the
+          DotPad to restore advertising, then select it once in this site's
+          picker. Disconnect it in the SDK demo before connecting here. “Show
+          all Bluetooth devices” also finds devices without a DotPad name;
+          select your DotPad there. Bluetooth permissions are separate for each
+          site and port.
+        </p>
+      )}
       {!transports.length && (
         <p className="text-sm text-muted">
           Hardware connection needs Chrome with HTTPS or localhost.

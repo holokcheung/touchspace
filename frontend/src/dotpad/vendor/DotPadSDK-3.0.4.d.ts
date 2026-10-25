@@ -20,7 +20,7 @@ export class DotPadSDK {
   connectBleDevice(device: unknown): Promise<DotDevice | null | undefined>;
   connectUsbDevice(port: unknown): Promise<DotDevice | null | undefined>;
   displayGraphicData(hex: string, device: DotDevice, mode: string): void;
-  displayTextData(hex: string, device: DotDevice, mode: string): void;
+  displayTextData(hex: string, device: DotDevice, mode: string): Promise<void>;
   displayAllDown(device: DotDevice): void;
   disconnect(device?: DotDevice): void;
 }
