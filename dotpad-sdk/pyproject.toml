@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "touchspace-dotpad-sdk"
+version = "0.1.0"
+description = "Raw DotPad display gateway with native bindings and a local web mock"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+browser-test = ["pytest>=8", "playwright>=1.50"]
+
+[project.scripts]
+dotpad-viewer = "dotpad_sdk.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+dotpad_sdk = ["contract.json", "web/*.html", "web/*.css", "web/*.js"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
