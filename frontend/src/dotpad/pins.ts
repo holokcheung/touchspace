@@ -1,6 +1,6 @@
 /**
  * The map as a DotPad pin grid: raised walls, gaps at doors, a 3 × 3 pin symbol per landmark,
- * and an X where the walker stands. North is up, like the printed map.
+ * spaced route dots, and an X where the walker stands. North is up, like the printed map.
  *
  * Hardware transport lives in device.ts; this file only produces tactile frames.
  */
@@ -19,7 +19,12 @@ export const DOTPAD = {
   minGapPins: 2,
 };
 
-export const PIN = { empty: 0, wall: 1, symbol: 2, walker: 3 } as const;
+export const PIN = { empty: 0, wall: 1, symbol: 2, walker: 3, route: 4 } as const;
+export const ZOOM_LEVELS = [1, 2, 4] as const;
+export interface PinViewport {
+  zoom: number;
+  center?: Point2D;
+}
 export type PinKind = (typeof PIN)[keyof typeof PIN];
 
 export interface PinGrid {
@@ -69,13 +74,27 @@ export function layoutFor(
   map: FloorMap,
   cols = DOTPAD.cols,
   rows = DOTPAD.rows,
+  viewport?: PinViewport,
 ): PinLayout {
   const b = planBounds(map);
   const w = Math.max(b.max_x - b.min_x, 1e-6);
   const h = Math.max(b.max_y - b.min_y, 1e-6);
   const usableC = cols - 1 - 2 * DOTPAD.marginPins;
   const usableR = rows - 1 - 2 * DOTPAD.marginPins;
-  const scale = Math.min(usableC / w, usableR / h);
+  const zoom = viewport && Number.isFinite(viewport.zoom)
+    ? Math.min(4, Math.max(1, viewport.zoom))
+    : 1;
+  const scale = Math.min(usableC / w, usableR / h) * zoom;
+  if (zoom > 1 && viewport?.center) {
+    return {
+      scale,
+      originCol: Math.round((cols - 1) / 2),
+      originRow: Math.round((rows - 1) / 2),
+      minX: viewport.center.x,
+      maxY: viewport.center.y,
+      metersPerPin: 1 / scale,
+    };
+  }
   return {
     scale,
     originCol: DOTPAD.marginPins + (usableC - w * scale) / 2,
@@ -114,7 +133,30 @@ export function pinAt(g: PinGrid, col: number, row: number): PinKind {
 function linePins(
   a: { col: number; row: number },
   b: { col: number; row: number },
+  grid: PinGrid,
 ): [number, number][] {
+  // Clip before sampling, so work is bounded by the board size even far off map.
+  const dx = b.col - a.col;
+  const dy = b.row - a.row;
+  let start = 0;
+  let end = 1;
+  for (const [p, q] of [
+    [-dx, a.col + 0.49],
+    [dx, grid.cols - 0.51 - a.col],
+    [-dy, a.row + 0.49],
+    [dy, grid.rows - 0.51 - a.row],
+  ]) {
+    if (p === 0) {
+      if (q < 0) return [];
+    } else {
+      const t = q / p;
+      if (p < 0) start = Math.max(start, t);
+      else end = Math.min(end, t);
+      if (start > end) return [];
+    }
+  }
+  b = { col: a.col + end * dx, row: a.row + end * dy };
+  a = { col: a.col + start * dx, row: a.row + start * dy };
   const n = Math.max(
     1,
     Math.ceil(Math.hypot(b.col - a.col, b.row - a.row) * 4),
@@ -147,20 +189,21 @@ function stamp(
   );
 }
 
-/** Pins that stay the same while walking: walls with door gaps, and landmark symbols. */
+/** Walls with door gaps and landmark symbols in the current viewport. */
 export function mapPins(
   map: FloorMap,
   cols = DOTPAD.cols,
   rows = DOTPAD.rows,
+  viewport?: PinViewport,
 ): { grid: PinGrid; layout: PinLayout; placed: PlacedSymbol[] } {
-  const layout = layoutFor(map, cols, rows);
+  const layout = layoutFor(map, cols, rows, viewport);
   const grid = emptyGrid(cols, rows);
   const gaps = [...map.doors, ...map.openings];
 
   for (const wall of map.walls) {
     const own = gaps.filter((g) => g.wall_id === wall.id);
     for (const [a, b] of wallPieces(wall, own)) {
-      for (const [c, r] of linePins(exact(layout, a), exact(layout, b)))
+      for (const [c, r] of linePins(exact(layout, a), exact(layout, b), grid))
         setPin(grid, c, r, PIN.wall);
     }
   }
@@ -184,7 +227,7 @@ export function mapPins(
       col: b.col + (b.col - a.col) * grow,
       row: b.row + (b.row - a.row) * grow,
     };
-    for (const [c, r] of linePins(a2, b2))
+    for (const [c, r] of linePins(a2, b2, grid))
       if (pinAt(grid, c, r) === PIN.wall) setPin(grid, c, r, PIN.empty);
   }
 
@@ -192,7 +235,11 @@ export function mapPins(
   for (const lm of map.landmarks) {
     const sym = PIN_SYMBOLS[lm.type];
     if (!sym || lm.show_on_tactile === false) continue;
-    const at = placeSymbol(grid, toPin(layout, lm.position), placed);
+    const want = toPin(layout, lm.position);
+    // Hide offscreen landmarks instead of moving them onto the board's edge.
+    if (want.col < 1 || want.row < 1 || want.col > cols - 2 || want.row > rows - 2)
+      continue;
+    const at = placeSymbol(grid, want, placed);
     stamp(grid, sym.pattern, at.col, at.row, PIN.symbol);
     placed.push({ landmarkId: lm.id, name: lm.name, symbol: sym.name, ...at });
   }
@@ -241,14 +288,44 @@ function placeSymbol(
   return want;
 }
 
-/** The full frame: the map plus an X at the walker's position (drawn on top). */
+/** Spaced route dots, leaving a flat pin beside walls and landmark symbols. */
+function drawRoute(grid: PinGrid, layout: PinLayout, points: Point2D[]) {
+  let distance = 0;
+  for (let i = 1; i < points.length; i++) {
+    const a = exact(layout, points[i - 1]);
+    const b = exact(layout, points[i]);
+    const dx = b.col - a.col;
+    const dy = b.row - a.row;
+    const length = Math.hypot(dx, dy);
+    if (length === 0) continue;
+    for (const [c, r] of linePins(a, b, grid)) {
+      // Anchor spacing to the route, rather than the clipped viewport edge.
+      const along = ((c - a.col) * dx + (r - a.row) * dy) / length;
+      if (Math.round(distance + along) % 3 !== 0) continue;
+      let clear = true;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          const kind = pinAt(grid, c + dc, r + dr);
+          if (kind === PIN.wall || kind === PIN.symbol) clear = false;
+        }
+      }
+      if (clear && pinAt(grid, c, r) === PIN.empty)
+        setPin(grid, c, r, PIN.route);
+    }
+    distance += length;
+  }
+}
+
+/** The full frame: map, route, and an X at the walker's position (drawn on top). */
 export function framePins(
   base: PinGrid,
   layout: PinLayout,
   pose: Pose | null,
   placed: PlacedSymbol[] = [],
+  route: Point2D[] = [],
 ): { grid: PinGrid; walker: { col: number; row: number } | null } {
   const grid = { ...base, pins: base.pins.slice() };
+  drawRoute(grid, layout, route);
   if (!pose) return { grid, walker: null };
   const at = toPin(layout, pose.position);
   const col = Math.min(grid.cols - 2, Math.max(1, at.col));
@@ -263,6 +340,13 @@ export function framePins(
       for (let dc = -1; dc <= 1; dc++)
         if (pinAt(grid, p.col + dc, p.row + dr) === PIN.symbol)
           setPin(grid, p.col + dc, p.row + dr, PIN.empty);
+    }
+  }
+  // Keep route dots separate from the 3 × 3 X so it stays recognizable.
+  for (let dr = -2; dr <= 2; dr++) {
+    for (let dc = -2; dc <= 2; dc++) {
+      if (pinAt(grid, col + dc, row + dr) === PIN.route)
+        setPin(grid, col + dc, row + dr, PIN.empty);
     }
   }
   stamp(grid, WALKER_SYMBOL.pattern, col, row, PIN.walker);
@@ -341,14 +425,17 @@ export function describeGrid(g: PinGrid): {
   raised: number;
   walls: number;
   symbols: number;
+  route: number;
 } {
   let walls = 0;
   let symbols = 0;
   let raised = 0;
+  let route = 0;
   for (const p of g.pins) {
     if (p !== PIN.empty) raised++;
     if (p === PIN.wall) walls++;
     if (p === PIN.symbol) symbols++;
+    if (p === PIN.route) route++;
   }
-  return { raised, walls, symbols };
+  return { raised, walls, symbols, route };
 }

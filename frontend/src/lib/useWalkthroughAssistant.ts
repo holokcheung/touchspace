@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../api/client";
-import type { AskContext, AskResult, FloorMap } from "../api/types";
+import type { AskContext, AskResult, FloorMap, RouteResult } from "../api/types";
 import { playCue } from "./cues";
 import { dist } from "./geometry";
 import {
@@ -25,6 +25,12 @@ export function useWalkthroughAssistant(
   const [answer, setAnswer] = useState("");
   const [error, setError] = useState("");
   const [result, setResult] = useState<AskResult | null>(null);
+  const [activeRoute, setActiveRoute] = useState<RouteResult | null>(null);
+  const routeGeneration = useRef(0);
+  const dismissRoute = useCallback(() => {
+    routeGeneration.current++;
+    setActiveRoute(null);
+  }, []);
   const phaseRef = useRef<VoicePhase>("idle");
   const poseRef = useRef(pose);
   poseRef.current = pose;
@@ -75,6 +81,7 @@ export function useWalkthroughAssistant(
       )
         return;
       const id = ++generation.current;
+      const routeId = routeGeneration.current;
       clearTimer();
       held.current = false;
       listener.current?.cancel();
@@ -118,6 +125,10 @@ export function useWalkthroughAssistant(
             if (!alive.current || id !== generation.current) return;
             context.current = data.context;
             setResult(data);
+            // Follow-up answers never clear the route. A dismissal also prevents
+            // an already pending answer from restoring it.
+            if (data.route?.found && routeId === routeGeneration.current)
+              setActiveRoute(data.route);
             response = data.answer;
             if (data.route?.found)
               response = `Recorded route starts at ${data.route.origin_name}. ${response}`;
@@ -256,6 +267,8 @@ export function useWalkthroughAssistant(
     answer,
     error,
     result,
+    activeRoute,
+    dismissRoute,
     ask,
     press,
     release,

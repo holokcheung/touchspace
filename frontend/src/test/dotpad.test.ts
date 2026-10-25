@@ -8,6 +8,7 @@ import {
   PIN_SYMBOLS,
   WALKER_SYMBOL,
   framePins,
+  describeGrid,
   mapPins,
   pinAt,
   previewBraille,
@@ -24,6 +25,47 @@ const demoMap = {
 
 describe("DotPad pin grid", () => {
   const { grid, layout, placed } = mapPins(demoMap);
+
+  it("keeps the X centered while zooming and moving, including beyond map edges", () => {
+    for (const zoom of [2, 4]) {
+      for (const position of [{ x: 3.5, y: 2 }, { x: 8, y: 5 }, { x: 30, y: 30 }]) {
+        const view = mapPins(demoMap, 60, 40, { zoom, center: position });
+        const frame = framePins(view.grid, view.layout, { position, heading: 90 }, view.placed);
+        expect(frame.walker).toEqual({ col: 30, row: 20 });
+        expect(view.layout.metersPerPin).toBeCloseTo(layout.metersPerPin / zoom);
+        expect([...frame.grid.pins].filter((pin) => pin === PIN.walker)).toHaveLength(5);
+      }
+    }
+    // Overview restores the original map framing regardless of user location.
+    expect(mapPins(demoMap, 60, 40, { zoom: 1, center: { x: 30, y: 30 } }).grid)
+      .toEqual(grid);
+  });
+
+  it("pans the map with the user without changing north-up orientation", () => {
+    const a = mapPins(demoMap, 60, 40, { zoom: 2, center: { x: 7, y: 5 } });
+    const b = mapPins(demoMap, 60, 40, { zoom: 2, center: { x: 8, y: 6 } });
+    const fixed = { x: 8, y: 5 };
+    expect(toPin(b.layout, fixed).col).toBeLessThan(toPin(a.layout, fixed).col);
+    expect(toPin(b.layout, fixed).row).toBeGreaterThan(toPin(a.layout, fixed).row);
+    expect(b.grid.pins).not.toEqual(a.grid.pins);
+    expect(b.placed.every((p) => p.col >= 1 && p.col <= 58 && p.row >= 1 && p.row <= 38)).toBe(true);
+  });
+
+  it("clips crossing walls, preserves door gaps and hides offscreen landmarks", () => {
+    const map: FloorMap = {
+      ...demoMap,
+      walls: [{ ...demoMap.walls[0], id: "wall", start: { x: -1000, y: 5 }, end: { x: 1000, y: 5 } }],
+      doors: [], openings: [], landmarks: [],
+    };
+    const view = mapPins(map, 60, 40, { zoom: 4, center: { x: 8, y: 5 } });
+    for (let c = 0; c < 60; c++) expect(pinAt(view.grid, c, 20)).toBe(PIN.wall);
+    const doorway = mapPins(demoMap, 60, 40, { zoom: 4, center: { x: 3.5, y: 0 } });
+    expect(pinAt(doorway.grid, 30, 20)).toBe(PIN.empty);
+    expect(doorway.placed.length).toBeLessThan(placed.length);
+    const outside = mapPins(demoMap, 60, 40, { zoom: 4, center: { x: 1000, y: 1000 } });
+    expect(outside.placed).toEqual([]);
+    expect(outside.grid.pins.every((pin) => pin === PIN.empty)).toBe(true);
+  });
 
   it("fills the 60 × 40 graphic area, north up, with a margin", () => {
     expect(grid.cols).toBe(60);
@@ -144,6 +186,48 @@ describe("DotPad pin grid", () => {
     for (const p of real.grid.pins) if (p === PIN.wall) walls++;
     expect(walls).toBeGreaterThan(60);
     expect(real.placed.length).toBe(0); // its landmarks are rooms, which get no symbol
+  });
+});
+
+describe("DotPad routes", () => {
+  it("draws spaced route pins, preserves map geometry, and removes them when dismissed", () => {
+    const base = mapPins(demoMap);
+    const route = [{ x: 3.5, y: 2 }, { x: 3.5, y: 5 }, { x: 8, y: 5 }, { x: 8, y: 8 }];
+    const frame = framePins(base.grid, base.layout, null, base.placed, route);
+    expect(describeGrid(frame.grid).route).toBeGreaterThan(5);
+    expect(describeGrid(base.grid).route).toBe(0);
+    base.grid.pins.forEach((kind, index) => {
+      if (kind !== PIN.empty) expect(frame.grid.pins[index]).toBe(kind);
+    });
+    frame.grid.pins.forEach((kind, index) => {
+      if (kind !== PIN.route) return;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          const neighbor = pinAt(frame.grid, index % 60 + dc, Math.floor(index / 60) + dr);
+          expect(neighbor).not.toBe(PIN.wall);
+          expect(neighbor).not.toBe(PIN.symbol);
+        }
+      }
+    });
+    expect(toCellBytes(frame.grid)).not.toEqual(toCellBytes(base.grid));
+    expect(framePins(base.grid, base.layout, null, base.placed).grid).toEqual(base.grid);
+  });
+
+  it("clips zoomed routes and leaves space around the centered X", () => {
+    const position = { x: 8, y: 5 };
+    const base = mapPins(demoMap, 60, 40, { zoom: 4, center: position });
+    const frame = framePins(base.grid, base.layout, { position, heading: 0 }, base.placed,
+      [{ x: -1000, y: 5 }, { x: 1000, y: 5 }]);
+    expect(describeGrid(frame.grid).route).toBeGreaterThan(0);
+    expect(frame.walker).toEqual({ col: 30, row: 20 });
+    expect([...frame.grid.pins].filter((pin) => pin === PIN.walker)).toHaveLength(5);
+    for (let dr = -2; dr <= 2; dr++)
+      for (let dc = -2; dc <= 2; dc++)
+        expect(pinAt(frame.grid, 30 + dc, 20 + dr)).not.toBe(PIN.route);
+    const offscreen = framePins(base.grid, base.layout, null, [],
+      [{ x: 1000, y: 1000 }, { x: 2000, y: 1000 }]);
+    expect(offscreen.grid).toEqual(base.grid);
+    expect(framePins(base.grid, base.layout, null, [], [position, position]).grid).toEqual(base.grid);
   });
 });
 

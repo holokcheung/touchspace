@@ -12,6 +12,7 @@ const FILL: Record<number, string> = {
   [PIN.wall]: "var(--text)",
   [PIN.symbol]: "var(--plan-landmark)",
   [PIN.walker]: "var(--accent)",
+  [PIN.route]: "#b97c1d",
 };
 
 /** The pins as dots: raised ones large and colored by what raised them, flat ones faint. */
@@ -73,6 +74,7 @@ interface Props {
   walker: { col: number; row: number } | null;
   text: string;
   metersPerPin: number;
+  routeName?: string;
 }
 
 export default function DotPadPreview({
@@ -80,11 +82,13 @@ export default function DotPadPreview({
   walker,
   text,
   metersPerPin,
+  routeName,
 }: Props) {
   const counts = describeGrid(grid);
   const label =
     `DotPad preview, ${grid.cols} by ${grid.rows} pins, north up, about ${metersPerPin.toFixed(2)} meters per pin. ` +
     `${counts.walls} wall pins and ${counts.symbols} symbol pins are raised.` +
+    (routeName ? ` Route to ${routeName}: ${counts.route} route pins visible.` : "") +
     (walker
       ? ` Your X is at column ${walker.col + 1}, row ${walker.row + 1}.`
       : "") +
@@ -134,6 +138,14 @@ export default function DotPadPreview({
               ))}
             </svg>
             Wall: a line of raised pins; a gap is a doorway
+          </li>
+          <li className="flex items-center gap-2">
+            <svg viewBox="0 0 7 1" className="h-2 w-6 shrink-0" aria-hidden="true">
+              {[0, 3, 6].map((c) => (
+                <circle key={c} cx={c + 0.5} cy={0.5} r={0.4} fill={FILL[PIN.route]} />
+              ))}
+            </svg>
+            Route: spaced raised dots, with gaps beside walls and symbols
           </li>
           <li className="flex items-center gap-2">
             <MiniPattern

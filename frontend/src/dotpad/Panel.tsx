@@ -3,6 +3,7 @@ import {
   DotPadConnection,
   supportedTransports,
   type DeviceState,
+  type ZoomAction,
 } from "./device";
 import type { PinGrid } from "./pins";
 import { knownDotPads, type KnownDotPad } from "./discovery";
@@ -13,8 +14,16 @@ export default function DotPadPanel(props: {
   walker: { col: number; row: number } | null;
   text: string;
   metersPerPin: number;
+  zoom: number;
+  onZoom: (action: ZoomAction) => void;
+  routeName?: string;
+  onDismissRoute: () => void;
 }) {
   const connection = useRef<DotPadConnection | null>(null);
+  const onZoom = useRef(props.onZoom);
+  onZoom.current = props.onZoom;
+  const onDismissRoute = useRef(props.onDismissRoute);
+  onDismissRoute.current = props.onDismissRoute;
   const [state, setState] = useState<DeviceState>("disconnected");
   const [error, setError] = useState("");
   const [knownDevices, setKnownDevices] = useState<KnownDotPad[]>([]);
@@ -32,7 +41,7 @@ export default function DotPadPanel(props: {
       setState(next);
       setError(message ?? "");
       if (next !== "connecting") refreshKnownDevices();
-    });
+    }, (action) => onZoom.current(action), () => onDismissRoute.current());
     connection.current = device;
     const refreshOnFocus = () => refreshKnownDevices();
     window.addEventListener("focus", refreshOnFocus);
@@ -50,9 +59,34 @@ export default function DotPadPanel(props: {
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted">
-        Feel the whole map. Walls are raised, doors are gaps, and your position
-        is an X.
+        Walls are raised, doors are gaps, and your position is an X.
+        Zoom in to keep your position centered as you walk. On the DotPad,
+        function button 1 zooms out and function button 2 zooms in.
       </p>
+      <p role="status" aria-label="DotPad route" className="text-sm">
+        {props.routeName
+          ? `Route to ${props.routeName}. Follow the spaced raised dots. Press function button 3 on the DotPad to dismiss the route.`
+          : "No active route. Ask for directions to highlight a route."}
+      </p>
+      <div className="flex flex-wrap items-center gap-2" role="group" aria-label="DotPad zoom">
+        <button
+          className="btn-secondary"
+          disabled={props.zoom === 1}
+          onClick={() => props.onZoom("out")}
+        >
+          Zoom out
+        </button>
+        <span role="status" aria-label="DotPad zoom level">
+          {props.zoom === 1 ? "Overview" : `${props.zoom}× · centered on you`}
+        </span>
+        <button
+          className="btn-secondary"
+          disabled={props.zoom === 4}
+          onClick={() => props.onZoom("in")}
+        >
+          Zoom in
+        </button>
+      </div>
       <div className="flex flex-wrap gap-2">
         {state === "connected" ? (
           <>

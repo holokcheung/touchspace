@@ -5,6 +5,8 @@ import { PIN } from "../dotpad/pins";
 const sdk = vi.hoisted(() => ({
   callback: null as
     null | ((device: object, code: string, message: string) => void),
+  keyCallback: null as
+    null | ((device: object, code: string, message: string) => void),
   graphic: vi.fn(),
   text: vi.fn(),
   disconnect: vi.fn(),
@@ -26,8 +28,9 @@ vi.mock("../dotpad/vendor/DotPadSDK-3.0.4.js", () => ({
     startUsbScan = sdk.scan;
   },
   DotPadSDK: class {
-    setCallBack(cb: typeof sdk.callback) {
+    setCallBack(cb: typeof sdk.callback, key: typeof sdk.keyCallback) {
       sdk.callback = cb;
+      sdk.keyCallback = key;
     }
     connectBleDevice = sdk.connect;
     connectUsbDevice = sdk.connect;
@@ -62,6 +65,48 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 describe("DotPad vendor SDK integration", () => {
+  it("maps function buttons to zoom only for the active connection and removes callbacks on disposal", async () => {
+    const zoom = vi.fn();
+    const connection = new DotPadConnection(vi.fn(), zoom);
+    const key = sdk.keyCallback!;
+    key(device, "KeyFunction2", "4");
+    expect(zoom).not.toHaveBeenCalled();
+    await connection.connect("usb");
+    sdk.callback!(device, "Connected", "");
+    key(device, "KeyFunction2", "4");
+    key(device, "KeyFunction1", "8");
+    expect(zoom.mock.calls).toEqual([["in"], ["out"]]);
+    key(device, "KeyFunction12", "12");
+    key({ ...device }, "KeyFunction2", "4");
+    connection.disconnect();
+    key(device, "KeyFunction2", "4");
+    expect(zoom).toHaveBeenCalledTimes(2);
+    connection.dispose();
+    key(device, "KeyFunction2", "4");
+    expect(zoom).toHaveBeenCalledTimes(2);
+    expect(sdk.keyCallback).toBeNull();
+  });
+  it("dismisses routes with function button 3 and ignores other keys and inactive connections", async () => {
+    const dismiss = vi.fn();
+    const zoom = vi.fn();
+    const connection = new DotPadConnection(vi.fn(), zoom, dismiss);
+    const key = sdk.keyCallback!;
+    key(device, "KeyFunction3", "2");
+    await connection.connect("usb");
+    sdk.callback!(device, "Connected", "");
+    key({ ...device }, "KeyFunction3", "2");
+    key(device, "KeyFunction13", "10");
+    key(device, "KeyFunction4", "1");
+    expect(dismiss).not.toHaveBeenCalled();
+    key(device, "KeyFunction3", "2");
+    expect(dismiss).toHaveBeenCalledOnce();
+    expect(zoom).not.toHaveBeenCalled();
+    connection.disconnect();
+    key(device, "KeyFunction3", "2");
+    connection.dispose();
+    key(device, "KeyFunction3", "2");
+    expect(dismiss).toHaveBeenCalledOnce();
+  });
   it("waits for readiness, sends 300 graphic cells and 20 text cells, and coalesces motion", async () => {
     const state = vi.fn();
     const connection = new DotPadConnection(state);
