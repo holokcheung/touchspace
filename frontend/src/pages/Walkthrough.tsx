@@ -6,6 +6,7 @@ import FloorPlanSvg from "../components/FloorPlanSvg";
 import MapNav from "../components/MapNav";
 import { LiveStatus, Notice } from "../components/Status";
 import { framePins, mapPins, statusLine } from "../lib/dotpad";
+import { useDotPadLink } from "../lib/dotpadLink";
 import { dist, planBounds, roomAt } from "../lib/geometry";
 import {
   SOUNDSCAPE,
@@ -160,6 +161,7 @@ export function WalkthroughView({ map, header }: { map: FloorMap; header?: React
   const dot = useMemo(() => mapPins(map), [map]);
   const frame = useMemo(() => framePins(dot.grid, dot.layout, pose, dot.placed), [dot, pose]);
   const padText = useMemo(() => statusLine(map, pose), [map, pose]);
+  const linkStatus = useDotPadLink(map, pose);
 
   useEffect(() => {
     if (!soundOn || readings.length === 0) return;
@@ -441,6 +443,11 @@ export function WalkthroughView({ map, header }: { map: FloorMap; header?: React
               <div className="mt-3">
                 <DotPadPreview grid={frame.grid} walker={frame.walker} text={padText} metersPerPin={dot.layout.metersPerPin} />
               </div>
+              {linkStatus && (
+                <p className="mt-2 text-sm" role="status">
+                  {linkStatus}
+                </p>
+              )}
             </section>
           </aside>
         </div>

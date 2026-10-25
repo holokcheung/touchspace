@@ -86,6 +86,27 @@ No phone yet? Pretend to be one:
 .venv/bin/python -m app.live.fake_phone "ws://127.0.0.1:8765/phone?token=..." --map ../sample-data/demo-building.json
 ```
 
+## Phone browser instead of the app (works today, no Xcode)
+
+A phone's browser cannot reach the DotPad itself (no Web Bluetooth or Web Serial on iOS) and has no
+LiDAR, so the DotPad stays on the Mac. But the web walk-through on the phone can drive it: you walk
+the saved map by touch and the DotPad follows. Walking is simulated, not live sensing.
+
+On the Mac (three terminals, plus Chrome on `/hardware` as in step 2):
+
+```sh
+cd backend && .venv/bin/python -m app.live --dotpad browser --web-sdk ~/dotpad-vendor/DotPadSDK-3.0.4.js --token ab12
+cd backend && .venv/bin/python -m uvicorn app.main:app --port 8000
+cd frontend && npm run dev -- --host        # prints "Network: http://<mac-ip>:5173/"
+```
+
+On the phone, same Wi-Fi (or the Mac on the phone's hotspot), open:
+`http://<mac-ip>:5173/maps/<map-id>/walk?dotpad=ab12` (find the map id in the map list on the Mac).
+Under the DotPad preview the page should say **"DotPad: connected, showing this walk"**.
+The page reaches the bridge through Vite's `/bridge` proxy, so only port 5173 must be reachable.
+Allow incoming connections if macOS asks. Use this plain `http://` link, not the claude.ai
+artifact page: an https page can't open a `ws://` connection to the Mac.
+
 ## Network at the venue
 
 The phone must reach the Mac on port 8765.
