@@ -57,9 +57,9 @@ import SwiftUI
             marker.position = [Float(landmark.position.x),floor+0.06,Float(landmark.position.z)]
             model.addChild(marker)
         }
-        let cursor = ModelEntity(mesh:.generateSphere(radius:0.12),materials:[UnlitMaterial(color:.systemBlue)])
+        let cursor = ModelEntity(mesh:.generateSphere(radius:0.12),materials:[UnlitMaterial(color:.touchSpaceMint)])
         cursor.position.y = floor+0.18; walker.addChild(cursor)
-        let facing = ModelEntity(mesh:.generateBox(size:[0.06,0.04,0.36]),materials:[UnlitMaterial(color:.systemBlue)])
+        let facing = ModelEntity(mesh:.generateBox(size:[0.06,0.04,0.36]),materials:[UnlitMaterial(color:.touchSpaceMint)])
         facing.position = [0,floor+0.18,-0.19]; walker.addChild(facing)
         model.addChild(walker); model.addChild(routeRoot)
         let light = DirectionalLight(); light.light.intensity = 3500

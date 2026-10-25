@@ -23,7 +23,7 @@ struct FloorPlanView: View {
                     Path { path in guard let first=points.first else { return }; path.move(to:point(first)); for p in points.dropFirst() { path.addLine(to:point(p)) }; path.closeSubpath() }
                 }
                 for room in package.geometry.rooms {
-                    context.fill(polygon(room.polygon),with:.color(.blue.opacity(0.12)))
+                    context.fill(polygon(room.polygon),with:.color(Color.touchSpaceMint.opacity(0.12)))
                     context.stroke(polygon(room.polygon),with:.color(.secondary),lineWidth:1)
                 }
                 for item in package.geometry.obstacles { context.fill(polygon(item.polygon),with:.color(.secondary.opacity(0.5))) }
@@ -34,7 +34,7 @@ struct FloorPlanView: View {
                     context.stroke(Path { $0.move(to:point(door.start)); $0.addLine(to:point(door.end)) },with:.color(door.traversability == "confirmed" ? .green : .orange),lineWidth:5)
                 }
                 if let route {
-                    context.stroke(Path { path in for (i,p) in route.waypoints.enumerated() { if i==0 { path.move(to:point(p)) } else { path.addLine(to:point(p)) } } },with:.color(.blue),style:.init(lineWidth:4,lineCap:.round,lineJoin:.round))
+                    context.stroke(Path { path in for (i,p) in route.waypoints.enumerated() { if i==0 { path.move(to:point(p)) } else { path.addLine(to:point(p)) } } },with:.color(.touchSpaceMint),style:.init(lineWidth:4,lineCap:.round,lineJoin:.round))
                 }
                 for landmark in package.landmarks.landmarks {
                     let p = point(landmark.position)
@@ -45,11 +45,11 @@ struct FloorPlanView: View {
                 }
                 if let pose, let heading {
                     let origin = point(pose), target = CGPoint(x:origin.x+sin(heading)*20,y:origin.y-cos(heading)*20)
-                    context.stroke(Path { $0.move(to:origin); $0.addLine(to:target) },with:.color(.blue),style:.init(lineWidth:4,lineCap:.round))
+                    context.stroke(Path { $0.move(to:origin); $0.addLine(to:target) },with:.color(.touchSpaceMint),style:.init(lineWidth:4,lineCap:.round))
                 }
                 for p in [pose,selected].compactMap({ $0 }) {
                     let p = point(p)
-                    context.fill(Path(ellipseIn:CGRect(x:p.x-7,y:p.y-7,width:14,height:14)),with:.color(.blue))
+                    context.fill(Path(ellipseIn:CGRect(x:p.x-7,y:p.y-7,width:14,height:14)),with:.color(.touchSpaceMint))
                 }
             }
             .contentShape(Rectangle())
