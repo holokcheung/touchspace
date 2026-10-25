@@ -14,9 +14,15 @@ def test_palace_trace_has_valid_rooms_and_usable_door_gaps():
     assert raw == (ROOT / 'frontend/standalone/maps/palace-of-fine-arts.json').read_text()
     m = FloorMap.model_validate_json(raw)
     assert not validate_map(m)
+    # Calibrated to the printed plan dimension, not the old OSM auditorium span.
+    northings = [p.y for w in m.walls for p in (w.start, w.end)]
+    assert 208 < max(northings) - min(northings) < 210
+    shell = Polygon([p.as_tuple() for p in m.rooms[-1].polygon])
     for room in m.rooms:
         polygon = Polygon([p.as_tuple() for p in room.polygon])
         assert polygon.is_valid and polygon.area > 0, room.id
+        # Sub-pixel tracing differences are acceptable; no meaningful spill.
+        assert polygon.difference(shell).area < 0.1, room.id
     for door in m.doors:
         wall = m.wall_by_id(door.wall_id)
         line = LineString([wall.start.as_tuple(), wall.end.as_tuple()])

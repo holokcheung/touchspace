@@ -14,8 +14,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUTS = [ROOT / "palace-of-fine-arts.json", ROOT.parent / "frontend/standalone/maps/palace-of-fine-arts.json"]
 SOURCE_URL = "https://palaceoffinearts.com/wp-content/uploads/sites/4/2025/04/PFA-Master-Floorplan.pdf"
-# Retain the earlier OSM end-to-end scale, applied to the new trace's extents.
-M_PER_PX = 273.8 / (1115 - 62)
+# Upstream measured 188.9 px for the printed 132'-10 21/32" dimension
+# on an 1100 px-wide rendering. Our trace is 1188 px wide: convert that
+# calibration rather than reusing its rounded 0.214 m/px at a different size.
+PLAN_DIMENSION_M = (132 + (10 + 21 / 32) / 12) * 0.3048
+M_PER_PX = PLAN_DIMENSION_M / (188.9 * 1188 / 1100)
 
 
 def pt(px, py):
@@ -113,8 +116,8 @@ shell_door("north_exit", (901,604), 2.0)
 cx, cy, rx, ry = 544, 264, 45, 39
 ring = [(cx+rx*math.cos(t),cy+ry*math.sin(t)) for t in [2*math.pi*i/40 for i in range(40)]]
 ring_ids = path("breakout_ring", ring, closed=True)
-door("breakout1",ring_ids[20],0.5,1.5)
-door("breakout2",ring_ids[3],0.5,1.5)
+door("breakout1",ring_ids[20],0.5,1.0)
+door("breakout2",ring_ids[3],0.5,1.0)
 # The divider leans slightly right at its upper end; include the connecting door.
 divider = wall("w_breakout_divider",(542,225),(528,301))
 door("breakout_connect",divider,0.5,1.1)
@@ -137,7 +140,7 @@ enclosed("breakout6","Breakout 6",[(784,443),(819,441),(842,459),(862,476),(886,
                                          (886,517),(868,534),(831,506),(802,481),(768,459)],
          [(2,0.5,1.5),(9,0.4,1.5)])
 # Breakout 7 is an open event zone; the drawing shows no enclosing west wall.
-room("breakout7","Breakout 7",[(951,411),(1028,431),(1071,488),(1005,533),(981,486),(939,447)],
+room("breakout7","Breakout 7",[(951,411),(1028,442),(1071,491),(1005,533),(981,486),(939,447)],
      "Open event area beside the mezzanine stairs; no partition across the circulation aisle.")
 path("breakout7_service",[(968,410),(1001,435),(1023,414)])
 
@@ -146,8 +149,8 @@ path("catering",[(525,160),(520,185),(565,196),(573,171)])
 room("catering","Catering prep",[(480,155),(525,160),(520,185),(565,196),(559,215),(480,194)])
 for rid,name,points in [
     ("restroom_catering_w","Women's restroom by catering",[(573,171),(615,181),(605,209),(565,198)]),
-    ("restroom_catering_m","Men's restroom by catering",[(615,181),(655,193),(647,222),(605,209)]),
-    ("service_store","Service storage",[(655,193),(691,205),(679,235),(647,222)]),
+    ("restroom_catering_m","Men's restroom by catering",[(615,181),(655,194),(647,222),(605,209)]),
+    ("service_store","Service storage",[(655,194),(691,207),(679,235),(647,222)]),
 ]:
     enclosed(rid,name,points,[(2,0.5,1.1)])
 
@@ -180,24 +183,24 @@ room("back_of_house","Available back of house",[(499,346),(542,352),(585,363),(6
 door("back_of_house", "w_back_of_house_02", 0.6, 1.2)
 # Green rooms and service room at the south end.
 path("south_service",[(93,226),(115,277),(215,237),(201,185)])
-room("south_service","South service area (no access)",[(62,240),(93,226),(115,277),(85,289)])
+room("south_service","South service area (no access)",[(62,240),(93,226),(115,277),(88,289)])
 path("green_rooms",[(101,318),(119,310),(133,339),(116,347)])
 path("green_room_two",[(132,380),(160,368),(178,403)])
-room("green_rooms","Green rooms",[(85,289),(115,277),(178,403),(156,425)])
+room("green_rooms","Green rooms",[(88,289),(115,277),(178,403),(156,425)])
 # North end lobby, restrooms and theater boundary, visible on the source.
-path("north_lobby",[(916,626),(1051,544),(1078,575)])
+path("north_lobby",[(916,626),(1051,544),(1068,562),(1078,575)])
 door("theater_lobby","w_north_lobby_00",0.62,2.0)
-path("north_services",[(1005,533),(1071,488)])
-path("north_restroom",[(1051,544),(1089,520)])
-room("restroom_north","North end restroom",[(1051,544),(1089,520),(1115,553),(1078,575)])
-path("lobby_south_wc",[(938,640),(957,628),(969,649)])
-room("restroom_lobby","Restroom by business entrance",[(916,626),(938,656),(969,639),(957,619)])
+path("north_services",[(1005,533),(1071,491)])
+path("north_restroom",[(1051,544),(1089,528)])
+room("restroom_north","North end restroom",[(1051,544),(1089,528),(1115,553),(1078,575),(1068,562)])
+path("lobby_south_wc",[(938,640),(957,628),(969,637)])
+room("restroom_lobby","Restroom by business entrance",[(916,626),(938,656),(969,637),(957,619)])
 room("theater","Theater area",[(831,520),(865,534),(892,570),(916,626),(1005,572),(964,548),(901,540)])
 
 # Open-floor areas: boundaries color the floor only, never create fictitious walls.
 # Put small rooms first for roomAt(); a complete shell floor fills circulation gaps.
 room("pavilion","Pavilion",[(115,277),(215,237),(201,185),(248,173),(270,300),(195,408),(156,425)])
-room("atrium","Atrium",[(248,173),(340,157),(390,154),(436,153),(460,310),(420,360),(375,364),(330,371),(195,408),(270,300)])
+room("atrium","Atrium",[(248,173),(340,157),(390,154),(436,153),(460,310),(420,360),(375,364),(330,371),(285,381),(240,393),(195,408),(270,300)])
 room("broadway1","Broadway 1",[(436,153),(480,155),(499,225),(499,303),(591,317),(585,363),(510,368),(465,362),(420,360),(460,310)])
 room("broadway2","Broadway 2",[(591,317),(664,339),(692,270),(692,323),(817,391),(777,421),(735,452),(690,428),(645,407),(663,407),(668,391)])
 room("broadway3","Broadway 3",[(817,391),(877,405),(910,452),(981,486),(1005,533),(901,540),(886,517),(886,494),(842,459),(819,441),(784,443),(768,459),(735,452),(777,421)])
@@ -212,20 +215,20 @@ for lid,name,kind,x,y,description in [
     ("green_rooms","Green rooms","room",142,359,"Service rooms at the south end."),
     ("catering","Catering prep","room",543,187,"Prep area beside the service restrooms."),
     ("restroom_north","Restrooms by catering prep","restroom",589,194,"Service restrooms along Palace Drive."),
-    ("palace_games","Palace Games","room",780,262,"Restricted escape-room strip along Palace Drive; separate venue access."),
+    ("palace_games","Palace Games","room",780,262,"Restricted escape-room strip along Palace Drive; separate public entrance at 3362 Palace Drive."),
     ("staff","Staff offices (no access)","room",775,340,"Restricted staff office block."),
-    ("breakout1","Breakout 1","room",518,262,"One half of the circular room."),
-    ("breakout2","Breakout 2","room",561,267,"Other half of the circular room."),
-    ("breakout3","Breakout 3","room",646,266,"Outer room of the rectangular breakout block."),
-    ("breakout4","Breakout 4","room",632,308,"Inner room of the rectangular breakout block."),
+    ("breakout1","Breakout 1","room",518,262,"South half of the circular room."),
+    ("breakout2","Breakout 2","room",561,267,"North half of the circular room."),
+    ("breakout3","Breakout 3","room",646,266,"West room (Palace Drive side) of the block north of the circular room."),
+    ("breakout4","Breakout 4","room",632,308,"East room (lagoon side) of the block north of the circular room."),
     ("breakout5","Breakout 5","room",913,410,"Enclosed breakout beside the mezzanine stairs."),
     ("breakout6","Breakout 6","room",843,489,"Angled room along the lagoon side."),
     ("breakout7","Breakout 7","room",1000,468,"Open event area at the north end."),
     ("stairs","Stairs to the mezzanine","stairs",934,464,"Stairs beside Breakout 5; upper level is not modeled."),
-    ("theater","Theater","room",926,574,"Theater area shown on the first-floor venue plan."),
+    ("theater","Theater","room",926,574,"Small tiered seating area labeled Theater by the business entrance. The main Palace of Fine Arts Theatre auditorium is at the far south end and is not on this map."),
     ("restroom_east","Restroom, north end","restroom",1084,549,"Restroom at the north end beside Breakout 7."),
     ("restroom_south","Restroom by the business entrance","restroom",946,639,"Restroom beside the business entrance lobby."),
-    ("broadway1","Broadway 1","room",492,329,"Open floor around the circular breakout block."),
+    ("broadway1","Broadway 1","room",492,329,"Open floor southeast of the circular breakout block, toward the lagoon wall."),
     ("broadway2","Broadway 2","room",705,369,"Main circulation beside staff offices."),
     ("broadway3","Broadway 3","room",818,420,"Open floor between Breakouts 5 and 6."),
     ("back_of_house","Available back of house","room",578,380,"Narrow service strip along the lagoon wall."),
@@ -237,8 +240,9 @@ floor_map = {
     "name": "Palace of Fine Arts, first floor", "units": "meters",
     "source": {"kind": "manual", "description":
         f"Interior reconstruction traced from the official PFA Master Floorplan, page 1: {SOURCE_URL} "
-        "(accessed 2026-10-25). North up. Approximate scale retained from OpenStreetMap "
-        "(c) OpenStreetMap contributors, 273.8 m overall span. Interior walls, door positions "
+        "(accessed 2026-10-25). North up. Approximate scale calibrated from the plan's "
+        "printed 132 ft 10 21/32 in dimension on page 2, converted to the 1188 px trace. "
+        "The main theater auditorium at the south end is outside this map. Interior walls, door positions "
         "and room footprints are hand-traced; heights (8 m shell / 3 m partitions) and wall "
         "thicknesses are illustrative, not surveyed. Ground floor only; mezzanine not modeled. "
         "Restricted areas are labeled, not verified public routes."},

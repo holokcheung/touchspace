@@ -161,7 +161,9 @@ def test_palace_of_fine_arts_sample(client):
     assert r.status_code == 201, r.text
     m = r.json()["map"]
     assert m["name"] == "Palace of Fine Arts, first floor" and m["source"]["kind"] == "manual"
-    assert "OpenStreetMap" in m["source"]["description"]
+    assert "Approximate" in m["source"]["description"] and "North up" in m["source"]["description"]
+    assert "printed" in m["source"]["description"]
+    assert not any("Rotated" in step for step in r.json()["processing_steps"])
     names = {lm["name"] for lm in m["landmarks"]}
     assert {"Public entrance", "Business entrance", "Palace Games", "Theater", "Atrium"} <= names
     assert not r.json()["issues"]

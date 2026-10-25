@@ -6,9 +6,11 @@ The sample now retains interior geometry for the 3D walkthrough instead of reduc
 
 - [Official PFA Master Floorplan](https://palaceoffinearts.com/wp-content/uploads/sites/4/2025/04/PFA-Master-Floorplan.pdf), accessed October 25, 2026. Page 1 supplies ground-floor walls, rooms and door locations. Page 3 shows a mezzanine; page 4 provides architectural/site context and the compass. This is the same source named by the old sample, but its interior detail was previously discarded.
 - [Official venue presentation](https://palaceoffinearts.com/wp-content/uploads/sites/4/2024/09/Palace-of-Fine-Arts-Venue-Presentation.pdf) corroborates the arrangement of event spaces.
-- Scale retains the earlier sample's approximate 273.8 m end-to-end span attributed to OpenStreetMap, © OpenStreetMap contributors ([ODbL](https://www.openstreetmap.org/copyright)). This is not a new survey or an independently verified dimension.
+- Scale uses the printed 132′-10 21/32″ dimension on page 2 (about 40.50 m), measured upstream as 188.9 pixels in an 1100-pixel-wide rendering. Converting that calibration to our 1188-pixel-wide trace gives approximately 0.1985 m/pixel. The earlier OpenStreetMap span included the main theater auditorium outside this map and made the reconstruction too large.
 
 ## What is reconstructed
+
+The main Palace of Fine Arts Theatre auditorium at the far south end is outside this map. The small area labeled Theater on this plan is tiered seating beside the north business entrance.
 
 The curved shell, divided circular Breakouts 1–2, rectangular Breakouts 3–4, angled Breakouts 5–6, service/restroom blocks, green rooms, staff office partitions, back-of-house strip and north entrance lobby are represented with walls and doorway gaps. Breakout 7 and Broadway remain open zones where the source shows no enclosing partition. Staff offices and Palace Games retain their restricted-area labels.
 
