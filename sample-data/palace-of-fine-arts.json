@@ -5,338 +5,3545 @@
   "units": "meters",
   "source": {
     "kind": "manual",
-    "description": "Traced from the Palace of Fine Arts public floor plan (palaceoffinearts.com), scaled with the dimensions printed on it. Approximate and simplified for the DotPad. North up."
+    "description": "Interior reconstruction traced from the official PFA Master Floorplan, page 1: https://palaceoffinearts.com/wp-content/uploads/sites/4/2025/04/PFA-Master-Floorplan.pdf (accessed 2026-10-25). North up. Approximate scale calibrated from the plan's printed 132 ft 10 21/32 in dimension on page 2, converted to the 1188 px trace. The main theater auditorium at the south end is outside this map. Interior walls, door positions and room footprints are hand-traced; heights (8 m shell / 3 m partitions) and wall thicknesses are illustrative, not surveyed. Ground floor only; mezzanine not modeled. Restricted areas are labeled, not verified public routes."
   },
   "floor_level": 0,
   "walls": [
     {
       "id": "w_shell_00",
       "start": {
-        "x": 46.01,
-        "y": 12.2
+        "x": 17.273,
+        "y": 0.0
       },
       "end": {
-        "x": 36.38,
-        "y": 42.8
+        "x": 13.302,
+        "y": 8.537
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_01",
       "start": {
-        "x": 36.38,
-        "y": 42.8
+        "x": 13.302,
+        "y": 8.537
       },
       "end": {
-        "x": 31.67,
-        "y": 70.62
+        "x": 9.331,
+        "y": 18.067
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_02",
       "start": {
-        "x": 31.67,
-        "y": 70.62
+        "x": 9.331,
+        "y": 18.067
       },
       "end": {
-        "x": 29.96,
-        "y": 96.3
+        "x": 6.353,
+        "y": 27.597
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_03",
       "start": {
-        "x": 29.96,
-        "y": 96.3
+        "x": 6.353,
+        "y": 27.597
       },
       "end": {
-        "x": 32.1,
-        "y": 119.84
+        "x": 3.971,
+        "y": 36.928
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_04",
       "start": {
-        "x": 32.1,
-        "y": 119.84
+        "x": 3.971,
+        "y": 36.928
       },
       "end": {
-        "x": 38.95,
-        "y": 139.1
+        "x": 1.985,
+        "y": 46.061
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_05",
       "start": {
-        "x": 38.95,
-        "y": 139.1
+        "x": 1.985,
+        "y": 46.061
       },
       "end": {
-        "x": 47.51,
-        "y": 160.5
+        "x": 0.794,
+        "y": 55.194
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_06",
       "start": {
-        "x": 47.51,
-        "y": 160.5
+        "x": 0.794,
+        "y": 55.194
       },
       "end": {
-        "x": 60.99,
-        "y": 181.9
+        "x": 0.199,
+        "y": 65.121
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_07",
       "start": {
-        "x": 60.99,
-        "y": 181.9
+        "x": 0.199,
+        "y": 65.121
       },
       "end": {
-        "x": 74.9,
-        "y": 194.74
+        "x": 0.0,
+        "y": 74.253
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_08",
       "start": {
-        "x": 74.9,
-        "y": 194.74
+        "x": 0.0,
+        "y": 74.253
       },
       "end": {
-        "x": 88.81,
-        "y": 205.44
+        "x": 0.397,
+        "y": 82.989
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_09",
       "start": {
-        "x": 88.81,
-        "y": 205.44
+        "x": 0.397,
+        "y": 82.989
       },
       "end": {
-        "x": 100.58,
-        "y": 216.14
+        "x": 1.39,
+        "y": 91.923
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_10",
       "start": {
-        "x": 100.58,
-        "y": 216.14
+        "x": 1.39,
+        "y": 91.923
       },
       "end": {
-        "x": 111.28,
-        "y": 224.7
+        "x": 3.375,
+        "y": 100.858
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_11",
       "start": {
-        "x": 111.28,
-        "y": 224.7
+        "x": 3.375,
+        "y": 100.858
       },
       "end": {
-        "x": 117.27,
-        "y": 210.79
+        "x": 5.559,
+        "y": 109.792
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_12",
       "start": {
-        "x": 117.27,
-        "y": 210.79
+        "x": 5.559,
+        "y": 109.792
       },
       "end": {
-        "x": 122.41,
-        "y": 193.67
+        "x": 8.339,
+        "y": 118.726
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_13",
       "start": {
-        "x": 122.41,
-        "y": 193.67
+        "x": 8.339,
+        "y": 118.726
       },
       "end": {
-        "x": 129.47,
-        "y": 184.04
+        "x": 11.515,
+        "y": 127.66
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_14",
       "start": {
-        "x": 129.47,
-        "y": 184.04
+        "x": 11.515,
+        "y": 127.66
       },
       "end": {
-        "x": 121.98,
-        "y": 178.69
+        "x": 15.287,
+        "y": 136.595
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_15",
       "start": {
-        "x": 121.98,
-        "y": 178.69
+        "x": 15.287,
+        "y": 136.595
       },
       "end": {
-        "x": 108.07,
-        "y": 171.2
+        "x": 19.854,
+        "y": 145.529
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_16",
       "start": {
-        "x": 108.07,
-        "y": 171.2
+        "x": 19.854,
+        "y": 145.529
       },
       "end": {
-        "x": 100.58,
-        "y": 164.78
+        "x": 24.817,
+        "y": 154.463
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_17",
       "start": {
-        "x": 100.58,
-        "y": 164.78
+        "x": 24.817,
+        "y": 154.463
       },
       "end": {
-        "x": 90.95,
-        "y": 154.08
+        "x": 30.575,
+        "y": 163.0
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_18",
       "start": {
-        "x": 90.95,
-        "y": 154.08
+        "x": 30.575,
+        "y": 163.0
       },
       "end": {
-        "x": 81.75,
-        "y": 134.82
+        "x": 36.928,
+        "y": 171.339
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_19",
       "start": {
-        "x": 81.75,
-        "y": 134.82
+        "x": 36.928,
+        "y": 171.339
       },
       "end": {
-        "x": 73.83,
-        "y": 117.7
+        "x": 44.076,
+        "y": 179.677
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_20",
       "start": {
-        "x": 73.83,
-        "y": 117.7
+        "x": 44.076,
+        "y": 179.677
       },
       "end": {
-        "x": 70.19,
-        "y": 96.3
+        "x": 51.819,
+        "y": 187.619
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_21",
       "start": {
-        "x": 70.19,
-        "y": 96.3
+        "x": 51.819,
+        "y": 187.619
       },
       "end": {
-        "x": 72.76,
-        "y": 74.9
+        "x": 60.157,
+        "y": 195.164
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_22",
       "start": {
-        "x": 72.76,
-        "y": 74.9
+        "x": 60.157,
+        "y": 195.164
       },
       "end": {
-        "x": 77.47,
-        "y": 53.5
+        "x": 69.489,
+        "y": 202.311
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_23",
       "start": {
-        "x": 77.47,
-        "y": 53.5
+        "x": 69.489,
+        "y": 202.311
       },
       "end": {
-        "x": 83.89,
-        "y": 34.24
+        "x": 79.415,
+        "y": 209.061
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     },
     {
       "id": "w_shell_24",
       "start": {
-        "x": 83.89,
-        "y": 34.24
+        "x": 79.415,
+        "y": 209.061
       },
       "end": {
-        "x": 46.01,
-        "y": 12.2
+        "x": 83.783,
+        "y": 201.715
       },
-      "thickness": 0.4
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_25",
+      "start": {
+        "x": 83.783,
+        "y": 201.715
+      },
+      "end": {
+        "x": 81.202,
+        "y": 199.73
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_26",
+      "start": {
+        "x": 81.202,
+        "y": 199.73
+      },
+      "end": {
+        "x": 85.57,
+        "y": 192.582
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_27",
+      "start": {
+        "x": 85.57,
+        "y": 192.582
+      },
+      "end": {
+        "x": 90.137,
+        "y": 184.442
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_28",
+      "start": {
+        "x": 90.137,
+        "y": 184.442
+      },
+      "end": {
+        "x": 92.718,
+        "y": 180.273
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_29",
+      "start": {
+        "x": 92.718,
+        "y": 180.273
+      },
+      "end": {
+        "x": 94.901,
+        "y": 182.06
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_30",
+      "start": {
+        "x": 94.901,
+        "y": 182.06
+      },
+      "end": {
+        "x": 99.865,
+        "y": 173.92
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_31",
+      "start": {
+        "x": 99.865,
+        "y": 173.92
+      },
+      "end": {
+        "x": 87.357,
+        "y": 164.787
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_32",
+      "start": {
+        "x": 87.357,
+        "y": 164.787
+      },
+      "end": {
+        "x": 79.018,
+        "y": 157.64
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_33",
+      "start": {
+        "x": 79.018,
+        "y": 157.64
+      },
+      "end": {
+        "x": 71.672,
+        "y": 150.095
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_34",
+      "start": {
+        "x": 71.672,
+        "y": 150.095
+      },
+      "end": {
+        "x": 65.121,
+        "y": 141.955
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_35",
+      "start": {
+        "x": 65.121,
+        "y": 141.955
+      },
+      "end": {
+        "x": 59.363,
+        "y": 133.617
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_36",
+      "start": {
+        "x": 59.363,
+        "y": 133.617
+      },
+      "end": {
+        "x": 54.598,
+        "y": 124.682
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_37",
+      "start": {
+        "x": 54.598,
+        "y": 124.682
+      },
+      "end": {
+        "x": 50.429,
+        "y": 115.748
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_38",
+      "start": {
+        "x": 50.429,
+        "y": 115.748
+      },
+      "end": {
+        "x": 47.252,
+        "y": 106.814
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_39",
+      "start": {
+        "x": 47.252,
+        "y": 106.814
+      },
+      "end": {
+        "x": 44.671,
+        "y": 97.88
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_40",
+      "start": {
+        "x": 44.671,
+        "y": 97.88
+      },
+      "end": {
+        "x": 42.686,
+        "y": 88.945
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_41",
+      "start": {
+        "x": 42.686,
+        "y": 88.945
+      },
+      "end": {
+        "x": 41.495,
+        "y": 80.011
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_42",
+      "start": {
+        "x": 41.495,
+        "y": 80.011
+      },
+      "end": {
+        "x": 41.098,
+        "y": 71.077
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_43",
+      "start": {
+        "x": 41.098,
+        "y": 71.077
+      },
+      "end": {
+        "x": 41.892,
+        "y": 62.143
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_44",
+      "start": {
+        "x": 41.892,
+        "y": 62.143
+      },
+      "end": {
+        "x": 43.281,
+        "y": 53.208
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_45",
+      "start": {
+        "x": 43.281,
+        "y": 53.208
+      },
+      "end": {
+        "x": 45.267,
+        "y": 44.274
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_46",
+      "start": {
+        "x": 45.267,
+        "y": 44.274
+      },
+      "end": {
+        "x": 47.649,
+        "y": 35.34
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_47",
+      "start": {
+        "x": 47.649,
+        "y": 35.34
+      },
+      "end": {
+        "x": 50.627,
+        "y": 26.406
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_48",
+      "start": {
+        "x": 50.627,
+        "y": 26.406
+      },
+      "end": {
+        "x": 54.003,
+        "y": 18.663
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_shell_49",
+      "start": {
+        "x": 54.003,
+        "y": 18.663
+      },
+      "end": {
+        "x": 17.273,
+        "y": 0.0
+      },
+      "thickness": 0.4,
+      "height": 8.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_00",
+      "start": {
+        "x": 22.038,
+        "y": 104.63
+      },
+      "end": {
+        "x": 23.249,
+        "y": 104.52
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_01",
+      "start": {
+        "x": 23.249,
+        "y": 104.52
+      },
+      "end": {
+        "x": 24.431,
+        "y": 104.193
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_02",
+      "start": {
+        "x": 24.431,
+        "y": 104.193
+      },
+      "end": {
+        "x": 25.553,
+        "y": 103.656
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_03",
+      "start": {
+        "x": 25.553,
+        "y": 103.656
+      },
+      "end": {
+        "x": 26.589,
+        "y": 102.924
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_04",
+      "start": {
+        "x": 26.589,
+        "y": 102.924
+      },
+      "end": {
+        "x": 27.513,
+        "y": 102.013
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_05",
+      "start": {
+        "x": 27.513,
+        "y": 102.013
+      },
+      "end": {
+        "x": 28.302,
+        "y": 100.947
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_06",
+      "start": {
+        "x": 28.302,
+        "y": 100.947
+      },
+      "end": {
+        "x": 28.937,
+        "y": 99.752
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_07",
+      "start": {
+        "x": 28.937,
+        "y": 99.752
+      },
+      "end": {
+        "x": 29.402,
+        "y": 98.456
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_08",
+      "start": {
+        "x": 29.402,
+        "y": 98.456
+      },
+      "end": {
+        "x": 29.685,
+        "y": 97.093
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_09",
+      "start": {
+        "x": 29.685,
+        "y": 97.093
+      },
+      "end": {
+        "x": 29.781,
+        "y": 95.696
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_10",
+      "start": {
+        "x": 29.781,
+        "y": 95.696
+      },
+      "end": {
+        "x": 29.685,
+        "y": 94.298
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_11",
+      "start": {
+        "x": 29.685,
+        "y": 94.298
+      },
+      "end": {
+        "x": 29.402,
+        "y": 92.935
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_12",
+      "start": {
+        "x": 29.402,
+        "y": 92.935
+      },
+      "end": {
+        "x": 28.937,
+        "y": 91.64
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_13",
+      "start": {
+        "x": 28.937,
+        "y": 91.64
+      },
+      "end": {
+        "x": 28.302,
+        "y": 90.444
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_14",
+      "start": {
+        "x": 28.302,
+        "y": 90.444
+      },
+      "end": {
+        "x": 27.513,
+        "y": 89.378
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_15",
+      "start": {
+        "x": 27.513,
+        "y": 89.378
+      },
+      "end": {
+        "x": 26.589,
+        "y": 88.468
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_16",
+      "start": {
+        "x": 26.589,
+        "y": 88.468
+      },
+      "end": {
+        "x": 25.553,
+        "y": 87.735
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_17",
+      "start": {
+        "x": 25.553,
+        "y": 87.735
+      },
+      "end": {
+        "x": 24.431,
+        "y": 87.199
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_18",
+      "start": {
+        "x": 24.431,
+        "y": 87.199
+      },
+      "end": {
+        "x": 23.249,
+        "y": 86.871
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_19",
+      "start": {
+        "x": 23.249,
+        "y": 86.871
+      },
+      "end": {
+        "x": 22.038,
+        "y": 86.761
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_20",
+      "start": {
+        "x": 22.038,
+        "y": 86.761
+      },
+      "end": {
+        "x": 20.827,
+        "y": 86.871
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_21",
+      "start": {
+        "x": 20.827,
+        "y": 86.871
+      },
+      "end": {
+        "x": 19.645,
+        "y": 87.199
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_22",
+      "start": {
+        "x": 19.645,
+        "y": 87.199
+      },
+      "end": {
+        "x": 18.523,
+        "y": 87.735
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_23",
+      "start": {
+        "x": 18.523,
+        "y": 87.735
+      },
+      "end": {
+        "x": 17.487,
+        "y": 88.468
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_24",
+      "start": {
+        "x": 17.487,
+        "y": 88.468
+      },
+      "end": {
+        "x": 16.563,
+        "y": 89.378
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_25",
+      "start": {
+        "x": 16.563,
+        "y": 89.378
+      },
+      "end": {
+        "x": 15.774,
+        "y": 90.444
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_26",
+      "start": {
+        "x": 15.774,
+        "y": 90.444
+      },
+      "end": {
+        "x": 15.139,
+        "y": 91.64
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_27",
+      "start": {
+        "x": 15.139,
+        "y": 91.64
+      },
+      "end": {
+        "x": 14.674,
+        "y": 92.935
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_28",
+      "start": {
+        "x": 14.674,
+        "y": 92.935
+      },
+      "end": {
+        "x": 14.39,
+        "y": 94.298
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_29",
+      "start": {
+        "x": 14.39,
+        "y": 94.298
+      },
+      "end": {
+        "x": 14.295,
+        "y": 95.696
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_30",
+      "start": {
+        "x": 14.295,
+        "y": 95.696
+      },
+      "end": {
+        "x": 14.39,
+        "y": 97.093
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_31",
+      "start": {
+        "x": 14.39,
+        "y": 97.093
+      },
+      "end": {
+        "x": 14.674,
+        "y": 98.456
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_32",
+      "start": {
+        "x": 14.674,
+        "y": 98.456
+      },
+      "end": {
+        "x": 15.139,
+        "y": 99.752
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_33",
+      "start": {
+        "x": 15.139,
+        "y": 99.752
+      },
+      "end": {
+        "x": 15.774,
+        "y": 100.947
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_34",
+      "start": {
+        "x": 15.774,
+        "y": 100.947
+      },
+      "end": {
+        "x": 16.563,
+        "y": 102.013
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_35",
+      "start": {
+        "x": 16.563,
+        "y": 102.013
+      },
+      "end": {
+        "x": 17.487,
+        "y": 102.924
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_36",
+      "start": {
+        "x": 17.487,
+        "y": 102.924
+      },
+      "end": {
+        "x": 18.523,
+        "y": 103.656
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_37",
+      "start": {
+        "x": 18.523,
+        "y": 103.656
+      },
+      "end": {
+        "x": 19.645,
+        "y": 104.193
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_38",
+      "start": {
+        "x": 19.645,
+        "y": 104.193
+      },
+      "end": {
+        "x": 20.827,
+        "y": 104.52
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_ring_39",
+      "start": {
+        "x": 20.827,
+        "y": 104.52
+      },
+      "end": {
+        "x": 22.038,
+        "y": 104.63
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout_divider",
+      "start": {
+        "x": 14.295,
+        "y": 95.299
+      },
+      "end": {
+        "x": 29.384,
+        "y": 92.519
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout34_00",
+      "start": {
+        "x": 15.287,
+        "y": 110.586
+      },
+      "end": {
+        "x": 19.655,
+        "y": 125.079
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout34_01",
+      "start": {
+        "x": 19.655,
+        "y": 125.079
+      },
+      "end": {
+        "x": 36.928,
+        "y": 119.52
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout34_02",
+      "start": {
+        "x": 36.928,
+        "y": 119.52
+      },
+      "end": {
+        "x": 32.56,
+        "y": 105.027
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout34_03",
+      "start": {
+        "x": 32.56,
+        "y": 105.027
+      },
+      "end": {
+        "x": 15.287,
+        "y": 110.586
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout34_divider",
+      "start": {
+        "x": 23.825,
+        "y": 107.806
+      },
+      "end": {
+        "x": 28.192,
+        "y": 122.3
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout5_00",
+      "start": {
+        "x": 42.487,
+        "y": 166.971
+      },
+      "end": {
+        "x": 51.024,
+        "y": 176.501
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout5_01",
+      "start": {
+        "x": 51.024,
+        "y": 176.501
+      },
+      "end": {
+        "x": 59.363,
+        "y": 168.361
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout5_02",
+      "start": {
+        "x": 59.363,
+        "y": 168.361
+      },
+      "end": {
+        "x": 50.032,
+        "y": 161.809
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout5_03",
+      "start": {
+        "x": 50.032,
+        "y": 161.809
+      },
+      "end": {
+        "x": 42.487,
+        "y": 166.971
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_00",
+      "start": {
+        "x": 57.576,
+        "y": 143.345
+      },
+      "end": {
+        "x": 57.179,
+        "y": 150.294
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_01",
+      "start": {
+        "x": 57.179,
+        "y": 150.294
+      },
+      "end": {
+        "x": 60.753,
+        "y": 154.86
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_02",
+      "start": {
+        "x": 60.753,
+        "y": 154.86
+      },
+      "end": {
+        "x": 64.128,
+        "y": 158.831
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_03",
+      "start": {
+        "x": 64.128,
+        "y": 158.831
+      },
+      "end": {
+        "x": 67.702,
+        "y": 163.596
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_04",
+      "start": {
+        "x": 67.702,
+        "y": 163.596
+      },
+      "end": {
+        "x": 72.268,
+        "y": 163.596
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_05",
+      "start": {
+        "x": 72.268,
+        "y": 163.596
+      },
+      "end": {
+        "x": 75.643,
+        "y": 160.022
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_06",
+      "start": {
+        "x": 75.643,
+        "y": 160.022
+      },
+      "end": {
+        "x": 70.084,
+        "y": 152.676
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_07",
+      "start": {
+        "x": 70.084,
+        "y": 152.676
+      },
+      "end": {
+        "x": 65.121,
+        "y": 146.919
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_08",
+      "start": {
+        "x": 65.121,
+        "y": 146.919
+      },
+      "end": {
+        "x": 60.753,
+        "y": 140.168
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout6_09",
+      "start": {
+        "x": 60.753,
+        "y": 140.168
+      },
+      "end": {
+        "x": 57.576,
+        "y": 143.345
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout7_service_00",
+      "start": {
+        "x": 51.024,
+        "y": 179.876
+      },
+      "end": {
+        "x": 55.988,
+        "y": 186.428
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_breakout7_service_01",
+      "start": {
+        "x": 55.988,
+        "y": 186.428
+      },
+      "end": {
+        "x": 51.819,
+        "y": 190.796
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_catering_00",
+      "start": {
+        "x": 1.39,
+        "y": 91.923
+      },
+      "end": {
+        "x": 6.353,
+        "y": 90.931
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_catering_01",
+      "start": {
+        "x": 6.353,
+        "y": 90.931
+      },
+      "end": {
+        "x": 8.537,
+        "y": 99.865
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_catering_02",
+      "start": {
+        "x": 8.537,
+        "y": 99.865
+      },
+      "end": {
+        "x": 3.574,
+        "y": 101.453
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_restroom_catering_w_00",
+      "start": {
+        "x": 3.574,
+        "y": 101.453
+      },
+      "end": {
+        "x": 5.559,
+        "y": 109.792
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_restroom_catering_w_01",
+      "start": {
+        "x": 5.559,
+        "y": 109.792
+      },
+      "end": {
+        "x": 11.118,
+        "y": 107.806
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_restroom_catering_w_02",
+      "start": {
+        "x": 11.118,
+        "y": 107.806
+      },
+      "end": {
+        "x": 8.934,
+        "y": 99.865
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_restroom_catering_w_03",
+      "start": {
+        "x": 8.934,
+        "y": 99.865
+      },
+      "end": {
+        "x": 3.574,
+        "y": 101.453
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_restroom_catering_m_00",
+      "start": {
+        "x": 5.559,
+        "y": 109.792
+      },
+      "end": {
+        "x": 8.14,
+        "y": 117.733
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_restroom_catering_m_01",
+      "start": {
+        "x": 8.14,
+        "y": 117.733
+      },
+      "end": {
+        "x": 13.699,
+        "y": 116.145
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_restroom_catering_m_02",
+      "start": {
+        "x": 13.699,
+        "y": 116.145
+      },
+      "end": {
+        "x": 11.118,
+        "y": 107.806
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_restroom_catering_m_03",
+      "start": {
+        "x": 11.118,
+        "y": 107.806
+      },
+      "end": {
+        "x": 5.559,
+        "y": 109.792
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_service_store_00",
+      "start": {
+        "x": 8.14,
+        "y": 117.733
+      },
+      "end": {
+        "x": 10.721,
+        "y": 124.881
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_service_store_01",
+      "start": {
+        "x": 10.721,
+        "y": 124.881
+      },
+      "end": {
+        "x": 16.28,
+        "y": 122.498
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_service_store_02",
+      "start": {
+        "x": 16.28,
+        "y": 122.498
+      },
+      "end": {
+        "x": 13.699,
+        "y": 116.145
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_service_store_03",
+      "start": {
+        "x": 13.699,
+        "y": 116.145
+      },
+      "end": {
+        "x": 8.14,
+        "y": 117.733
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_00",
+      "start": {
+        "x": 18.663,
+        "y": 132.425
+      },
+      "end": {
+        "x": 22.832,
+        "y": 141.757
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_01",
+      "start": {
+        "x": 22.832,
+        "y": 141.757
+      },
+      "end": {
+        "x": 27.994,
+        "y": 150.889
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_02",
+      "start": {
+        "x": 27.994,
+        "y": 150.889
+      },
+      "end": {
+        "x": 34.149,
+        "y": 160.221
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_03",
+      "start": {
+        "x": 34.149,
+        "y": 160.221
+      },
+      "end": {
+        "x": 40.303,
+        "y": 157.64
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_04",
+      "start": {
+        "x": 40.303,
+        "y": 157.64
+      },
+      "end": {
+        "x": 42.09,
+        "y": 161.015
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_05",
+      "start": {
+        "x": 42.09,
+        "y": 161.015
+      },
+      "end": {
+        "x": 46.855,
+        "y": 158.037
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_06",
+      "start": {
+        "x": 46.855,
+        "y": 158.037
+      },
+      "end": {
+        "x": 45.267,
+        "y": 155.257
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_07",
+      "start": {
+        "x": 45.267,
+        "y": 155.257
+      },
+      "end": {
+        "x": 47.252,
+        "y": 149.897
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_08",
+      "start": {
+        "x": 47.252,
+        "y": 149.897
+      },
+      "end": {
+        "x": 33.752,
+        "y": 125.079
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_09",
+      "start": {
+        "x": 33.752,
+        "y": 125.079
+      },
+      "end": {
+        "x": 18.663,
+        "y": 132.425
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_corridor_00",
+      "start": {
+        "x": 27.795,
+        "y": 130.043
+      },
+      "end": {
+        "x": 31.171,
+        "y": 136.793
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_corridor_01",
+      "start": {
+        "x": 31.171,
+        "y": 136.793
+      },
+      "end": {
+        "x": 34.943,
+        "y": 143.543
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_corridor_02",
+      "start": {
+        "x": 34.943,
+        "y": 143.543
+      },
+      "end": {
+        "x": 39.112,
+        "y": 150.492
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_staff_corridor_03",
+      "start": {
+        "x": 39.112,
+        "y": 150.492
+      },
+      "end": {
+        "x": 43.083,
+        "y": 156.25
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_00",
+      "start": {
+        "x": 18.663,
+        "y": 132.425
+      },
+      "end": {
+        "x": 24.42,
+        "y": 130.043
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_01",
+      "start": {
+        "x": 20.847,
+        "y": 137.19
+      },
+      "end": {
+        "x": 26.406,
+        "y": 134.212
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_02",
+      "start": {
+        "x": 22.832,
+        "y": 141.757
+      },
+      "end": {
+        "x": 30.178,
+        "y": 138.381
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_03",
+      "start": {
+        "x": 25.413,
+        "y": 146.323
+      },
+      "end": {
+        "x": 32.957,
+        "y": 142.551
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_04",
+      "start": {
+        "x": 27.994,
+        "y": 150.889
+      },
+      "end": {
+        "x": 36.531,
+        "y": 146.522
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_05",
+      "start": {
+        "x": 30.972,
+        "y": 155.456
+      },
+      "end": {
+        "x": 39.311,
+        "y": 151.485
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_06",
+      "start": {
+        "x": 27.795,
+        "y": 130.043
+      },
+      "end": {
+        "x": 32.957,
+        "y": 127.263
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_07",
+      "start": {
+        "x": 30.575,
+        "y": 135.602
+      },
+      "end": {
+        "x": 37.127,
+        "y": 132.028
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_08",
+      "start": {
+        "x": 33.354,
+        "y": 140.764
+      },
+      "end": {
+        "x": 40.303,
+        "y": 137.19
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_09",
+      "start": {
+        "x": 36.531,
+        "y": 145.727
+      },
+      "end": {
+        "x": 43.083,
+        "y": 141.955
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_office_10",
+      "start": {
+        "x": 39.112,
+        "y": 150.492
+      },
+      "end": {
+        "x": 45.862,
+        "y": 146.522
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_games_front_00",
+      "start": {
+        "x": 18.663,
+        "y": 132.425
+      },
+      "end": {
+        "x": 17.273,
+        "y": 127.66
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_games_front_01",
+      "start": {
+        "x": 17.273,
+        "y": 127.66
+      },
+      "end": {
+        "x": 23.229,
+        "y": 125.079
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_games_0",
+      "start": {
+        "x": 16.677,
+        "y": 139.176
+      },
+      "end": {
+        "x": 22.832,
+        "y": 136.595
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_games_1",
+      "start": {
+        "x": 21.244,
+        "y": 147.911
+      },
+      "end": {
+        "x": 26.207,
+        "y": 144.735
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_games_2",
+      "start": {
+        "x": 26.604,
+        "y": 157.044
+      },
+      "end": {
+        "x": 29.979,
+        "y": 153.867
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_back_of_house_00",
+      "start": {
+        "x": 38.318,
+        "y": 86.761
+      },
+      "end": {
+        "x": 39.509,
+        "y": 95.299
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_back_of_house_01",
+      "start": {
+        "x": 39.509,
+        "y": 95.299
+      },
+      "end": {
+        "x": 41.693,
+        "y": 103.836
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_back_of_house_02",
+      "start": {
+        "x": 41.693,
+        "y": 103.836
+      },
+      "end": {
+        "x": 44.671,
+        "y": 112.174
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_back_of_house_03",
+      "start": {
+        "x": 44.671,
+        "y": 112.174
+      },
+      "end": {
+        "x": 47.252,
+        "y": 120.314
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_back_of_house_04",
+      "start": {
+        "x": 47.252,
+        "y": 120.314
+      },
+      "end": {
+        "x": 50.429,
+        "y": 119.322
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_back_of_house_start",
+      "start": {
+        "x": 38.318,
+        "y": 86.761
+      },
+      "end": {
+        "x": 42.09,
+        "y": 86.166
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_south_service_00",
+      "start": {
+        "x": 14.493,
+        "y": 6.155
+      },
+      "end": {
+        "x": 24.619,
+        "y": 10.523
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_south_service_01",
+      "start": {
+        "x": 24.619,
+        "y": 10.523
+      },
+      "end": {
+        "x": 16.677,
+        "y": 30.376
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_south_service_02",
+      "start": {
+        "x": 16.677,
+        "y": 30.376
+      },
+      "end": {
+        "x": 6.353,
+        "y": 27.597
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_green_rooms_00",
+      "start": {
+        "x": 32.759,
+        "y": 7.743
+      },
+      "end": {
+        "x": 31.171,
+        "y": 11.317
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_green_rooms_01",
+      "start": {
+        "x": 31.171,
+        "y": 11.317
+      },
+      "end": {
+        "x": 36.928,
+        "y": 14.096
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_green_rooms_02",
+      "start": {
+        "x": 36.928,
+        "y": 14.096
+      },
+      "end": {
+        "x": 38.516,
+        "y": 10.721
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_green_room_two_00",
+      "start": {
+        "x": 45.068,
+        "y": 13.898
+      },
+      "end": {
+        "x": 42.686,
+        "y": 19.457
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_green_room_two_01",
+      "start": {
+        "x": 42.686,
+        "y": 19.457
+      },
+      "end": {
+        "x": 49.635,
+        "y": 23.03
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_north_lobby_00",
+      "start": {
+        "x": 93.909,
+        "y": 169.552
+      },
+      "end": {
+        "x": 77.629,
+        "y": 196.355
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_north_lobby_01",
+      "start": {
+        "x": 77.629,
+        "y": 196.355
+      },
+      "end": {
+        "x": 81.202,
+        "y": 199.73
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_north_lobby_02",
+      "start": {
+        "x": 81.202,
+        "y": 199.73
+      },
+      "end": {
+        "x": 83.783,
+        "y": 201.715
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_north_services_00",
+      "start": {
+        "x": 75.445,
+        "y": 187.222
+      },
+      "end": {
+        "x": 67.106,
+        "y": 200.326
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_north_restroom_00",
+      "start": {
+        "x": 77.629,
+        "y": 196.355
+      },
+      "end": {
+        "x": 74.452,
+        "y": 203.899
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_lobby_south_wc_00",
+      "start": {
+        "x": 96.688,
+        "y": 173.92
+      },
+      "end": {
+        "x": 94.306,
+        "y": 177.692
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
+    },
+    {
+      "id": "w_lobby_south_wc_01",
+      "start": {
+        "x": 94.306,
+        "y": 177.692
+      },
+      "end": {
+        "x": 96.093,
+        "y": 180.075
+      },
+      "thickness": 0.18,
+      "height": 3.0,
+      "confidence": "medium",
+      "metadata": {
+        "reference_page": 1,
+        "height_is_assumed": true
+      }
     }
   ],
   "doors": [
     {
-      "id": "d_public_entrance",
+      "id": "d_loading",
+      "kind": "door",
+      "wall_id": "w_shell_07",
       "position": {
-        "x": 72.64,
-        "y": 75.88
+        "x": 0.056,
+        "y": 71.696
       },
-      "width": 4.0,
-      "wall_id": "w_shell_21"
+      "width": 5.0,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_public_entrance",
+      "kind": "door",
+      "wall_id": "w_shell_43",
+      "position": {
+        "x": 41.715,
+        "y": 64.13
+      },
+      "width": 3.6,
+      "confidence": "medium"
     },
     {
       "id": "d_business_entrance",
+      "kind": "door",
+      "wall_id": "w_shell_27",
       "position": {
-        "x": 119.53,
-        "y": 203.27
+        "x": 88.353,
+        "y": 187.621
       },
-      "width": 6.0,
-      "wall_id": "w_shell_12"
+      "width": 2.4,
+      "confidence": "medium"
     },
     {
-      "id": "d_loading",
+      "id": "d_lagoon_exit",
+      "kind": "door",
+      "wall_id": "w_shell_35",
       "position": {
-        "x": 30.77,
-        "y": 84.13
+        "x": 62.588,
+        "y": 138.287
       },
-      "width": 4.0,
-      "wall_id": "w_shell_02"
+      "width": 2.4,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_north_exit",
+      "kind": "door",
+      "wall_id": "w_shell_31",
+      "position": {
+        "x": 89.633,
+        "y": 166.449
+      },
+      "width": 2.0,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_breakout1",
+      "kind": "door",
+      "wall_id": "w_breakout_ring_20",
+      "position": {
+        "x": 21.433,
+        "y": 86.816
+      },
+      "width": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_breakout2",
+      "kind": "door",
+      "wall_id": "w_breakout_ring_03",
+      "position": {
+        "x": 26.071,
+        "y": 103.29
+      },
+      "width": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_breakout_connect",
+      "kind": "door",
+      "wall_id": "w_breakout_divider",
+      "position": {
+        "x": 21.84,
+        "y": 93.909
+      },
+      "width": 1.1,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_breakout3",
+      "kind": "door",
+      "wall_id": "w_breakout34_03",
+      "position": {
+        "x": 19.087,
+        "y": 109.363
+      },
+      "width": 1.2,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_breakout4",
+      "kind": "door",
+      "wall_id": "w_breakout34_01",
+      "position": {
+        "x": 31.746,
+        "y": 121.188
+      },
+      "width": 1.2,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_breakout5_2",
+      "kind": "door",
+      "wall_id": "w_breakout5_02",
+      "position": {
+        "x": 54.231,
+        "y": 164.757
+      },
+      "width": 1.8,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_breakout6_2",
+      "kind": "door",
+      "wall_id": "w_breakout6_02",
+      "position": {
+        "x": 62.441,
+        "y": 156.846
+      },
+      "width": 1.5,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_breakout6_9",
+      "kind": "door",
+      "wall_id": "w_breakout6_09",
+      "position": {
+        "x": 59.482,
+        "y": 141.439
+      },
+      "width": 1.5,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_restroom_catering_w_2",
+      "kind": "door",
+      "wall_id": "w_restroom_catering_w_02",
+      "position": {
+        "x": 10.026,
+        "y": 103.835
+      },
+      "width": 1.1,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_restroom_catering_m_2",
+      "kind": "door",
+      "wall_id": "w_restroom_catering_m_02",
+      "position": {
+        "x": 12.409,
+        "y": 111.975
+      },
+      "width": 1.1,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_service_store_2",
+      "kind": "door",
+      "wall_id": "w_service_store_02",
+      "position": {
+        "x": 14.989,
+        "y": 119.322
+      },
+      "width": 1.1,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_staff_7",
+      "kind": "door",
+      "wall_id": "w_staff_07",
+      "position": {
+        "x": 46.26,
+        "y": 152.577
+      },
+      "width": 1.5,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_00",
+      "kind": "door",
+      "wall_id": "w_office_00",
+      "position": {
+        "x": 22.808,
+        "y": 130.71
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_01",
+      "kind": "door",
+      "wall_id": "w_office_01",
+      "position": {
+        "x": 24.849,
+        "y": 135.046
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_02",
+      "kind": "door",
+      "wall_id": "w_office_02",
+      "position": {
+        "x": 28.121,
+        "y": 139.326
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_03",
+      "kind": "door",
+      "wall_id": "w_office_03",
+      "position": {
+        "x": 30.845,
+        "y": 143.607
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_04",
+      "kind": "door",
+      "wall_id": "w_office_04",
+      "position": {
+        "x": 34.141,
+        "y": 147.745
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_05",
+      "kind": "door",
+      "wall_id": "w_office_05",
+      "position": {
+        "x": 36.976,
+        "y": 152.597
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_06",
+      "kind": "door",
+      "wall_id": "w_office_06",
+      "position": {
+        "x": 31.512,
+        "y": 128.041
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_07",
+      "kind": "door",
+      "wall_id": "w_office_07",
+      "position": {
+        "x": 35.292,
+        "y": 133.029
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_08",
+      "kind": "door",
+      "wall_id": "w_office_08",
+      "position": {
+        "x": 38.357,
+        "y": 138.191
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_09",
+      "kind": "door",
+      "wall_id": "w_office_09",
+      "position": {
+        "x": 41.248,
+        "y": 143.011
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_office_10",
+      "kind": "door",
+      "wall_id": "w_office_10",
+      "position": {
+        "x": 43.972,
+        "y": 147.634
+      },
+      "width": 0.9,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_back_of_house",
+      "kind": "door",
+      "wall_id": "w_back_of_house_02",
+      "position": {
+        "x": 43.48,
+        "y": 108.839
+      },
+      "width": 1.2,
+      "confidence": "medium"
+    },
+    {
+      "id": "d_theater_lobby",
+      "kind": "door",
+      "wall_id": "w_north_lobby_00",
+      "position": {
+        "x": 83.815,
+        "y": 186.17
+      },
+      "width": 2.0,
+      "confidence": "medium"
     }
   ],
   "openings": [],
@@ -344,352 +3551,1171 @@
   "objects": [],
   "rooms": [
     {
-      "id": "r_breakout12",
-      "name": "Breakouts 1 and 2",
+      "id": "r_breakout1",
+      "name": "Breakout 1",
       "polygon": [
         {
-          "x": 53.5,
-          "y": 117.7
+          "x": 29.384,
+          "y": 92.519
         },
         {
-          "x": 58.31,
-          "y": 116.41
+          "x": 28.937,
+          "y": 91.64
         },
         {
-          "x": 61.84,
-          "y": 112.88
+          "x": 28.302,
+          "y": 90.444
         },
         {
-          "x": 63.13,
-          "y": 108.07
+          "x": 27.513,
+          "y": 89.378
         },
         {
-          "x": 61.84,
-          "y": 103.25
+          "x": 26.589,
+          "y": 88.468
         },
         {
-          "x": 58.31,
-          "y": 99.73
+          "x": 25.553,
+          "y": 87.735
         },
         {
-          "x": 53.5,
-          "y": 98.44
+          "x": 24.431,
+          "y": 87.199
         },
         {
-          "x": 48.69,
-          "y": 99.73
+          "x": 23.249,
+          "y": 86.871
         },
         {
-          "x": 45.16,
-          "y": 103.25
+          "x": 22.038,
+          "y": 86.761
         },
         {
-          "x": 43.87,
-          "y": 108.07
+          "x": 20.827,
+          "y": 86.871
         },
         {
-          "x": 45.16,
-          "y": 112.88
+          "x": 19.645,
+          "y": 87.199
         },
         {
-          "x": 48.68,
-          "y": 116.41
+          "x": 18.523,
+          "y": 87.735
+        },
+        {
+          "x": 17.487,
+          "y": 88.468
+        },
+        {
+          "x": 16.563,
+          "y": 89.378
+        },
+        {
+          "x": 15.774,
+          "y": 90.444
+        },
+        {
+          "x": 15.139,
+          "y": 91.64
+        },
+        {
+          "x": 14.674,
+          "y": 92.935
+        },
+        {
+          "x": 14.39,
+          "y": 94.298
+        },
+        {
+          "x": 14.295,
+          "y": 95.299
         }
-      ]
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_breakout2",
+      "name": "Breakout 2",
+      "polygon": [
+        {
+          "x": 14.295,
+          "y": 95.299
+        },
+        {
+          "x": 14.39,
+          "y": 97.093
+        },
+        {
+          "x": 14.674,
+          "y": 98.456
+        },
+        {
+          "x": 15.139,
+          "y": 99.752
+        },
+        {
+          "x": 15.774,
+          "y": 100.947
+        },
+        {
+          "x": 16.563,
+          "y": 102.013
+        },
+        {
+          "x": 17.487,
+          "y": 102.924
+        },
+        {
+          "x": 18.523,
+          "y": 103.656
+        },
+        {
+          "x": 19.645,
+          "y": 104.193
+        },
+        {
+          "x": 20.827,
+          "y": 104.52
+        },
+        {
+          "x": 22.038,
+          "y": 104.63
+        },
+        {
+          "x": 23.249,
+          "y": 104.52
+        },
+        {
+          "x": 24.431,
+          "y": 104.193
+        },
+        {
+          "x": 25.553,
+          "y": 103.656
+        },
+        {
+          "x": 26.589,
+          "y": 102.924
+        },
+        {
+          "x": 27.513,
+          "y": 102.013
+        },
+        {
+          "x": 28.302,
+          "y": 100.947
+        },
+        {
+          "x": 28.937,
+          "y": 99.752
+        },
+        {
+          "x": 29.402,
+          "y": 98.456
+        },
+        {
+          "x": 29.685,
+          "y": 97.093
+        },
+        {
+          "x": 29.781,
+          "y": 95.696
+        },
+        {
+          "x": 29.685,
+          "y": 94.298
+        },
+        {
+          "x": 29.384,
+          "y": 92.519
+        }
+      ],
+      "description": ""
     },
     {
       "id": "r_breakout3",
       "name": "Breakout 3",
       "polygon": [
         {
-          "x": 44.94,
-          "y": 121.98
+          "x": 15.287,
+          "y": 110.586
         },
         {
-          "x": 49.65,
-          "y": 138.67
+          "x": 19.655,
+          "y": 125.079
         },
         {
-          "x": 56.92,
-          "y": 136.96
+          "x": 28.192,
+          "y": 122.3
         },
         {
-          "x": 53.93,
-          "y": 119.63
+          "x": 23.825,
+          "y": 107.806
         }
-      ]
+      ],
+      "description": ""
     },
     {
       "id": "r_breakout4",
       "name": "Breakout 4",
       "polygon": [
         {
-          "x": 53.93,
-          "y": 119.63
+          "x": 23.825,
+          "y": 107.806
         },
         {
-          "x": 56.92,
-          "y": 136.96
+          "x": 28.192,
+          "y": 122.3
         },
         {
-          "x": 64.2,
-          "y": 135.25
+          "x": 36.928,
+          "y": 119.52
         },
         {
-          "x": 62.49,
-          "y": 117.27
+          "x": 32.56,
+          "y": 105.027
         }
-      ]
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_breakout5",
+      "name": "Breakout 5",
+      "polygon": [
+        {
+          "x": 42.487,
+          "y": 166.971
+        },
+        {
+          "x": 51.024,
+          "y": 176.501
+        },
+        {
+          "x": 59.363,
+          "y": 168.361
+        },
+        {
+          "x": 50.032,
+          "y": 161.809
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_breakout6",
+      "name": "Breakout 6",
+      "polygon": [
+        {
+          "x": 57.576,
+          "y": 143.345
+        },
+        {
+          "x": 57.179,
+          "y": 150.294
+        },
+        {
+          "x": 60.753,
+          "y": 154.86
+        },
+        {
+          "x": 64.128,
+          "y": 158.831
+        },
+        {
+          "x": 67.702,
+          "y": 163.596
+        },
+        {
+          "x": 72.268,
+          "y": 163.596
+        },
+        {
+          "x": 75.643,
+          "y": 160.022
+        },
+        {
+          "x": 70.084,
+          "y": 152.676
+        },
+        {
+          "x": 65.121,
+          "y": 146.919
+        },
+        {
+          "x": 60.753,
+          "y": 140.168
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_breakout7",
+      "name": "Breakout 7",
+      "polygon": [
+        {
+          "x": 51.223,
+          "y": 176.501
+        },
+        {
+          "x": 57.378,
+          "y": 191.788
+        },
+        {
+          "x": 67.106,
+          "y": 200.326
+        },
+        {
+          "x": 75.445,
+          "y": 187.222
+        },
+        {
+          "x": 66.113,
+          "y": 182.457
+        },
+        {
+          "x": 58.37,
+          "y": 174.118
+        }
+      ],
+      "description": "Open event area beside the mezzanine stairs; no partition across the circulation aisle."
+    },
+    {
+      "id": "r_catering",
+      "name": "Catering prep",
+      "polygon": [
+        {
+          "x": 0.397,
+          "y": 82.989
+        },
+        {
+          "x": 1.39,
+          "y": 91.923
+        },
+        {
+          "x": 6.353,
+          "y": 90.931
+        },
+        {
+          "x": 8.537,
+          "y": 99.865
+        },
+        {
+          "x": 12.309,
+          "y": 98.674
+        },
+        {
+          "x": 8.14,
+          "y": 82.989
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_restroom_catering_w",
+      "name": "Women's restroom by catering",
+      "polygon": [
+        {
+          "x": 3.574,
+          "y": 101.453
+        },
+        {
+          "x": 5.559,
+          "y": 109.792
+        },
+        {
+          "x": 11.118,
+          "y": 107.806
+        },
+        {
+          "x": 8.934,
+          "y": 99.865
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_restroom_catering_m",
+      "name": "Men's restroom by catering",
+      "polygon": [
+        {
+          "x": 5.559,
+          "y": 109.792
+        },
+        {
+          "x": 8.14,
+          "y": 117.733
+        },
+        {
+          "x": 13.699,
+          "y": 116.145
+        },
+        {
+          "x": 11.118,
+          "y": 107.806
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_service_store",
+      "name": "Service storage",
+      "polygon": [
+        {
+          "x": 8.14,
+          "y": 117.733
+        },
+        {
+          "x": 10.721,
+          "y": 124.881
+        },
+        {
+          "x": 16.28,
+          "y": 122.498
+        },
+        {
+          "x": 13.699,
+          "y": 116.145
+        }
+      ],
+      "description": ""
     },
     {
       "id": "r_staff",
       "name": "Staff offices (no access)",
       "polygon": [
         {
-          "x": 46.01,
-          "y": 139.1
+          "x": 18.663,
+          "y": 132.425
         },
         {
-          "x": 51.36,
-          "y": 162.64
+          "x": 22.832,
+          "y": 141.757
         },
         {
-          "x": 70.62,
-          "y": 173.77
+          "x": 27.994,
+          "y": 150.889
         },
         {
-          "x": 77.04,
-          "y": 170.13
+          "x": 34.149,
+          "y": 160.221
         },
         {
-          "x": 73.83,
-          "y": 159.43
+          "x": 40.303,
+          "y": 157.64
         },
         {
-          "x": 64.2,
-          "y": 138.03
+          "x": 42.09,
+          "y": 161.015
+        },
+        {
+          "x": 46.855,
+          "y": 158.037
+        },
+        {
+          "x": 45.267,
+          "y": 155.257
+        },
+        {
+          "x": 47.252,
+          "y": 149.897
+        },
+        {
+          "x": 33.752,
+          "y": 125.079
         }
-      ]
+      ],
+      "description": "Restricted block; internal office partitions traced approximately from the venue plan."
+    },
+    {
+      "id": "r_palace_games",
+      "name": "Palace Games (no access)",
+      "polygon": [
+        {
+          "x": 11.515,
+          "y": 127.66
+        },
+        {
+          "x": 15.287,
+          "y": 136.595
+        },
+        {
+          "x": 19.854,
+          "y": 145.529
+        },
+        {
+          "x": 24.817,
+          "y": 154.463
+        },
+        {
+          "x": 30.575,
+          "y": 163.0
+        },
+        {
+          "x": 36.928,
+          "y": 171.339
+        },
+        {
+          "x": 40.7,
+          "y": 163.397
+        },
+        {
+          "x": 34.149,
+          "y": 160.221
+        },
+        {
+          "x": 27.994,
+          "y": 150.889
+        },
+        {
+          "x": 22.832,
+          "y": 141.757
+        },
+        {
+          "x": 18.663,
+          "y": 132.425
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_back_of_house",
+      "name": "Available back of house",
+      "polygon": [
+        {
+          "x": 38.318,
+          "y": 86.761
+        },
+        {
+          "x": 39.509,
+          "y": 95.299
+        },
+        {
+          "x": 41.693,
+          "y": 103.836
+        },
+        {
+          "x": 44.671,
+          "y": 112.174
+        },
+        {
+          "x": 47.252,
+          "y": 120.314
+        },
+        {
+          "x": 50.429,
+          "y": 119.322
+        },
+        {
+          "x": 50.429,
+          "y": 115.748
+        },
+        {
+          "x": 47.252,
+          "y": 106.814
+        },
+        {
+          "x": 44.671,
+          "y": 97.88
+        },
+        {
+          "x": 42.686,
+          "y": 88.945
+        },
+        {
+          "x": 42.09,
+          "y": 86.166
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_south_service",
+      "name": "South service area (no access)",
+      "polygon": [
+        {
+          "x": 17.273,
+          "y": 0.0
+        },
+        {
+          "x": 14.493,
+          "y": 6.155
+        },
+        {
+          "x": 24.619,
+          "y": 10.523
+        },
+        {
+          "x": 27.001,
+          "y": 5.162
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_green_rooms",
+      "name": "Green rooms",
+      "polygon": [
+        {
+          "x": 27.001,
+          "y": 5.162
+        },
+        {
+          "x": 24.619,
+          "y": 10.523
+        },
+        {
+          "x": 49.635,
+          "y": 23.03
+        },
+        {
+          "x": 54.003,
+          "y": 18.663
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_restroom_north",
+      "name": "North end restroom",
+      "polygon": [
+        {
+          "x": 77.629,
+          "y": 196.355
+        },
+        {
+          "x": 74.452,
+          "y": 203.899
+        },
+        {
+          "x": 79.415,
+          "y": 209.061
+        },
+        {
+          "x": 83.783,
+          "y": 201.715
+        },
+        {
+          "x": 81.202,
+          "y": 199.73
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_restroom_lobby",
+      "name": "Restroom by business entrance",
+      "polygon": [
+        {
+          "x": 93.909,
+          "y": 169.552
+        },
+        {
+          "x": 99.865,
+          "y": 173.92
+        },
+        {
+          "x": 96.093,
+          "y": 180.075
+        },
+        {
+          "x": 92.519,
+          "y": 177.692
+        }
+      ],
+      "description": ""
+    },
+    {
+      "id": "r_theater",
+      "name": "Theater area",
+      "polygon": [
+        {
+          "x": 72.864,
+          "y": 152.676
+        },
+        {
+          "x": 75.643,
+          "y": 159.427
+        },
+        {
+          "x": 82.791,
+          "y": 164.787
+        },
+        {
+          "x": 93.909,
+          "y": 169.552
+        },
+        {
+          "x": 83.188,
+          "y": 187.222
+        },
+        {
+          "x": 78.423,
+          "y": 179.082
+        },
+        {
+          "x": 76.834,
+          "y": 166.574
+        }
+      ],
+      "description": ""
     },
     {
       "id": "r_pavilion",
       "name": "Pavilion",
       "polygon": [
         {
-          "x": 46.01,
-          "y": 12.2
+          "x": 24.619,
+          "y": 10.523
         },
         {
-          "x": 36.38,
-          "y": 42.8
+          "x": 16.677,
+          "y": 30.376
         },
         {
-          "x": 34.93,
-          "y": 51.36
+          "x": 6.353,
+          "y": 27.597
         },
         {
-          "x": 78.18,
-          "y": 51.36
+          "x": 3.971,
+          "y": 36.928
         },
         {
-          "x": 83.89,
-          "y": 34.24
+          "x": 29.185,
+          "y": 41.296
+        },
+        {
+          "x": 50.627,
+          "y": 26.406
+        },
+        {
+          "x": 54.003,
+          "y": 18.663
         }
-      ]
+      ],
+      "description": ""
     },
     {
       "id": "r_atrium",
       "name": "Atrium",
       "polygon": [
         {
-          "x": 34.93,
-          "y": 51.36
+          "x": 3.971,
+          "y": 36.928
         },
         {
-          "x": 31.67,
-          "y": 70.62
+          "x": 0.794,
+          "y": 55.194
         },
         {
-          "x": 30.39,
-          "y": 89.88
+          "x": 0.199,
+          "y": 65.121
         },
         {
-          "x": 70.96,
-          "y": 89.88
+          "x": 0.0,
+          "y": 74.253
         },
         {
-          "x": 72.76,
-          "y": 74.9
+          "x": 31.171,
+          "y": 79.018
         },
         {
-          "x": 77.47,
-          "y": 53.5
+          "x": 41.098,
+          "y": 71.077
         },
         {
-          "x": 78.18,
-          "y": 51.36
+          "x": 41.892,
+          "y": 62.143
+        },
+        {
+          "x": 43.281,
+          "y": 53.208
+        },
+        {
+          "x": 45.267,
+          "y": 44.274
+        },
+        {
+          "x": 47.649,
+          "y": 35.34
+        },
+        {
+          "x": 50.627,
+          "y": 26.406
+        },
+        {
+          "x": 29.185,
+          "y": 41.296
         }
-      ]
+      ],
+      "description": ""
     },
     {
       "id": "r_broadway1",
       "name": "Broadway 1",
       "polygon": [
         {
-          "x": 30.39,
-          "y": 89.88
+          "x": 0.0,
+          "y": 74.253
         },
         {
-          "x": 29.96,
-          "y": 96.3
+          "x": 0.397,
+          "y": 82.989
         },
         {
-          "x": 32.1,
-          "y": 119.84
+          "x": 14.295,
+          "y": 86.761
         },
         {
-          "x": 35.14,
-          "y": 128.4
+          "x": 29.781,
+          "y": 86.761
         },
         {
-          "x": 78.78,
-          "y": 128.4
+          "x": 32.56,
+          "y": 105.027
         },
         {
-          "x": 73.83,
-          "y": 117.7
+          "x": 41.693,
+          "y": 103.836
         },
         {
-          "x": 70.19,
-          "y": 96.3
+          "x": 42.686,
+          "y": 88.945
         },
         {
-          "x": 70.96,
-          "y": 89.88
+          "x": 41.495,
+          "y": 80.011
+        },
+        {
+          "x": 41.098,
+          "y": 71.077
+        },
+        {
+          "x": 31.171,
+          "y": 79.018
         }
-      ]
+      ],
+      "description": ""
     },
     {
       "id": "r_broadway2",
       "name": "Broadway 2",
       "polygon": [
         {
-          "x": 35.14,
-          "y": 128.4
+          "x": 32.56,
+          "y": 105.027
         },
         {
-          "x": 38.95,
-          "y": 139.1
+          "x": 36.928,
+          "y": 119.52
         },
         {
-          "x": 46.65,
-          "y": 158.36
+          "x": 23.229,
+          "y": 125.079
         },
         {
-          "x": 94.8,
-          "y": 158.36
+          "x": 33.752,
+          "y": 125.079
         },
         {
-          "x": 90.95,
-          "y": 154.08
+          "x": 47.252,
+          "y": 149.897
         },
         {
-          "x": 81.75,
-          "y": 134.82
+          "x": 53.208,
+          "y": 141.955
         },
         {
-          "x": 78.78,
-          "y": 128.4
+          "x": 59.363,
+          "y": 133.617
+        },
+        {
+          "x": 54.598,
+          "y": 124.682
+        },
+        {
+          "x": 50.429,
+          "y": 115.748
+        },
+        {
+          "x": 50.429,
+          "y": 119.322
+        },
+        {
+          "x": 47.252,
+          "y": 120.314
         }
-      ]
+      ],
+      "description": ""
     },
     {
       "id": "r_broadway3",
       "name": "Broadway 3",
       "polygon": [
         {
-          "x": 46.65,
-          "y": 158.36
+          "x": 47.252,
+          "y": 149.897
         },
         {
-          "x": 47.51,
-          "y": 160.5
+          "x": 50.032,
+          "y": 161.809
         },
         {
-          "x": 60.99,
-          "y": 181.9
+          "x": 59.363,
+          "y": 168.361
         },
         {
-          "x": 68.05,
-          "y": 188.32
+          "x": 66.113,
+          "y": 182.457
         },
         {
-          "x": 104.86,
-          "y": 169.06
+          "x": 75.445,
+          "y": 187.222
         },
         {
-          "x": 108.07,
-          "y": 171.2
+          "x": 76.834,
+          "y": 166.574
         },
         {
-          "x": 100.58,
-          "y": 164.78
+          "x": 72.268,
+          "y": 163.596
         },
         {
-          "x": 90.95,
-          "y": 154.08
+          "x": 67.702,
+          "y": 163.596
+        },
+        {
+          "x": 60.753,
+          "y": 154.86
+        },
+        {
+          "x": 57.179,
+          "y": 150.294
+        },
+        {
+          "x": 57.576,
+          "y": 143.345
+        },
+        {
+          "x": 60.753,
+          "y": 140.168
+        },
+        {
+          "x": 59.363,
+          "y": 133.617
+        },
+        {
+          "x": 53.208,
+          "y": 141.955
         }
-      ]
+      ],
+      "description": ""
     },
     {
-      "id": "r_east",
-      "name": "North wing",
+      "id": "r_circulation",
+      "name": "First-floor circulation",
       "polygon": [
         {
-          "x": 68.05,
-          "y": 188.32
+          "x": 17.273,
+          "y": 0.0
         },
         {
-          "x": 74.9,
-          "y": 194.74
+          "x": 13.302,
+          "y": 8.537
         },
         {
-          "x": 88.81,
-          "y": 205.44
+          "x": 9.331,
+          "y": 18.067
         },
         {
-          "x": 100.58,
-          "y": 216.14
+          "x": 6.353,
+          "y": 27.597
         },
         {
-          "x": 111.28,
-          "y": 224.7
+          "x": 3.971,
+          "y": 36.928
         },
         {
-          "x": 117.27,
-          "y": 210.79
+          "x": 1.985,
+          "y": 46.061
         },
         {
-          "x": 122.41,
-          "y": 193.67
+          "x": 0.794,
+          "y": 55.194
         },
         {
-          "x": 129.47,
-          "y": 184.04
+          "x": 0.199,
+          "y": 65.121
         },
         {
-          "x": 121.98,
-          "y": 178.69
+          "x": 0.0,
+          "y": 74.253
         },
         {
-          "x": 108.07,
-          "y": 171.2
+          "x": 0.397,
+          "y": 82.989
         },
         {
-          "x": 104.86,
-          "y": 169.06
+          "x": 1.39,
+          "y": 91.923
+        },
+        {
+          "x": 3.375,
+          "y": 100.858
+        },
+        {
+          "x": 5.559,
+          "y": 109.792
+        },
+        {
+          "x": 8.339,
+          "y": 118.726
+        },
+        {
+          "x": 11.515,
+          "y": 127.66
+        },
+        {
+          "x": 15.287,
+          "y": 136.595
+        },
+        {
+          "x": 19.854,
+          "y": 145.529
+        },
+        {
+          "x": 24.817,
+          "y": 154.463
+        },
+        {
+          "x": 30.575,
+          "y": 163.0
+        },
+        {
+          "x": 36.928,
+          "y": 171.339
+        },
+        {
+          "x": 44.076,
+          "y": 179.677
+        },
+        {
+          "x": 51.819,
+          "y": 187.619
+        },
+        {
+          "x": 60.157,
+          "y": 195.164
+        },
+        {
+          "x": 69.489,
+          "y": 202.311
+        },
+        {
+          "x": 79.415,
+          "y": 209.061
+        },
+        {
+          "x": 83.783,
+          "y": 201.715
+        },
+        {
+          "x": 81.202,
+          "y": 199.73
+        },
+        {
+          "x": 85.57,
+          "y": 192.582
+        },
+        {
+          "x": 90.137,
+          "y": 184.442
+        },
+        {
+          "x": 92.718,
+          "y": 180.273
+        },
+        {
+          "x": 94.901,
+          "y": 182.06
+        },
+        {
+          "x": 99.865,
+          "y": 173.92
+        },
+        {
+          "x": 87.357,
+          "y": 164.787
+        },
+        {
+          "x": 79.018,
+          "y": 157.64
+        },
+        {
+          "x": 71.672,
+          "y": 150.095
+        },
+        {
+          "x": 65.121,
+          "y": 141.955
+        },
+        {
+          "x": 59.363,
+          "y": 133.617
+        },
+        {
+          "x": 54.598,
+          "y": 124.682
+        },
+        {
+          "x": 50.429,
+          "y": 115.748
+        },
+        {
+          "x": 47.252,
+          "y": 106.814
+        },
+        {
+          "x": 44.671,
+          "y": 97.88
+        },
+        {
+          "x": 42.686,
+          "y": 88.945
+        },
+        {
+          "x": 41.495,
+          "y": 80.011
+        },
+        {
+          "x": 41.098,
+          "y": 71.077
+        },
+        {
+          "x": 41.892,
+          "y": 62.143
+        },
+        {
+          "x": 43.281,
+          "y": 53.208
+        },
+        {
+          "x": 45.267,
+          "y": 44.274
+        },
+        {
+          "x": 47.649,
+          "y": 35.34
+        },
+        {
+          "x": 50.627,
+          "y": 26.406
+        },
+        {
+          "x": 54.003,
+          "y": 18.663
         }
-      ]
+      ],
+      "description": "Continuous ground-floor footprint; upper mezzanine is not modeled."
     }
   ],
   "landmarks": [
@@ -698,10 +4724,10 @@
       "name": "Public entrance",
       "type": "entrance",
       "position": {
-        "x": 71.26,
-        "y": 75.97
+        "x": 39.311,
+        "y": 64.128
       },
-      "description": "Main public doors on the lagoon side, facing the rotunda.",
+      "description": "Public doors on the lagoon side, near the atrium.",
       "source": "manual"
     },
     {
@@ -709,10 +4735,10 @@
       "name": "Business entrance",
       "type": "entrance",
       "position": {
-        "x": 117.27,
-        "y": 203.3
+        "x": 86.761,
+        "y": 187.619
       },
-      "description": "Doors at the north end, next to the small theater seating.",
+      "description": "North end lobby doors beside the theater area.",
       "source": "manual"
     },
     {
@@ -720,76 +4746,10 @@
       "name": "Loading doors",
       "type": "other",
       "position": {
-        "x": 32.53,
-        "y": 84.1
+        "x": 2.184,
+        "y": 72.07
       },
-      "description": "Loading doors on the Palace Drive side.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_palace_games",
-      "name": "Palace Games",
-      "type": "room",
-      "position": {
-        "x": 44.3,
-        "y": 142.95
-      },
-      "description": "Escape rooms along the Palace Drive wall, past the restrooms and catering prep. Palace Games lists its own public door at 3362 Palace Drive.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_restroom_north",
-      "name": "Restrooms by catering prep",
-      "type": "restroom",
-      "position": {
-        "x": 39.59,
-        "y": 122.41
-      },
-      "description": "Restrooms on the Palace Drive side, next to Palace Games.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_restroom_east",
-      "name": "Restroom, north end",
-      "type": "restroom",
-      "position": {
-        "x": 107.0,
-        "y": 214.0
-      },
-      "description": "Restroom at the north end, near Breakout 7.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_restroom_south",
-      "name": "Restroom by the business entrance",
-      "type": "restroom",
-      "position": {
-        "x": 124.12,
-        "y": 187.89
-      },
-      "description": "Restroom beside the business entrance.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_stairs",
-      "name": "Stairs to the mezzanine",
-      "type": "stairs",
-      "position": {
-        "x": 90.95,
-        "y": 184.47
-      },
-      "description": "Stairs up to the mezzanine, between Breakout 5 and Breakout 7, toward the north end.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_theater",
-      "name": "Theater",
-      "type": "room",
-      "position": {
-        "x": 113.85,
-        "y": 182.33
-      },
-      "description": "Small tiered seating area labeled Theater on the venue plan, by the business entrance. The main Palace of Fine Arts Theatre is at the far south end and is not on this map.",
+      "description": "Loading doors on Palace Drive.",
       "source": "manual"
     },
     {
@@ -797,21 +4757,10 @@
       "name": "Pavilion",
       "type": "room",
       "position": {
-        "x": 55.0,
-        "y": 44.94
+        "x": 25.214,
+        "y": 32.362
       },
-      "description": "Open area at the south end of the hall.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_green_rooms",
-      "name": "Green rooms",
-      "type": "room",
-      "position": {
-        "x": 69.98,
-        "y": 28.25
-      },
-      "description": "Small rooms at the south end.",
+      "description": "Open event area at the south end.",
       "source": "manual"
     },
     {
@@ -819,10 +4768,21 @@
       "name": "Atrium",
       "type": "room",
       "position": {
-        "x": 60.78,
-        "y": 70.19
+        "x": 30.575,
+        "y": 57.973
       },
-      "description": "Open area just inside the public entrance.",
+      "description": "Open event area beside the public entrance.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_green_rooms",
+      "name": "Green rooms",
+      "type": "room",
+      "position": {
+        "x": 40.899,
+        "y": 15.883
+      },
+      "description": "Service rooms at the south end.",
       "source": "manual"
     },
     {
@@ -830,131 +4790,32 @@
       "name": "Catering prep",
       "type": "room",
       "position": {
-        "x": 37.66,
-        "y": 104.22
+        "x": 6.75,
+        "y": 95.497
       },
-      "description": "Catering prep area on the Palace Drive side.",
+      "description": "Prep area beside the service restrooms.",
       "source": "manual"
     },
     {
-      "id": "lm_breakout1",
-      "name": "Breakout 1",
-      "type": "room",
+      "id": "lm_restroom_north",
+      "name": "Restrooms by catering prep",
+      "type": "restroom",
       "position": {
-        "x": 50.93,
-        "y": 103.15
+        "x": 8.14,
+        "y": 104.63
       },
-      "description": "South half of the round room.",
+      "description": "Service restrooms along Palace Drive.",
       "source": "manual"
     },
     {
-      "id": "lm_breakout2",
-      "name": "Breakout 2",
+      "id": "lm_palace_games",
+      "name": "Palace Games",
       "type": "room",
       "position": {
-        "x": 56.07,
-        "y": 112.78
+        "x": 21.641,
+        "y": 142.551
       },
-      "description": "North half of the round room.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_breakout3",
-      "name": "Breakout 3",
-      "type": "room",
-      "position": {
-        "x": 52.0,
-        "y": 127.76
-      },
-      "description": "West room (Palace Drive side) of the block north of the round room.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_breakout4",
-      "name": "Breakout 4",
-      "type": "room",
-      "position": {
-        "x": 60.35,
-        "y": 126.26
-      },
-      "description": "East room (lagoon side) of the block north of the round room.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_broadway1",
-      "name": "Broadway 1",
-      "type": "room",
-      "position": {
-        "x": 64.2,
-        "y": 99.08
-      },
-      "description": "Main floor southeast of the round room, toward the lagoon wall.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_broadway2",
-      "name": "Broadway 2",
-      "type": "room",
-      "position": {
-        "x": 72.33,
-        "y": 139.1
-      },
-      "description": "Main floor in the middle of the hall.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_broadway3",
-      "name": "Broadway 3",
-      "type": "room",
-      "position": {
-        "x": 82.82,
-        "y": 161.57
-      },
-      "description": "Main floor toward the north end.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_back_of_house",
-      "name": "Available back of house",
-      "type": "room",
-      "position": {
-        "x": 71.9,
-        "y": 112.78
-      },
-      "description": "Back-of-house space along the lagoon wall.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_breakout5",
-      "name": "Breakout 5",
-      "type": "room",
-      "position": {
-        "x": 80.89,
-        "y": 179.33
-      },
-      "description": "Room beside the stairs.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_breakout6",
-      "name": "Breakout 6",
-      "type": "room",
-      "position": {
-        "x": 94.16,
-        "y": 165.42
-      },
-      "description": "Room along the lagoon wall near the north end.",
-      "source": "manual"
-    },
-    {
-      "id": "lm_breakout7",
-      "name": "Breakout 7",
-      "type": "room",
-      "position": {
-        "x": 92.45,
-        "y": 197.95
-      },
-      "description": "Room at the north end.",
+      "description": "Restricted escape-room strip along Palace Drive; separate public entrance at 3362 Palace Drive.",
       "source": "manual"
     },
     {
@@ -962,10 +4823,175 @@
       "name": "Staff offices (no access)",
       "type": "room",
       "position": {
-        "x": 62.06,
-        "y": 152.37
+        "x": 37.127,
+        "y": 141.558
       },
-      "description": "Staff offices along the Palace Drive wall. No access.",
+      "description": "Restricted staff office block.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout1",
+      "name": "Breakout 1",
+      "type": "room",
+      "position": {
+        "x": 21.641,
+        "y": 90.534
+      },
+      "description": "South half of the circular room.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout2",
+      "name": "Breakout 2",
+      "type": "room",
+      "position": {
+        "x": 22.633,
+        "y": 99.071
+      },
+      "description": "North half of the circular room.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout3",
+      "name": "Breakout 3",
+      "type": "room",
+      "position": {
+        "x": 22.435,
+        "y": 115.947
+      },
+      "description": "West room (Palace Drive side) of the block north of the circular room.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout4",
+      "name": "Breakout 4",
+      "type": "room",
+      "position": {
+        "x": 30.773,
+        "y": 113.167
+      },
+      "description": "East room (lagoon side) of the block north of the circular room.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout5",
+      "name": "Breakout 5",
+      "type": "room",
+      "position": {
+        "x": 51.024,
+        "y": 168.956
+      },
+      "description": "Enclosed breakout beside the mezzanine stairs.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout6",
+      "name": "Breakout 6",
+      "type": "room",
+      "position": {
+        "x": 66.709,
+        "y": 155.059
+      },
+      "description": "Angled room along the lagoon side.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout7",
+      "name": "Breakout 7",
+      "type": "room",
+      "position": {
+        "x": 62.54,
+        "y": 186.229
+      },
+      "description": "Open event area at the north end.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_stairs",
+      "name": "Stairs to the mezzanine",
+      "type": "stairs",
+      "position": {
+        "x": 61.746,
+        "y": 173.126
+      },
+      "description": "Stairs beside Breakout 5; upper level is not modeled.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_theater",
+      "name": "Theater",
+      "type": "room",
+      "position": {
+        "x": 83.585,
+        "y": 171.537
+      },
+      "description": "Small tiered seating area labeled Theater by the business entrance. The main Palace of Fine Arts Theatre auditorium is at the far south end and is not on this map.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_restroom_east",
+      "name": "Restroom, north end",
+      "type": "restroom",
+      "position": {
+        "x": 78.621,
+        "y": 202.907
+      },
+      "description": "Restroom at the north end beside Breakout 7.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_restroom_south",
+      "name": "Restroom by the business entrance",
+      "type": "restroom",
+      "position": {
+        "x": 96.49,
+        "y": 175.508
+      },
+      "description": "Restroom beside the business entrance lobby.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_broadway1",
+      "name": "Broadway 1",
+      "type": "room",
+      "position": {
+        "x": 34.943,
+        "y": 85.372
+      },
+      "description": "Open floor southeast of the circular breakout block, toward the lagoon wall.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_broadway2",
+      "name": "Broadway 2",
+      "type": "room",
+      "position": {
+        "x": 42.884,
+        "y": 127.66
+      },
+      "description": "Main circulation beside staff offices.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_broadway3",
+      "name": "Broadway 3",
+      "type": "room",
+      "position": {
+        "x": 53.01,
+        "y": 150.095
+      },
+      "description": "Open floor between Breakouts 5 and 6.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_back_of_house",
+      "name": "Available back of house",
+      "type": "room",
+      "position": {
+        "x": 45.068,
+        "y": 102.446
+      },
+      "description": "Narrow service strip along the lagoon wall.",
       "source": "manual"
     }
   ],

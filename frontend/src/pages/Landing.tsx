@@ -212,8 +212,8 @@ export default function Landing() {
             <span aria-hidden="true">↗</span>
           </button>
           <p id="palace-note" className="sample-note">
-            First floor traced from the venue's public floor plan. Approximate
-            and simplified for the DotPad.
+            First floor reconstructed from the venue's official floor plan,
+            including interior rooms and walls. Dimensions and heights are approximate.
           </p>
         </section>
         {busy && (

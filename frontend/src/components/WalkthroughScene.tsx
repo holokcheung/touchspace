@@ -23,7 +23,7 @@ function Camera({ pose }: { pose: Pose }) {
   return null;
 }
 
-function RoomFloor({ room, index }: { room: Room; index: number }) {
+function RoomFloor({ room, index, count }: { room: Room; index: number; count: number }) {
   const shape = useMemo(() => {
     const s = new Shape();
     room.polygon.forEach((p, i) =>
@@ -35,7 +35,9 @@ function RoomFloor({ room, index }: { room: Room; index: number }) {
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, 0.012, 0]}
+      // Earlier rooms have priority in roomAt(). Keep their floors above broad
+      // circulation polygons too, avoiding flicker where the footprints overlap.
+      position={[0, 0.012 + (count - index) * 0.001, 0]}
       receiveShadow
     >
       <shapeGeometry args={[shape]} />
@@ -93,7 +95,7 @@ function Space({
       {map.rooms
         .filter((r) => r.polygon.length >= 3)
         .map((r, i) => (
-          <RoomFloor key={r.id} room={r} index={i} />
+          <RoomFloor key={r.id} room={r} index={i} count={map.rooms.length} />
         ))}
       {map.walls.flatMap((wall) => {
         const own = gaps.filter((g) => g.wall_id === wall.id);

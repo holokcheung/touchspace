@@ -162,6 +162,14 @@ def test_palace_of_fine_arts_sample(client):
     m = r.json()["map"]
     assert m["name"] == "Palace of Fine Arts, first floor" and m["source"]["kind"] == "manual"
     assert "Approximate" in m["source"]["description"] and "North up" in m["source"]["description"]
+    assert "printed" in m["source"]["description"]
+    assert not any("Rotated" in step for step in r.json()["processing_steps"])
     names = {lm["name"] for lm in m["landmarks"]}
     assert {"Public entrance", "Business entrance", "Palace Games", "Theater", "Atrium"} <= names
-    assert not any("Rotated" in s for s in r.json()["processing_steps"])  # stays north up
+    assert not r.json()["issues"]
+    # The main app preserves the north-up trace used by the standalone viewer.
+    from tests.conftest import REPO_ROOT
+    original = json.loads((REPO_ROOT / "sample-data/palace-of-fine-arts.json").read_text())
+    assert len(m["walls"]) == len(original["walls"])
+    assert m["walls"][0]["start"] == original["walls"][0]["start"]
+    assert m["walls"][0]["end"] == original["walls"][0]["end"]

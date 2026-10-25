@@ -212,7 +212,7 @@ def _map_response(store: MapStore, fmap: FloorMap, steps: list[str] | None = Non
 
 
 def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None,
-            options: ProcessingOptions | None = None) -> MapResponse:
+            processing_options: ProcessingOptions | None = None) -> MapResponse:
     try:
         imported = import_scan(data, name=name)
     except ImportError_ as exc:
@@ -220,7 +220,7 @@ def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None,
     fmap = imported.map
     fmap.id = map_id
     try:
-        result = process_map(fmap, options)
+        result = process_map(fmap, processing_options)
     except FloorPlanError as exc:
         raise ApiError(422, "unprocessable_plan", str(exc)) from None
     saved = store.save(result.map)
@@ -322,9 +322,10 @@ def create_palace_fine_arts_sample(store: MapStore = Depends(get_store)) -> MapR
     path = get_settings().palace_fine_arts_path
     if not path.is_file():
         raise ApiError(500, "sample_missing", "The Palace of Fine Arts map file is missing from sample-data/.")
-    # Already north up: only translate it. Axis alignment would turn this curved hall about 28 degrees.
+    # This curved, manually traced plan already has a north-up orientation.
+    # Axis alignment would rotate it by about 29 degrees and invalidate that claim.
     return _ingest(store, json.loads(path.read_text()), map_id=new_map_id("palace"), name=None,
-                   options=ProcessingOptions(align_to_axes=False))
+                   processing_options=ProcessingOptions(align_to_axes=False, snap_tolerance_m=0))
 
 
 @app.get("/api/maps", response_model=list[MapSummary])
