@@ -2,8 +2,10 @@
 hall, San Francisco (the Cal Hacks venue), simplified for a 60 x 40 pin DotPad.
 
 Traced by hand from the venue's public floor plan (palaceoffinearts.com, "PFA Master Floorplan",
-first floor), in that drawing's pixel coordinates, then scaled to meters with the building's
-length in OpenStreetMap (about 274 m end to end; (c) OpenStreetMap contributors, ODbL).
+first floor), in that drawing's pixel coordinates (page image 1100 x 850). Scale from the
+dimensions printed on the plan's page 2 (132'-10 21/32" = 40.50 m over 188.9 px, about 0.214 m/px;
+the page 4 scale bar agrees). Page 1 stops at the north wall of the Palace of Fine Arts Theatre
+auditorium, which is not on this map.
 APPROXIMATE: walls are simplified to the outer shell so it reads at DotPad size; every named
 area is a spoken landmark. Rotated so north is up (the venue's plan has west up).
 
@@ -19,7 +21,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUTS = [ROOT / "palace-of-fine-arts.json", ROOT.parent / "frontend" / "standalone" / "maps" / "palace-of-fine-arts.json"]
 
-M_PER_PX = 273.8 / 1038.8  # OSM building length / the same length on the plan page
+M_PER_PX = 0.214  # from the dimension strings on page 2 of the plan
 
 
 def pt(px: float, py: float) -> tuple[float, float]:
@@ -28,7 +30,7 @@ def pt(px: float, py: float) -> tuple[float, float]:
     return round(py * M_PER_PX, 2), round(px * M_PER_PX, 2)
 
 
-# ---- outer shell, clockwise from the west end (page pixels)
+# ---- outer shell, clockwise from the south end (page pixels)
 OUTER = [(57, 215), (200, 170), (330, 148), (450, 140), (560, 150), (650, 182), (750, 222), (850, 285),
          (910, 350), (960, 415), (1010, 470), (1050, 520)]
 EAST_END = [(985, 548), (905, 572), (860, 605), (835, 570)]
@@ -100,12 +102,12 @@ rooms = [
     {"id": "r_breakout3", "name": "Breakout 3", "polygon": poly([(570, 210), (648, 232), (640, 266), (559, 252)])},
     {"id": "r_breakout4", "name": "Breakout 4", "polygon": poly([(559, 252), (640, 266), (632, 300), (548, 292)])},
     {"id": "r_staff", "name": "Staff offices (no access)", "polygon": poly(STAFF)},
-    {"id": "r_pavilion", "name": "Pavilion", "polygon": poly(band(57, 240) )},
+    {"id": "r_pavilion", "name": "Pavilion", "polygon": poly(band(57, 240)[1:-1])},
     {"id": "r_atrium", "name": "Atrium", "polygon": poly(band(240, 420))},
     {"id": "r_broadway1", "name": "Broadway 1", "polygon": poly(band(420, 600))},
     {"id": "r_broadway2", "name": "Broadway 2", "polygon": poly(band(600, 740))},
-    {"id": "r_broadway3", "name": "Broadway 3", "polygon": poly([(750, 222), (850, 285), (880, 318), (790, 490), (770, 470), (720, 425)])},
-    {"id": "r_east", "name": "East wing", "polygon": poly([(880, 318), (910, 350), (960, 415), (1010, 470), (1050, 520)] + EAST_END + [(800, 505), (790, 490)])},
+    {"id": "r_broadway3", "name": "Broadway 3", "polygon": poly([(740, 218), (750, 222), (850, 285), (880, 318), (790, 490), (800, 505), (770, 470), (720, 425)])},
+    {"id": "r_east", "name": "North wing", "polygon": poly([(880, 318), (910, 350), (960, 415), (1010, 470), (1050, 520)] + EAST_END + [(800, 505), (790, 490)])},
 ]
 
 
@@ -116,30 +118,31 @@ def landmark(lid: str, name: str, kind: str, px: float, py: float, description: 
 
 landmarks = [
     landmark("lm_public_entrance", "Public entrance", "entrance", 355, 333, "Main public doors on the lagoon side, facing the rotunda."),
-    landmark("lm_business_entrance", "Business entrance", "entrance", 950, 548, "Doors at the east end, next to the theater."),
+    landmark("lm_business_entrance", "Business entrance", "entrance", 950, 548, "Doors at the north end, next to the small theater seating."),
     landmark("lm_loading", "Loading doors", "other", 393, 152, "Loading doors on the Palace Drive side."),
     landmark("lm_palace_games", "Palace Games", "room", 668, 207,
-             "Escape rooms along the Palace Drive wall, past the restrooms and catering prep. Their own public door is on Palace Drive."),
+             "Escape rooms along the Palace Drive wall, past the restrooms and catering prep. Palace Games lists its own public door at 3362 Palace Drive."),
     landmark("lm_restroom_north", "Restrooms by catering prep", "restroom", 572, 185, "Restrooms on the Palace Drive side, next to Palace Games."),
-    landmark("lm_restroom_east", "Restroom, east end", "restroom", 1000, 500, "Restroom at the east end, near Breakout 7."),
+    landmark("lm_restroom_east", "Restroom, north end", "restroom", 1000, 500, "Restroom at the north end, near Breakout 7."),
     landmark("lm_restroom_south", "Restroom by the business entrance", "restroom", 878, 580, "Restroom beside the business entrance."),
-    landmark("lm_stairs", "Stairs to the mezzanine", "stairs", 862, 425, "Stairs up to the mezzanine, between Breakout 5 and Breakout 7."),
-    landmark("lm_theater", "Theater", "room", 852, 532, "Performing arts theater near the business entrance."),
-    landmark("lm_pavilion", "Pavilion", "room", 210, 257, "Open area at the west end of the hall."),
-    landmark("lm_green_rooms", "Green rooms", "room", 120, 327, "Small rooms at the west end."),
+    landmark("lm_stairs", "Stairs to the mezzanine", "stairs", 862, 425, "Stairs up to the mezzanine, between Breakout 5 and Breakout 7, toward the north end."),
+    landmark("lm_theater", "Theater", "room", 852, 532,
+             "Small tiered seating area labeled Theater on the venue plan, by the business entrance. The main Palace of Fine Arts Theatre is at the far south end and is not on this map."),
+    landmark("lm_pavilion", "Pavilion", "room", 210, 257, "Open area at the south end of the hall."),
+    landmark("lm_green_rooms", "Green rooms", "room", 132, 327, "Small rooms at the south end."),
     landmark("lm_atrium", "Atrium", "room", 328, 284, "Open area just inside the public entrance."),
     landmark("lm_catering", "Catering prep", "room", 487, 176, "Catering prep area on the Palace Drive side."),
-    landmark("lm_breakout1", "Breakout 1", "room", 482, 238, "West half of the round room."),
-    landmark("lm_breakout2", "Breakout 2", "room", 527, 262, "East half of the round room."),
-    landmark("lm_breakout3", "Breakout 3", "room", 597, 243, "North room of the block east of the round room."),
-    landmark("lm_breakout4", "Breakout 4", "room", 590, 282, "South room of the block east of the round room."),
-    landmark("lm_broadway1", "Broadway 1", "room", 463, 300, "Main floor south of the round room."),
+    landmark("lm_breakout1", "Breakout 1", "room", 482, 238, "South half of the round room."),
+    landmark("lm_breakout2", "Breakout 2", "room", 527, 262, "North half of the round room."),
+    landmark("lm_breakout3", "Breakout 3", "room", 597, 243, "West room (Palace Drive side) of the block north of the round room."),
+    landmark("lm_breakout4", "Breakout 4", "room", 590, 282, "East room (lagoon side) of the block north of the round room."),
+    landmark("lm_broadway1", "Broadway 1", "room", 463, 300, "Main floor southeast of the round room, toward the lagoon wall."),
     landmark("lm_broadway2", "Broadway 2", "room", 650, 338, "Main floor in the middle of the hall."),
-    landmark("lm_broadway3", "Broadway 3", "room", 755, 387, "Main floor toward the east end."),
+    landmark("lm_broadway3", "Broadway 3", "room", 755, 387, "Main floor toward the north end."),
     landmark("lm_back_of_house", "Available back of house", "room", 527, 336, "Back-of-house space along the lagoon wall."),
     landmark("lm_breakout5", "Breakout 5", "room", 838, 378, "Room beside the stairs."),
-    landmark("lm_breakout6", "Breakout 6", "room", 773, 440, "Room along the lagoon wall near the east end."),
-    landmark("lm_breakout7", "Breakout 7", "room", 925, 432, "Room at the east end."),
+    landmark("lm_breakout6", "Breakout 6", "room", 773, 440, "Room along the lagoon wall near the north end."),
+    landmark("lm_breakout7", "Breakout 7", "room", 925, 432, "Room at the north end."),
     landmark("lm_staff", "Staff offices (no access)", "room", 712, 290, "Staff offices along the Palace Drive wall. No access."),
 ]
 
@@ -150,9 +153,8 @@ floor_map = {
     "units": "meters",
     "source": {
         "kind": "manual",
-        "description": "Traced from the Palace of Fine Arts public floor plan (palaceoffinearts.com) and scaled with "
-                       "OpenStreetMap (c) OpenStreetMap contributors. Approximate and simplified for the DotPad. "
-                       "North up.",
+        "description": "Traced from the Palace of Fine Arts public floor plan (palaceoffinearts.com), scaled with the "
+                       "dimensions printed on it. Approximate and simplified for the DotPad. North up.",
     },
     "floor_level": 0,
     "walls": walls,
