@@ -11,7 +11,26 @@ extension UIColor {
     }
 }
 
-extension Color { static let touchSpaceMint = Color(uiColor:.touchSpaceMint) }
+extension UIColor {
+    /// Screen background: light mint #E6F7F2 (tint is 4.8:1 on it), deep mint #0B2E27 in dark mode.
+    static let touchSpaceBackground = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red:0x0B/255.0,green:0x2E/255.0,blue:0x27/255.0,alpha:1)
+            : UIColor(red:0xE6/255.0,green:0xF7/255.0,blue:0xF2/255.0,alpha:1)
+    }
+}
+
+extension Color {
+    static let touchSpaceMint = Color(uiColor:.touchSpaceMint)
+    static let touchSpaceBackground = Color(uiColor:.touchSpaceBackground)
+}
+
+extension View {
+    /// Mint behind a List, Form or ScrollView instead of the system white or grey.
+    func touchSpaceBackground() -> some View {
+        scrollContentBackground(.hidden).background(Color.touchSpaceBackground.ignoresSafeArea())
+    }
+}
 
 @main struct TouchSpaceApp: App {
     @StateObject private var library = MapLibrary()
@@ -19,6 +38,14 @@ extension Color { static let touchSpaceMint = Color(uiColor:.touchSpaceMint) }
     init() {
         // Alerts, sheets and UIKit-backed controls take the window's tint, not SwiftUI's.
         UIWindow.appearance().tintColor = .touchSpaceMint
+        // Mint navigation bars, scrolled or not.
+        let bar = UINavigationBarAppearance()
+        bar.configureWithOpaqueBackground()
+        bar.backgroundColor = .touchSpaceBackground
+        bar.shadowColor = .clear
+        UINavigationBar.appearance().standardAppearance = bar
+        UINavigationBar.appearance().scrollEdgeAppearance = bar
+        UINavigationBar.appearance().compactAppearance = bar
     }
     var body: some Scene {
         WindowGroup {
