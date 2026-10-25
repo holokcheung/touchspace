@@ -5,13 +5,14 @@ import { fmt, planBounds, regionName, roomAt } from "../lib/geometry";
 export default function PlanDescription({ map }: { map: FloorMap }) {
   const b = planBounds(map);
   const start = map.landmarks.find((l) => l.id === map.start_landmark_id);
-  const printed = map.objects.filter((o) => o.include_in_tactile && !o.hidden);
+  const objects = map.objects.filter((o) => !o.hidden);
   return (
     <div className="space-y-3 text-sm leading-relaxed">
       <p>
-        The plan is {fmt(b.max_x - b.min_x)} meters wide (west to east) and {fmt(b.max_y - b.min_y)} meters deep (south
-        to north). North is at the top. It has {map.walls.length} wall segments, {map.doors.length} doors and{" "}
-        {map.openings.length} open passages.
+        The plan is {fmt(b.max_x - b.min_x)} meters wide (west to east) and{" "}
+        {fmt(b.max_y - b.min_y)} meters deep (south to north). North is at the
+        top. It has {map.walls.length} wall segments, {map.doors.length} doors
+        and {map.openings.length} open passages.
       </p>
       {map.rooms.length > 0 && (
         <p>
@@ -27,8 +28,7 @@ export default function PlanDescription({ map }: { map: FloorMap }) {
               return (
                 <li key={l.id}>
                   {l.name} ({l.type}) on the {regionName(map, l.position)}
-                  {room && room.name !== l.name ? `, in ${room.name}` : ""}
-                  {l.show_on_tactile ? "" : ", not printed"}.
+                  {room && room.name !== l.name ? `, in ${room.name}` : ""}.
                 </li>
               );
             })}
@@ -37,8 +37,15 @@ export default function PlanDescription({ map }: { map: FloorMap }) {
       ) : (
         <p>No landmarks are marked yet.</p>
       )}
-      <p>{start ? `Starting point: ${start.name}.` : "No starting point is set."}</p>
-      {printed.length > 0 && <p>Objects printed on the tactile map: {printed.map((o) => o.label ?? o.category).join(", ")}.</p>}
+      <p>
+        {start ? `Starting point: ${start.name}.` : "No starting point is set."}
+      </p>
+      {objects.length > 0 && (
+        <p>
+          Mapped objects: {objects.map((o) => o.label ?? o.category).join(", ")}
+          .
+        </p>
+      )}
     </div>
   );
 }

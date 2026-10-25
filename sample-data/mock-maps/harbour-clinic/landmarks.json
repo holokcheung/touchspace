@@ -1,0 +1,64 @@
+{
+  "landmarks": [
+    {
+      "id": "clinic-entrance",
+      "kind": "entrance",
+      "name": "Main entrance",
+      "position": {
+        "x": 1.0,
+        "z": 2.4
+      },
+      "roomId": "waiting"
+    },
+    {
+      "id": "clinic-reception",
+      "kind": "information",
+      "name": "Reception desk",
+      "position": {
+        "x": 3.8,
+        "z": 2.4
+      },
+      "roomId": "waiting"
+    },
+    {
+      "id": "clinic-consult",
+      "kind": "destination",
+      "name": "Consultation room",
+      "position": {
+        "x": 4.0,
+        "z": 8.0
+      },
+      "roomId": "consult"
+    },
+    {
+      "id": "clinic-restroom",
+      "kind": "restroom",
+      "name": "Accessible restroom",
+      "position": {
+        "x": 10.4,
+        "z": 2.5
+      },
+      "roomId": "wc"
+    },
+    {
+      "id": "clinic-treatment",
+      "kind": "destination",
+      "name": "Treatment bed",
+      "position": {
+        "x": 11.5,
+        "z": 8.0
+      },
+      "roomId": "treatment"
+    },
+    {
+      "id": "clinic-supplies",
+      "kind": "destination",
+      "name": "Staff supplies",
+      "position": {
+        "x": 13.5,
+        "z": 2.3
+      },
+      "roomId": "store"
+    }
+  ]
+}

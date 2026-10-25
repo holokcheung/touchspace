@@ -1,102 +1,143 @@
+"""Native app endpoints, isolated from the original scan/print API."""
 from __future__ import annotations
 
-import secrets
+import hashlib
+import json
+import os
+import sqlite3
+import time
+from collections import defaultdict, deque
 from functools import lru_cache
-from typing import Literal
+from pathlib import Path
+from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi import APIRouter, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
+from pydantic import Field
 from starlette.concurrency import run_in_threadpool
 
-from .config import TouchspaceSettings, get_touchspace_settings
-from .models import CatalogResponse, ChatRequest, ChatResponse
-from .package import MAX_BYTES, PackageError, validate_package
-from .storage import Catalog, CatalogError
+from .auth import issue, owner
+from .chat import ChatService, ChatUnavailable, MessagesProvider, ProviderConfig
+from .models import ChatRequest, ChatResponse, Model
+from .package import MAX_PACKAGE, PackageError, validate_package
+from .spatial import SpatialError
+from .storage import Catalog
 
-router = APIRouter(prefix='/api/touchspace', tags=['Touchspace AI indoor exploration'])
+router = APIRouter(prefix="/api/touchspace", tags=["TouchSpace AR"])
 
 
 @lru_cache
-def get_catalog() -> Catalog:
-    # Reuse the established data root, file-writing helpers, and dependency-injection pattern.
-    from app.main import get_settings
-    return Catalog(get_settings().data_dir / 'touchspace')
+def get_catalog():
+    repo = Path(__file__).resolve().parents[3]
+    root = Path(os.environ.get("TOUCHSPACE_DATA_DIR", repo / "backend" / "data"))
+    return Catalog(root if root.is_absolute() else repo / root)
 
 
-def authorized_owner(authorization: str | None = Header(None), settings: TouchspaceSettings = Depends(get_touchspace_settings)) -> str | None:
-    token = authorization.removeprefix('Bearer ') if authorization and authorization.startswith('Bearer ') else ''
-    if len(settings.upload_token) >= 24 and token and secrets.compare_digest(token.encode(), settings.upload_token.encode()):
-        # One existing-project upload guard, with a stable owner across credential rotation.
-        return 'catalog-operator'
-    return None
+@lru_cache
+def get_chat():
+    return ChatService(MessagesProvider(ProviderConfig.from_env()))
 
 
-def require_owner(owner: str | None = Depends(authorized_owner), settings: TouchspaceSettings = Depends(get_touchspace_settings)) -> str:
-    if len(settings.upload_token) < 24:
-        raise HTTPException(503, 'Uploads are disabled. Configure TOUCHSPACE_UPLOAD_TOKEN with at least 24 random characters.')
-    if owner is None:
-        raise HTTPException(401, 'An authorized upload token is required.', headers={'WWW-Authenticate': 'Bearer'})
-    return owner
+_budgets = defaultdict(deque)
 
 
-def lookup(catalog: Catalog, map_id: str, owner: str | None):
+def budget(request: Request, kind: str, limit: int):
+    key = (request.client.host if request.client else "unknown", kind)
+    now = time.monotonic()
+    # Keep this demo limiter bounded even when source addresses change.
+    if len(_budgets) > 10000:
+        _budgets.clear()
+    queue = _budgets[key]
+    while queue and now-queue[0] > 60:
+        queue.popleft()
+    if len(queue) >= limit:
+        raise HTTPException(429, "Please wait before trying again")
+    queue.append(now)
+
+
+class PairRequest(Model):
+    code: str = Field(min_length=1, max_length=200)
+    installation_id: UUID
+
+
+@router.post("/publishing/session")
+def pair(body: PairRequest, request: Request):
+    budget(request, "pair", 6)
+    return issue(body.code, str(body.installation_id))
+
+
+@router.get("/maps")
+def search(q: str = ""):
+    if len(q) > 200:
+        raise HTTPException(422, "Search query is too long")
+    return get_catalog().search(q)
+
+
+def load(map_id, authorization):
     try:
-        return catalog.lookup(map_id, owner)
+        # Public browsing remains available even after a demo upload token expires.
+        return get_catalog().load(str(map_id))
     except KeyError:
-        raise HTTPException(404, 'Map not found or private.') from None
+        pass
+    try:
+        return get_catalog().load(str(map_id), owner(authorization))
+    except KeyError:
+        raise HTTPException(404, "Map not found") from None
 
 
-@router.get('/maps', response_model=list[CatalogResponse])
-def maps(q: str = Query('', max_length=200), catalog: Catalog = Depends(get_catalog)):
-    return catalog.search(q.strip())
+@router.get("/maps/{map_id}")
+def detail(map_id: UUID, authorization: str | None = Header(default=None)):
+    package, _, visibility = load(map_id, authorization)
+    return {"manifest": package.manifest.model_dump(mode="json", by_alias=True), "visibility": visibility}
 
 
-@router.post('/maps', status_code=201, response_model=CatalogResponse)
-async def upload(file: UploadFile = File(...), visibility: Literal['private', 'public'] = Form('private'),
-                 publication_consent: bool = Form(False), owner: str = Depends(require_owner), catalog: Catalog = Depends(get_catalog)):
-    name = (file.filename or '').lower()
-    if not name.endswith(('.touchspacemap', '.zip')) or file.content_type not in ('application/zip', 'application/octet-stream', 'application/x-zip-compressed', 'application/vnd.touchspace.map'):
-        raise HTTPException(415, 'Upload a Touchspace map ZIP package.')
-    if visibility == 'public' and not publication_consent:
-        raise HTTPException(422, 'Public sharing requires explicit publication consent.')
-    raw = await file.read(MAX_BYTES + 1)
-    if len(raw) > MAX_BYTES:
-        raise HTTPException(413, 'Packages must be at most 64 MiB.')
+@router.get("/maps/{map_id}/download")
+def download(map_id: UUID, authorization: str | None = Header(default=None)):
+    package, path, _ = load(map_id, authorization)
+    return FileResponse(path, media_type="application/vnd.touchspace.map+zip", filename=f"{package.manifest.id}.touchspacemap")
+
+
+@router.post("/maps", status_code=201)
+async def upload(request: Request, file: UploadFile = File(), visibility: str = Form("private"),
+                 publication_consent: bool = Form(False), authorization: str | None = Header(default=None)):
+    identity = owner(authorization)
+    if identity is None:
+        raise HTTPException(401, "Pair with the server before uploading")
+    budget(request, "upload", 10)
+    if visibility not in ("private", "public"):
+        raise HTTPException(422, "Visibility must be private or public")
+    if visibility == "public" and not publication_consent:
+        raise HTTPException(422, "Public maps require explicit publication consent")
+    try:
+        raw = await file.read(MAX_PACKAGE+1)
+    finally:
+        await file.close()
+    if len(raw) > MAX_PACKAGE:
+        raise HTTPException(413, "Package exceeds 64 MB")
     try:
         package = await run_in_threadpool(validate_package, raw)
-        if visibility == 'public' and not package.world_data:
-            raise PackageError('Map-only drafts cannot be published as live-navigable community maps. Upload privately or rescan with world data.')
-        return await run_in_threadpool(catalog.save, package, raw, owner=owner, visibility=visibility)
+        saved = get_catalog().save(package, identity, visibility)
+        return {"manifest": saved.manifest.model_dump(mode="json", by_alias=True), "visibility": visibility}
     except PackageError as exc:
         raise HTTPException(422, str(exc)) from None
-    except CatalogError as exc:
-        raise HTTPException(409, str(exc)) from None
+    except sqlite3.IntegrityError:
+        raise HTTPException(409, "This map ID already exists. Packages are immutable; create a new scan revision.") from None
 
 
-@router.get('/maps/{map_id}', response_model=CatalogResponse)
-def details(map_id: str, owner: str | None = Depends(authorized_owner), catalog: Catalog = Depends(get_catalog)):
-    return catalog.response(lookup(catalog, map_id, owner))
-
-
-@router.get('/maps/{map_id}/download')
-def download(map_id: str, owner: str | None = Depends(authorized_owner), catalog: Catalog = Depends(get_catalog)):
-    row = lookup(catalog, map_id, owner)
+@router.post("/chat", response_model=ChatResponse)
+async def chat(body: ChatRequest, request: Request, authorization: str | None = Header(default=None)):
+    budget(request, "chat", 20)
+    if body.map_package is not None:
+        # Imported/demo maps need not be published. Context is validated but never saved.
+        package = body.map_package
+        canonical = json.dumps(package.model_dump(mode="json"), sort_keys=True, separators=(",", ":"))
+        identity = "inline:" + hashlib.sha256(canonical.encode()).hexdigest()
+    else:
+        package, _, visibility = load(body.map_id, authorization)
+        identity = owner(authorization) if visibility == "private" else None
     try:
-        # Verify storage integrity before returning the complete original package.
-        catalog.load(map_id, owner)
-        path = catalog.path(row)
-    except (CatalogError, PackageError) as exc:
-        raise HTTPException(409, str(exc)) from None
-    return FileResponse(path, media_type='application/zip', filename=f'{map_id}.touchspacemap',
-                        headers={'Cache-Control': 'no-store', 'ETag': '"'+row['checksum']+'"'})
-
-
-@router.post('/chat', response_model=ChatResponse)
-async def chat(body: ChatRequest, owner: str | None = Depends(authorized_owner), catalog: Catalog = Depends(get_catalog), settings: TouchspaceSettings = Depends(get_touchspace_settings)):
-    from .chat import answer
-    lookup(catalog, body.mapId, owner)
-    try:
-        package = await run_in_threadpool(catalog.load, body.mapId, owner)
-        return await answer(body, package, catalog, owner or 'anonymous', settings)
-    except (CatalogError, PackageError) as exc:
-        raise HTTPException(409, str(exc)) from None
+        return await get_chat().answer(package, body, identity)
+    except ChatUnavailable as exc:
+        raise HTTPException(503, str(exc)) from None
+    except SpatialError as exc:
+        raise HTTPException(422, str(exc)) from None

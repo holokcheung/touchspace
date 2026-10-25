@@ -1,4 +1,4 @@
-"""Touchspace AI HTTP API.
+"""TouchSpace AI HTTP API.
 
 Run locally:  uvicorn app.main:app --reload --port 8000
 """
@@ -11,15 +11,12 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
-from fastapi.exception_handlers import http_exception_handler
+from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, Field
 
-from app.touchspace.api import router as touchspace_router
-from app.touchspace.middleware import PackageSizeLimit
 from app.models.map import FloorMap, SourceInfo, ValidationIssue
 from app.models.tactile import TactileReport, TactileSettings
 from app.services.assistant import AskContext, AskResult, answer
@@ -29,7 +26,8 @@ from app.services.importers import ImportError_, import_scan
 from app.services.routing import SAFETY_NOTE, RouteResult, RoutingError, plan_route
 from app.services.storage import MapNotFound, MapStore, map_revision, new_map_id
 from app.services.tactile import TactileGenerationError, export_stl, generate_tactile_model, stl_filename
-from app.services.voice import MAX_TTS_CHARS, CartesiaVoice, VoiceConfig, VoiceUnavailable
+from app.services.local_speech import LocalSpeech
+from app.services.voice import MAX_STT_BYTES, MAX_TTS_CHARS, CartesiaVoice, VoiceConfig, VoiceUnavailable
 
 VERSION = "0.4.0"
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -50,6 +48,7 @@ def _load_dotenv(path: Path) -> None:
             os.environ[key] = value
 
 
+_load_dotenv(REPO_ROOT / "backend" / ".env")
 _load_dotenv(REPO_ROOT / ".env")
 
 
@@ -85,6 +84,11 @@ def get_store() -> MapStore:
 @lru_cache
 def get_voice() -> CartesiaVoice:
     return CartesiaVoice(VoiceConfig.from_env())
+
+
+@lru_cache
+def get_local_speech() -> LocalSpeech:
+    return LocalSpeech()
 
 
 @lru_cache
@@ -162,7 +166,7 @@ class AskRequest(BaseModel):
 # --------------------------------------------------------------------------- app
 
 
-app = FastAPI(title="Touchspace AI API", version=VERSION)
+app = FastAPI(title="TouchSpace AI API", version=VERSION)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_settings().cors_origins,
@@ -231,6 +235,7 @@ def health(voice: CartesiaVoice = Depends(get_voice), interpreter: GeminiInterpr
         "features": {
             "gemini": interpreter.enabled,
             "cartesia": voice.config.enabled,
+            "local_stt": get_local_speech().enabled,
         },
     }
 
@@ -248,13 +253,15 @@ def text_to_speech(body: SpeakRequest, voice: CartesiaVoice = Depends(get_voice)
 
 
 @app.post("/api/stt", response_model=TranscriptResponse)
-def speech_to_text(file: UploadFile = File(...), voice: CartesiaVoice = Depends(get_voice)) -> TranscriptResponse:
-    """Transcribe a short recording with Cartesia. 503 means: use browser speech recognition or typing."""
-    # Sync handler on purpose: FastAPI runs it in a worker thread, so the blocking Cartesia call
-    # does not stall other requests.
-    audio = file.file.read()
+def speech_to_text(file: UploadFile = File(...), local_only: bool = Form(False),
+                   voice: CartesiaVoice = Depends(get_voice), local: LocalSpeech = Depends(get_local_speech)) -> TranscriptResponse:
+    """Transcribe a short recording. local_only never sends audio to an external provider."""
+    # Keep local inference and provider requests in a worker thread.
+    audio = file.file.read(MAX_STT_BYTES + 1)
+    if len(audio) > MAX_STT_BYTES:
+        raise ApiError(413, "file_too_large", "Recordings must be at most 10 MB.")
     try:
-        text = voice.transcribe(audio, file.filename or "speech.webm", file.content_type)
+        text = local.transcribe(audio) if local_only else voice.transcribe(audio, file.filename or "speech.webm", file.content_type)
     except VoiceUnavailable as exc:
         raise ApiError(503, "voice_unavailable", str(exc)) from None
     except ValueError as exc:
@@ -385,14 +392,9 @@ def download_stl(map_id: str, store: MapStore = Depends(get_store)) -> FileRespo
         headers={"X-Model-Stale": "true" if status.status == "stale" else "false", "Cache-Control": "no-store"},
     )
 
-# Indoor exploration is isolated from the existing scan/STL API.
-@app.exception_handler(HTTPException)
-async def _http_error(request: Request, exc: HTTPException) -> JSONResponse:
-    if not request.url.path.startswith("/api/touchspace/"):
-        return await http_exception_handler(request, exc)
-    return JSONResponse(status_code=exc.status_code,
-                        content=_error_body('http_error', str(exc.detail)), headers=exc.headers)
 
-
+# Native iOS map features keep their own schema and storage, preserving scan/print APIs.
+from app.touchspace.api import router as touchspace_router
+from app.touchspace.limits import UploadLimitMiddleware
+app.add_middleware(UploadLimitMiddleware)
 app.include_router(touchspace_router)
-app.add_middleware(PackageSizeLimit)

@@ -1,1 +1,1 @@
-"""Touchspace AI portable maps, deterministic spatial tools, and catalog."""
+"""AR map sharing, deterministic spatial tools, and grounded conversation."""

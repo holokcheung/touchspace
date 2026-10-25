@@ -1,0 +1,74 @@
+{
+  "landmarks": [
+    {
+      "id": "library-entrance",
+      "kind": "entrance",
+      "name": "Main entrance",
+      "position": {
+        "x": 1.2,
+        "z": 2.8
+      },
+      "roomId": "foyer"
+    },
+    {
+      "id": "library-returns",
+      "kind": "information",
+      "name": "Returns desk",
+      "position": {
+        "x": 3.6,
+        "z": 1.9
+      },
+      "roomId": "foyer"
+    },
+    {
+      "id": "library-study-reading",
+      "kind": "destination",
+      "name": "Study desk",
+      "position": {
+        "x": 2.4,
+        "z": 7.6
+      },
+      "roomId": "reading"
+    },
+    {
+      "id": "library-study-children",
+      "kind": "destination",
+      "name": "Study desk",
+      "position": {
+        "x": 8.5,
+        "z": 2.5
+      },
+      "roomId": "children"
+    },
+    {
+      "id": "library-quiet",
+      "kind": "destination",
+      "name": "Quiet reading corner",
+      "position": {
+        "x": 7.8,
+        "z": 8.0
+      },
+      "roomId": "reading"
+    },
+    {
+      "id": "library-travel",
+      "kind": "destination",
+      "name": "Travel books",
+      "position": {
+        "x": 12.35,
+        "z": 6.5
+      },
+      "roomId": "stacks"
+    },
+    {
+      "id": "library-staff-boundary",
+      "kind": "boundary",
+      "name": "Unscanned staff-area boundary",
+      "position": {
+        "x": 15.0,
+        "z": 9.1
+      },
+      "roomId": "stacks"
+    }
+  ]
+}

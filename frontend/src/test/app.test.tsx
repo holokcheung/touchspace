@@ -7,133 +7,146 @@ import type { FloorMap } from "../api/types";
 import FloorPlanSvg from "../components/FloorPlanSvg";
 import Layout from "../components/Layout";
 import Landing from "../pages/Landing";
-import Upload from "../pages/Upload";
-
 const demoMap = demo as unknown as FloorMap;
-
-function mockFetch(handler: (url: string, init?: RequestInit) => Response | Promise<Response>) {
-  const fn = vi.fn((input: RequestInfo | URL, init?: RequestInit) => Promise.resolve(handler(String(input), init)));
-  vi.stubGlobal("fetch", fn);
-  return fn;
+const json = (data: unknown, status = 200) =>
+  Promise.resolve(new Response(JSON.stringify(data), { status }));
+afterEach(() => vi.unstubAllGlobals());
+function library() {
+  render(
+    <MemoryRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/maps/:id/walk" element={<p>walkthrough opened</p>} />
+      </Routes>
+    </MemoryRouter>,
+  );
 }
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
-
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
-
-describe("Landing", () => {
-  it("shows the product name, tagline and both actions", () => {
-    render(<Landing />, { wrapper: MemoryRouter });
-    expect(screen.getByRole("heading", { level: 1, name: "TouchSpace AI" })).toBeInTheDocument();
-    expect(screen.getByText("Scan a Space. Feel the Layout. Explore with Confidence.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Get Started" })).toHaveAttribute("href", "/upload");
-    expect(screen.getByRole("button", { name: "Try Demo" })).toBeEnabled();
-  });
-
-  it("Try Demo creates a demo map and opens the editor", async () => {
-    const fetchMock = mockFetch(() => json({ map: { ...demoMap, id: "demo-1234" }, issues: [], model: { status: "none" }, processing_steps: [] }, 201));
-    render(
-      <MemoryRouter initialEntries={["/"]}>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/maps/:mapId/edit" element={<p>editor page</p>} />
-        </Routes>
-      </MemoryRouter>,
+describe("Space library", () => {
+  it("opens the demo straight into the walkthrough", async () => {
+    const fetchMock = vi.fn((url: string) =>
+      url.endsWith("/api/maps")
+        ? json([])
+        : json({ map: { ...demoMap, id: "demo-1234" } }),
     );
-    await userEvent.click(screen.getByRole("button", { name: "Try Demo" }));
-    expect(await screen.findByText("editor page")).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledWith("/api/demo", expect.objectContaining({ method: "POST" }));
-  });
-
-  it("explains when the backend is unreachable", async () => {
-    vi.stubGlobal("fetch", vi.fn(() => Promise.reject(new TypeError("Failed to fetch"))));
-    render(<Landing />, { wrapper: MemoryRouter });
-    await userEvent.click(screen.getByRole("button", { name: "Try Demo" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent(/Cannot reach the TouchSpace server/);
-  });
-});
-
-describe("Upload", () => {
-  it("shows the server's parsing error and details", async () => {
-    mockFetch((url) =>
-      url.endsWith("/api/scans")
-        ? json({ error: { code: "invalid_json", message: "The file is not valid JSON (line 1, column 12).", details: ["walls: required"] } }, 400)
-        : json([]),
+    vi.stubGlobal("fetch", fetchMock);
+    library();
+    await userEvent.click(screen.getByRole("button", { name: /Try Demo/ }));
+    expect(await screen.findByText("walkthrough opened")).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/demo",
+      expect.objectContaining({ method: "POST" }),
     );
-    render(<Upload />, { wrapper: MemoryRouter });
-    const input = screen.getByLabelText("Choose a file");
-    await userEvent.upload(input, new File(['{"walls": ['], "broken.json", { type: "application/json" }));
-    const alert = await screen.findByRole("alert");
-    expect(alert).toHaveTextContent("The file is not valid JSON (line 1, column 12).");
-    expect(alert).toHaveTextContent("walls: required");
   });
-
+  it("opens saved maps directly and has no editor or print navigation", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        json([
+          { id: "saved", name: "My apartment", landmarks: 4, synthetic: false },
+        ]),
+      ),
+    );
+    library();
+    expect(
+      await screen.findByRole("link", { name: /My apartment/ }),
+    ).toHaveAttribute("href", "/maps/saved/walk");
+    expect(screen.queryByText("3D preview")).not.toBeInTheDocument();
+  });
+  it("imports a scan directly into the walkthrough", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string) =>
+        url.endsWith("/api/maps")
+          ? json([])
+          : json({ map: { ...demoMap, id: "scan" } }),
+      ),
+    );
+    library();
+    await userEvent.upload(
+      screen.getByLabelText("Choose a file"),
+      new File(["{}"], "scan.json", { type: "application/json" }),
+    );
+    expect(await screen.findByText("walkthrough opened")).toBeInTheDocument();
+  });
+  it("shows parsing details and recovers from an unreachable server", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url: string) =>
+        url.endsWith("/api/maps")
+          ? json([])
+          : json(
+              {
+                error: {
+                  message: "Invalid JSON.",
+                  details: ["walls: required"],
+                },
+              },
+              400,
+            ),
+      ),
+    );
+    library();
+    await userEvent.upload(
+      screen.getByLabelText("Choose a file"),
+      new File(["{"], "broken.json", { type: "application/json" }),
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Invalid JSON. walls: required",
+    );
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.reject(new TypeError("Failed to fetch"))),
+    );
+    await userEvent.click(screen.getByRole("button", { name: /Try Demo/ }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      /Cannot reach the TouchSpace server/,
+    );
+  });
   it("rejects non-JSON files before uploading", async () => {
-    const fetchMock = mockFetch(() => json([]));
-    render(<Upload />, { wrapper: MemoryRouter });
-    await userEvent.upload(screen.getByLabelText("Choose a file"), new File(["x"], "photo.png", { type: "image/png" }), {
-      applyAccept: false,
-    });
-    expect(await screen.findByRole("alert")).toHaveTextContent('"photo.png" is not a JSON file');
+    const fetchMock = vi.fn(() => json([]));
+    vi.stubGlobal("fetch", fetchMock);
+    library();
+    await userEvent.upload(
+      screen.getByLabelText("Choose a file"),
+      new File(["x"], "photo.png", { type: "image/png" }),
+      { applyAccept: false },
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      '"photo.png" is not a JSON file',
+    );
     expect(fetchMock).not.toHaveBeenCalledWith("/api/scans", expect.anything());
   });
 });
-
-describe("Upload samples", () => {
-  // Ported from PR #1.
-  it("loads the public RoomPlan sample and shows its provenance caveat", async () => {
-    const fetchMock = mockFetch((url) =>
-      url.endsWith("/api/samples/roomplan")
-        ? json({ map: { ...demoMap, id: "roomplan-1234", name: "Public RoomPlan sample", source: { kind: "roomplan", description: "" } }, issues: [], model: { status: "none" }, processing_steps: [] }, 201)
-        : json([]),
-    );
-    render(<Upload />, { wrapper: MemoryRouter });
-    const button = screen.getByRole("button", { name: "Try the public RoomPlan sample" });
-    expect(button).toHaveAccessibleDescription(/not a scan by our team/);
-    await userEvent.click(button);
-    expect(await screen.findByText("Processed Public RoomPlan sample.")).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledWith("/api/samples/roomplan", expect.objectContaining({ method: "POST" }));
-  });
-});
-
-describe("FloorPlanSvg", () => {
-  const layers = { rooms: true, objects: true, paths: true, landmarks: true };
-
-  it("exposes every landmark as a keyboard-focusable button", () => {
-    render(<FloorPlanSvg map={demoMap} layers={layers} selectedId={null} label="plan" />);
-    const buttons = screen.getAllByRole("button");
-    expect(buttons).toHaveLength(demoMap.landmarks.length);
-    expect(screen.getByRole("button", { name: /Main Entrance, entrance, starting point/ })).toHaveAttribute("tabindex", "0");
-  });
-
-  it("moves the focused landmark with arrow keys", () => {
-    const onMove = vi.fn();
-    const onSelect = vi.fn();
-    render(<FloorPlanSvg map={demoMap} layers={layers} selectedId={null} onSelect={onSelect} onMoveLandmark={onMove} label="plan" />);
-    const restroom = screen.getByRole("button", { name: /^Restroom, restroom/ });
-    fireEvent.keyDown(restroom, { key: "ArrowRight" });
-    fireEvent.keyDown(restroom, { key: "ArrowUp", shiftKey: true });
-    expect(onMove).toHaveBeenNthCalledWith(1, "lm_restroom", { x: 7.6, y: 7.6 });
-    expect(onMove).toHaveBeenNthCalledWith(2, "lm_restroom", { x: 7.5, y: 8.1 });
-    expect(onSelect).toHaveBeenCalledWith("lm_restroom");
-  });
-});
-
-describe("Layout", () => {
-  it("provides a skip link to the main content", async () => {
+describe("Accessible floor plan", () => {
+  it("exposes every landmark to keyboard and assistive technology", () => {
     render(
-      <Layout>
-        <p>content</p>
-      </Layout>,
-      { wrapper: MemoryRouter },
+      <FloorPlanSvg
+        map={demoMap}
+        layers={{ rooms: true, objects: true, paths: true, landmarks: true }}
+        selectedId={null}
+        label="plan"
+      />,
     );
-    await userEvent.tab();
-    const skip = screen.getByRole("link", { name: "Skip to main content" });
-    expect(skip).toHaveFocus();
-    expect(skip).toHaveAttribute("href", "#main");
-    expect(screen.getByRole("main")).toHaveAttribute("id", "main");
+    expect(screen.getAllByRole("button")).toHaveLength(
+      demoMap.landmarks.length,
+    );
+    const entrance = screen.getByRole("button", {
+      name: /Main Entrance, entrance, starting point/,
+    });
+    expect(entrance).toHaveAttribute("tabindex", "0");
+    fireEvent.keyDown(entrance, { key: "Enter" });
   });
+});
+it("keeps the skip link and main landmark", async () => {
+  render(
+    <Layout>
+      <p>content</p>
+    </Layout>,
+    { wrapper: MemoryRouter },
+  );
+  await userEvent.tab();
+  expect(
+    screen.getByRole("link", { name: "Skip to main content" }),
+  ).toHaveFocus();
+  expect(screen.getByRole("main")).toHaveAttribute("id", "main");
 });

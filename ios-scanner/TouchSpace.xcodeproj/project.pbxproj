@@ -1,0 +1,733 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		003DCB32153ECA90AD66E328 /* TouchSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA950FA3D68D62942CA3DD2 /* TouchSpaceApp.swift */; };
+		157A4ED1523D8663D1D12580 /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B5EF1CD39580FBCF872DDF /* ScannerView.swift */; };
+		1DE733719B26D2438B0B862B /* SimulationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37817220ACEA24E43D5C4055 /* SimulationView.swift */; };
+		28F5FA33FC1EAC8635F78C21 /* FloorPlanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAACCC3C09D1DA7A4F2F291 /* FloorPlanView.swift */; };
+		3124DBE672AE394279665CD5 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E44C0F4B831C12B2EFAE477 /* APIClient.swift */; };
+		360937BFA72B448A73B3A849 /* harbour-clinic.touchspacemap in Resources */ = {isa = PBXBuildFile; fileRef = 48D26F6A088DA7DCBDFBB845 /* harbour-clinic.touchspacemap */; };
+		3A865E3EF166EA4CB3FE7B93 /* WalkthroughUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAB4DF9AEB26595A9F88BC /* WalkthroughUITests.swift */; };
+		487576B00D1D231133236AEC /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11C9D392A5EAFB807025A7 /* Models.swift */; };
+		48DAAA791EE01AC1CE9F6BD0 /* DemoSpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC71FCCD6FDBE4E9CF709E79 /* DemoSpacesView.swift */; };
+		4BE564972E0AA68971008151 /* MapExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC90D11420C235628A599DF /* MapExplorerView.swift */; };
+		50985B0E026F27B163654198 /* SimulationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D18FC4BA24EF2C9F215A44 /* SimulationTests.swift */; };
+		5DB036E4183E6D53F5266D37 /* VirtualMapScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BAB26827F25F49D03DBDE6 /* VirtualMapScene.swift */; };
+		68A043D8970441551A4FEB7C /* AudioGuidance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B94D3B51AC6CCB0DBE3E8D9 /* AudioGuidance.swift */; };
+		699AF93447759C1F78C466AC /* SimulationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FAF896C63FA529238DD6E14 /* SimulationSession.swift */; };
+		719CD6A2DF4FAF1872D99B3A /* SpatialEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = D426525F9884F1D59106B857 /* SpatialEngine.swift */; };
+		737E75F615FA08AF2E530B2B /* neighbourhood-library.touchspacemap in Resources */ = {isa = PBXBuildFile; fileRef = DF7174CCEAB1B2BF54FE882F /* neighbourhood-library.touchspacemap */; };
+		7573646D9C1B1804E2EC7AAE /* harbour-clinic.touchspacemap in Resources */ = {isa = PBXBuildFile; fileRef = 48D26F6A088DA7DCBDFBB845 /* harbour-clinic.touchspacemap */; };
+		787726128D1605AD677040CE /* NavigationSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7512B860A15E5E14A473AE6 /* NavigationSession.swift */; };
+		8508A746C9821B9838169922 /* ARLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B9A05338CCBC0444FE9D297 /* ARLocalization.swift */; };
+		877B645AE9111EA5C663BE6A /* LiveNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607E073148EA719E28FE010 /* LiveNavigationView.swift */; };
+		8A9D758AAB559FDE075B2B58 /* PackageCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542F666CCEA38BC67B3E3C4A /* PackageCodec.swift */; };
+		8C4B6799060A3CB406034558 /* AskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BD52C48BF21A992975458 /* AskSheet.swift */; };
+		9080DDC0B21ACC61F84F1F9C /* SpeechInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C618233D535018A3CB03A774 /* SpeechInputTests.swift */; };
+		90CF87D67F38F259BAC0C7A5 /* ServerSpeechInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBC000D512D2D502EADDA42 /* ServerSpeechInput.swift */; };
+		9592E484F2A7B1E99B77D84E /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = C97A133E076708B57CCA3C16 /* ZIPFoundation */; };
+		9821DE933ACDF99086647607 /* PolygonMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2A496FEB4198C0547CB1EA /* PolygonMesh.swift */; };
+		9F00D923EDBA8DA7E89DA00A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3E5246199B5F2E955E29C /* HomeView.swift */; };
+		A114883BCF035D354370C7F6 /* routes.json in Resources */ = {isa = PBXBuildFile; fileRef = 9CF5E5AB3526F499A50ED61A /* routes.json */; };
+		A457E372D9FDCFD0CA62B4EA /* SimulationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7890D4BEB06667EC2FFA751E /* SimulationEngine.swift */; };
+		AF9C8B50E6A259DC586FFBB4 /* SpatialTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44719976AF663ED4F1F677C /* SpatialTests.swift */; };
+		B7074A2EF58336248E60A3DA /* neighbourhood-library.touchspacemap in Resources */ = {isa = PBXBuildFile; fileRef = DF7174CCEAB1B2BF54FE882F /* neighbourhood-library.touchspacemap */; };
+		C3486580C78A1422C7B25890 /* WalkthroughVoiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E095138E2B8BF8A08E8B9AB4 /* WalkthroughVoiceTests.swift */; };
+		CFB3BAEC84F8BB97151469AF /* LocalizationVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0827CFA92ABCB993123CB6BF /* LocalizationVerifier.swift */; };
+		D6A88391C419F1FC2D387B5C /* RoomScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C3B7B1E619C29B5AC3CAD /* RoomScanner.swift */; };
+		E99BABE2FD2A7A10BC6AC619 /* reception-question.wav in Resources */ = {isa = PBXBuildFile; fileRef = 30B7D7C2F144C5F90522C928 /* reception-question.wav */; };
+		EA8F612E17D93BB6F5034E3D /* PackageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B63E759140392DAEBC13ADD /* PackageTests.swift */; };
+		ECA703E941FBA85B973AD462 /* GuidanceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB65297DF133E199CE0797 /* GuidanceEngine.swift */; };
+		ECD73935330DA21401770755 /* WalkthroughVoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965BFE5618101114DD468C08 /* WalkthroughVoice.swift */; };
+		EEF8BD057B1A7A346409D66D /* JSONGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F8A0F2EF6A05FB74FAF26A /* JSONGuard.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		694AF1F8F48C802694A52D70 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD70B833ADE32DBEFD0207F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B5666F2E2095AE7615561489;
+			remoteInfo = TouchSpace;
+		};
+		C270DD6686C4C11CD0B0EBE7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD70B833ADE32DBEFD0207F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B5666F2E2095AE7615561489;
+			remoteInfo = TouchSpace;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0827CFA92ABCB993123CB6BF /* LocalizationVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationVerifier.swift; sourceTree = "<group>"; };
+		1B9A05338CCBC0444FE9D297 /* ARLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARLocalization.swift; sourceTree = "<group>"; };
+		292384204A1A9A05C96F2F28 /* TouchSpace.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TouchSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30B7D7C2F144C5F90522C928 /* reception-question.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "reception-question.wav"; sourceTree = "<group>"; };
+		37817220ACEA24E43D5C4055 /* SimulationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationView.swift; sourceTree = "<group>"; };
+		379C3B7B1E619C29B5AC3CAD /* RoomScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomScanner.swift; sourceTree = "<group>"; };
+		3B63E759140392DAEBC13ADD /* PackageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageTests.swift; sourceTree = "<group>"; };
+		3B94D3B51AC6CCB0DBE3E8D9 /* AudioGuidance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioGuidance.swift; sourceTree = "<group>"; };
+		3DA5DD19B7ED7B73C3F60A6A /* TouchSpaceUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TouchSpaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4351C7AF9A87940099D53EDC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		47BB65297DF133E199CE0797 /* GuidanceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceEngine.swift; sourceTree = "<group>"; };
+		48D26F6A088DA7DCBDFBB845 /* harbour-clinic.touchspacemap */ = {isa = PBXFileReference; path = "harbour-clinic.touchspacemap"; sourceTree = "<group>"; };
+		50BAB26827F25F49D03DBDE6 /* VirtualMapScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualMapScene.swift; sourceTree = "<group>"; };
+		542F666CCEA38BC67B3E3C4A /* PackageCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageCodec.swift; sourceTree = "<group>"; };
+		6DA950FA3D68D62942CA3DD2 /* TouchSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchSpaceApp.swift; sourceTree = "<group>"; };
+		6E44C0F4B831C12B2EFAE477 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		75B5EF1CD39580FBCF872DDF /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
+		7890D4BEB06667EC2FFA751E /* SimulationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationEngine.swift; sourceTree = "<group>"; };
+		7F3BD52C48BF21A992975458 /* AskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskSheet.swift; sourceTree = "<group>"; };
+		7FAF896C63FA529238DD6E14 /* SimulationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationSession.swift; sourceTree = "<group>"; };
+		8A00641590B35015D4667F57 /* TouchSpaceTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TouchSpaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		93F8A0F2EF6A05FB74FAF26A /* JSONGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONGuard.swift; sourceTree = "<group>"; };
+		965BFE5618101114DD468C08 /* WalkthroughVoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughVoice.swift; sourceTree = "<group>"; };
+		9CF5E5AB3526F499A50ED61A /* routes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = routes.json; sourceTree = "<group>"; };
+		9EBC000D512D2D502EADDA42 /* ServerSpeechInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSpeechInput.swift; sourceTree = "<group>"; };
+		A7512B860A15E5E14A473AE6 /* NavigationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSession.swift; sourceTree = "<group>"; };
+		AA11C9D392A5EAFB807025A7 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		C0D3E5246199B5F2E955E29C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		C2D18FC4BA24EF2C9F215A44 /* SimulationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationTests.swift; sourceTree = "<group>"; };
+		C618233D535018A3CB03A774 /* SpeechInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechInputTests.swift; sourceTree = "<group>"; };
+		CD2A496FEB4198C0547CB1EA /* PolygonMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonMesh.swift; sourceTree = "<group>"; };
+		D426525F9884F1D59106B857 /* SpatialEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialEngine.swift; sourceTree = "<group>"; };
+		D9AAB4DF9AEB26595A9F88BC /* WalkthroughUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughUITests.swift; sourceTree = "<group>"; };
+		DAAACCC3C09D1DA7A4F2F291 /* FloorPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanView.swift; sourceTree = "<group>"; };
+		DEC90D11420C235628A599DF /* MapExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapExplorerView.swift; sourceTree = "<group>"; };
+		DF7174CCEAB1B2BF54FE882F /* neighbourhood-library.touchspacemap */ = {isa = PBXFileReference; path = "neighbourhood-library.touchspacemap"; sourceTree = "<group>"; };
+		E095138E2B8BF8A08E8B9AB4 /* WalkthroughVoiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughVoiceTests.swift; sourceTree = "<group>"; };
+		E44719976AF663ED4F1F677C /* SpatialTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialTests.swift; sourceTree = "<group>"; };
+		EC71FCCD6FDBE4E9CF709E79 /* DemoSpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSpacesView.swift; sourceTree = "<group>"; };
+		F607E073148EA719E28FE010 /* LiveNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveNavigationView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		720731D4CDF3491C37CF2A87 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9592E484F2A7B1E99B77D84E /* ZIPFoundation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		18989D3EFEBC2B166B440A91 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6E44C0F4B831C12B2EFAE477 /* APIClient.swift */,
+				1B9A05338CCBC0444FE9D297 /* ARLocalization.swift */,
+				3B94D3B51AC6CCB0DBE3E8D9 /* AudioGuidance.swift */,
+				A7512B860A15E5E14A473AE6 /* NavigationSession.swift */,
+				542F666CCEA38BC67B3E3C4A /* PackageCodec.swift */,
+				379C3B7B1E619C29B5AC3CAD /* RoomScanner.swift */,
+				9EBC000D512D2D502EADDA42 /* ServerSpeechInput.swift */,
+				7FAF896C63FA529238DD6E14 /* SimulationSession.swift */,
+				50BAB26827F25F49D03DBDE6 /* VirtualMapScene.swift */,
+				965BFE5618101114DD468C08 /* WalkthroughVoice.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		47AD66A9254EA1DD69298E6A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				7F3BD52C48BF21A992975458 /* AskSheet.swift */,
+				EC71FCCD6FDBE4E9CF709E79 /* DemoSpacesView.swift */,
+				DAAACCC3C09D1DA7A4F2F291 /* FloorPlanView.swift */,
+				C0D3E5246199B5F2E955E29C /* HomeView.swift */,
+				F607E073148EA719E28FE010 /* LiveNavigationView.swift */,
+				DEC90D11420C235628A599DF /* MapExplorerView.swift */,
+				75B5EF1CD39580FBCF872DDF /* ScannerView.swift */,
+				37817220ACEA24E43D5C4055 /* SimulationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4D664C60021A5A9D87B8C3B5 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				30B7D7C2F144C5F90522C928 /* reception-question.wav */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		A061CE50830331D557E1B5FE /* TouchSpaceUITests */ = {
+			isa = PBXGroup;
+			children = (
+				D9AAB4DF9AEB26595A9F88BC /* WalkthroughUITests.swift */,
+			);
+			path = TouchSpaceUITests;
+			sourceTree = "<group>";
+		};
+		B9B6F45080A83F83D3EB0F64 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				47BB65297DF133E199CE0797 /* GuidanceEngine.swift */,
+				93F8A0F2EF6A05FB74FAF26A /* JSONGuard.swift */,
+				0827CFA92ABCB993123CB6BF /* LocalizationVerifier.swift */,
+				AA11C9D392A5EAFB807025A7 /* Models.swift */,
+				CD2A496FEB4198C0547CB1EA /* PolygonMesh.swift */,
+				7890D4BEB06667EC2FFA751E /* SimulationEngine.swift */,
+				D426525F9884F1D59106B857 /* SpatialEngine.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E28CB3DB83F06D9B55BEB8D6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				292384204A1A9A05C96F2F28 /* TouchSpace.app */,
+				8A00641590B35015D4667F57 /* TouchSpaceTests.xctest */,
+				3DA5DD19B7ED7B73C3F60A6A /* TouchSpaceUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E494F26F75B39B0F0D2A30EA /* TouchSpace */ = {
+			isa = PBXGroup;
+			children = (
+				4351C7AF9A87940099D53EDC /* Info.plist */,
+				6DA950FA3D68D62942CA3DD2 /* TouchSpaceApp.swift */,
+				B9B6F45080A83F83D3EB0F64 /* Core */,
+				18989D3EFEBC2B166B440A91 /* Services */,
+				47AD66A9254EA1DD69298E6A /* Views */,
+			);
+			path = TouchSpace;
+			sourceTree = "<group>";
+		};
+		E70752FCFD6F567E791A96D8 /* TouchSpaceTests */ = {
+			isa = PBXGroup;
+			children = (
+				3B63E759140392DAEBC13ADD /* PackageTests.swift */,
+				C2D18FC4BA24EF2C9F215A44 /* SimulationTests.swift */,
+				E44719976AF663ED4F1F677C /* SpatialTests.swift */,
+				C618233D535018A3CB03A774 /* SpeechInputTests.swift */,
+				E095138E2B8BF8A08E8B9AB4 /* WalkthroughVoiceTests.swift */,
+				4D664C60021A5A9D87B8C3B5 /* Fixtures */,
+			);
+			path = TouchSpaceTests;
+			sourceTree = "<group>";
+		};
+		F1DCFF3C1BE2DD7FA6CF0C35 /* mock-maps */ = {
+			isa = PBXGroup;
+			children = (
+				48D26F6A088DA7DCBDFBB845 /* harbour-clinic.touchspacemap */,
+				DF7174CCEAB1B2BF54FE882F /* neighbourhood-library.touchspacemap */,
+			);
+			name = "mock-maps";
+			path = "../sample-data/mock-maps";
+			sourceTree = "<group>";
+		};
+		F6B5D8680183DA6B5A5990CB = {
+			isa = PBXGroup;
+			children = (
+				F97B0D99E4101ABBD5F23633 /* fixtures */,
+				F1DCFF3C1BE2DD7FA6CF0C35 /* mock-maps */,
+				E494F26F75B39B0F0D2A30EA /* TouchSpace */,
+				E70752FCFD6F567E791A96D8 /* TouchSpaceTests */,
+				A061CE50830331D557E1B5FE /* TouchSpaceUITests */,
+				E28CB3DB83F06D9B55BEB8D6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F97B0D99E4101ABBD5F23633 /* fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				9CF5E5AB3526F499A50ED61A /* routes.json */,
+			);
+			name = fixtures;
+			path = ../shared/fixtures;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0A072A104E26FD440857246A /* TouchSpaceUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDBE07778163A0BE6FFFB920 /* Build configuration list for PBXNativeTarget "TouchSpaceUITests" */;
+			buildPhases = (
+				0AA70887F57C8E168278784F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E33D47E1DA4B1623A000FDB2 /* PBXTargetDependency */,
+			);
+			name = TouchSpaceUITests;
+			packageProductDependencies = (
+			);
+			productName = TouchSpaceUITests;
+			productReference = 3DA5DD19B7ED7B73C3F60A6A /* TouchSpaceUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		28FE51DDB9C44DA12DA7510D /* TouchSpaceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27E8E06433F542B214A82359 /* Build configuration list for PBXNativeTarget "TouchSpaceTests" */;
+			buildPhases = (
+				DF631954076D139A8F3F2020 /* Sources */,
+				9DDBFA867F7CEF34E5BFC568 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AE08CAE60AB2D909D2A50019 /* PBXTargetDependency */,
+			);
+			name = TouchSpaceTests;
+			packageProductDependencies = (
+			);
+			productName = TouchSpaceTests;
+			productReference = 8A00641590B35015D4667F57 /* TouchSpaceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B5666F2E2095AE7615561489 /* TouchSpace */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 76E16D4C9985CAD0169710B6 /* Build configuration list for PBXNativeTarget "TouchSpace" */;
+			buildPhases = (
+				C89BE43CCBA045DC4B0F33C7 /* Sources */,
+				DD0DBD6FB161599BC44F0117 /* Resources */,
+				720731D4CDF3491C37CF2A87 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TouchSpace;
+			packageProductDependencies = (
+				C97A133E076708B57CCA3C16 /* ZIPFoundation */,
+			);
+			productName = TouchSpace;
+			productReference = 292384204A1A9A05C96F2F28 /* TouchSpace.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FD70B833ADE32DBEFD0207F8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0A072A104E26FD440857246A = {
+						ProvisioningStyle = Automatic;
+						TestTargetID = B5666F2E2095AE7615561489;
+					};
+					28FE51DDB9C44DA12DA7510D = {
+						ProvisioningStyle = Automatic;
+					};
+					B5666F2E2095AE7615561489 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 53478A0CFEE5B08FEB92321C /* Build configuration list for PBXProject "TouchSpace" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = F6B5D8680183DA6B5A5990CB;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5520C4A1F7570F233E681CF3 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E28CB3DB83F06D9B55BEB8D6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B5666F2E2095AE7615561489 /* TouchSpace */,
+				28FE51DDB9C44DA12DA7510D /* TouchSpaceTests */,
+				0A072A104E26FD440857246A /* TouchSpaceUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9DDBFA867F7CEF34E5BFC568 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				360937BFA72B448A73B3A849 /* harbour-clinic.touchspacemap in Resources */,
+				737E75F615FA08AF2E530B2B /* neighbourhood-library.touchspacemap in Resources */,
+				E99BABE2FD2A7A10BC6AC619 /* reception-question.wav in Resources */,
+				A114883BCF035D354370C7F6 /* routes.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD0DBD6FB161599BC44F0117 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7573646D9C1B1804E2EC7AAE /* harbour-clinic.touchspacemap in Resources */,
+				B7074A2EF58336248E60A3DA /* neighbourhood-library.touchspacemap in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0AA70887F57C8E168278784F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A865E3EF166EA4CB3FE7B93 /* WalkthroughUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C89BE43CCBA045DC4B0F33C7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3124DBE672AE394279665CD5 /* APIClient.swift in Sources */,
+				8508A746C9821B9838169922 /* ARLocalization.swift in Sources */,
+				8C4B6799060A3CB406034558 /* AskSheet.swift in Sources */,
+				68A043D8970441551A4FEB7C /* AudioGuidance.swift in Sources */,
+				48DAAA791EE01AC1CE9F6BD0 /* DemoSpacesView.swift in Sources */,
+				28F5FA33FC1EAC8635F78C21 /* FloorPlanView.swift in Sources */,
+				ECA703E941FBA85B973AD462 /* GuidanceEngine.swift in Sources */,
+				9F00D923EDBA8DA7E89DA00A /* HomeView.swift in Sources */,
+				EEF8BD057B1A7A346409D66D /* JSONGuard.swift in Sources */,
+				877B645AE9111EA5C663BE6A /* LiveNavigationView.swift in Sources */,
+				CFB3BAEC84F8BB97151469AF /* LocalizationVerifier.swift in Sources */,
+				4BE564972E0AA68971008151 /* MapExplorerView.swift in Sources */,
+				487576B00D1D231133236AEC /* Models.swift in Sources */,
+				787726128D1605AD677040CE /* NavigationSession.swift in Sources */,
+				8A9D758AAB559FDE075B2B58 /* PackageCodec.swift in Sources */,
+				9821DE933ACDF99086647607 /* PolygonMesh.swift in Sources */,
+				D6A88391C419F1FC2D387B5C /* RoomScanner.swift in Sources */,
+				157A4ED1523D8663D1D12580 /* ScannerView.swift in Sources */,
+				90CF87D67F38F259BAC0C7A5 /* ServerSpeechInput.swift in Sources */,
+				A457E372D9FDCFD0CA62B4EA /* SimulationEngine.swift in Sources */,
+				699AF93447759C1F78C466AC /* SimulationSession.swift in Sources */,
+				1DE733719B26D2438B0B862B /* SimulationView.swift in Sources */,
+				719CD6A2DF4FAF1872D99B3A /* SpatialEngine.swift in Sources */,
+				003DCB32153ECA90AD66E328 /* TouchSpaceApp.swift in Sources */,
+				5DB036E4183E6D53F5266D37 /* VirtualMapScene.swift in Sources */,
+				ECD73935330DA21401770755 /* WalkthroughVoice.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DF631954076D139A8F3F2020 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA8F612E17D93BB6F5034E3D /* PackageTests.swift in Sources */,
+				50985B0E026F27B163654198 /* SimulationTests.swift in Sources */,
+				AF9C8B50E6A259DC586FFBB4 /* SpatialTests.swift in Sources */,
+				9080DDC0B21ACC61F84F1F9C /* SpeechInputTests.swift in Sources */,
+				C3486580C78A1422C7B25890 /* WalkthroughVoiceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AE08CAE60AB2D909D2A50019 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B5666F2E2095AE7615561489 /* TouchSpace */;
+			targetProxy = C270DD6686C4C11CD0B0EBE7 /* PBXContainerItemProxy */;
+		};
+		E33D47E1DA4B1623A000FDB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B5666F2E2095AE7615561489 /* TouchSpace */;
+			targetProxy = 694AF1F8F48C802694A52D70 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		5D1D699C4B63FBD1AE9BC6DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.touchspace.TouchSpaceTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TouchSpace.app/TouchSpace";
+			};
+			name = Release;
+		};
+		7312B94738800F8C5A00A2D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.touchspace.TouchSpaceUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TouchSpace;
+			};
+			name = Release;
+		};
+		93CE18E9F0ADABAB09853481 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.touchspace.TouchSpaceTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TouchSpace.app/TouchSpace";
+			};
+			name = Debug;
+		};
+		CD8AC5C40420E7A662CAE9CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.touchspace.TouchSpaceUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TouchSpace;
+			};
+			name = Debug;
+		};
+		CFCB0D82FBBFCF189B9BC1CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = TouchSpace/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.touchspace.TouchSpace;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DF1FB591A14F451AC903DD30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E516AE5FF3315B1E4BE95638 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E836F9816979F4140E6C55EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = TouchSpace/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ai.touchspace.TouchSpace;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		27E8E06433F542B214A82359 /* Build configuration list for PBXNativeTarget "TouchSpaceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93CE18E9F0ADABAB09853481 /* Debug */,
+				5D1D699C4B63FBD1AE9BC6DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		53478A0CFEE5B08FEB92321C /* Build configuration list for PBXProject "TouchSpace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DF1FB591A14F451AC903DD30 /* Debug */,
+				E516AE5FF3315B1E4BE95638 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		76E16D4C9985CAD0169710B6 /* Build configuration list for PBXNativeTarget "TouchSpace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E836F9816979F4140E6C55EC /* Debug */,
+				CFCB0D82FBBFCF189B9BC1CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BDBE07778163A0BE6FFFB920 /* Build configuration list for PBXNativeTarget "TouchSpaceUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD8AC5C40420E7A662CAE9CF /* Debug */,
+				7312B94738800F8C5A00A2D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5520C4A1F7570F233E681CF3 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.9.20;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C97A133E076708B57CCA3C16 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5520C4A1F7570F233E681CF3 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = FD70B833ADE32DBEFD0207F8 /* Project object */;
+}

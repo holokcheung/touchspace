@@ -1,0 +1,19 @@
+{
+  "checksums": {
+    "geometry.json": "cac851d76e3b355c19b4dc4c95550c2179c089881983d2abde4b2b1af7fdc7dc",
+    "landmarks.json": "f495f61726262f1da0d2ff5cb6e90dc8f52eaeda394fa4c6fb762e95840f4ca5",
+    "navigation.json": "4cada46f7339bd72170b12a4abd2d9db20a068247a48b7d1eadba0d69bab8d0c",
+    "worldmap.archive": "0999b973dac7e1b43c2683b34a2d4305b1dfcf4df046b5b80aadf77377160f9b"
+  },
+  "contributor": "TouchSpace synthetic test fixtures",
+  "coordinateFrameId": "c62ed0ea-09de-5b32-9258-d6330de51060",
+  "coverage": "partial",
+  "createdAt": "2026-10-25T00:00:00Z",
+  "floor": "Ground floor",
+  "frameAnchorId": "2d6caf48-1b01-58ce-8b7e-b8aaf3df03a7",
+  "id": "87b81628-6b48-5beb-9481-2797a1b99d4f",
+  "provenance": "synthetic-fixture",
+  "schemaVersion": "1.0",
+  "venue": "Neighbourhood Library (Synthetic)",
+  "verification": "unverified"
+}
