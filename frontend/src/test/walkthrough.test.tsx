@@ -152,6 +152,31 @@ describe("Immersive walkthrough", () => {
     );
     expect(await area()).toHaveTextContent("Restroom · facing north");
   });
+  it("zooms around the user, follows movement, retains zoom across panels and restores overview", async () => {
+    setup();
+    await area();
+    await userEvent.click(screen.getByRole("button", { name: "DotPad" }));
+    const pad = screen.getByRole("img", { name: /^DotPad preview/ });
+    const overview = pad.getAttribute("aria-label");
+    expect(screen.getByRole("button", { name: "Zoom out" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "Zoom in" }));
+    expect(screen.getByRole("status", { name: "DotPad zoom level" })).toHaveTextContent("2×");
+    expect(pad).toHaveAccessibleName(/column 31, row 21/);
+    fireEvent.click(screen.getByRole("button", { name: "Step forward" }));
+    expect(pad).toHaveAccessibleName(/column 31, row 21/);
+    await userEvent.click(screen.getByRole("button", { name: "Zoom in" }));
+    expect(screen.getByRole("button", { name: "Zoom in" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "Floor plan" }));
+    await userEvent.selectOptions(screen.getByLabelText("Start from"), "lm_restroom");
+    await userEvent.click(screen.getByRole("button", { name: "DotPad" }));
+    expect(screen.getByRole("status", { name: "DotPad zoom level" })).toHaveTextContent("4×");
+    expect(pad).toHaveAccessibleName(/column 31, row 21/);
+    await userEvent.click(screen.getByRole("button", { name: "Zoom out" }));
+    await userEvent.click(screen.getByRole("button", { name: "Zoom out" }));
+    expect(screen.getByRole("status", { name: "DotPad zoom level" })).toHaveTextContent("Overview");
+    expect(pad.getAttribute("aria-label")).not.toEqual(overview);
+    expect(pad).not.toHaveAccessibleName(/column 31, row 21/);
+  });
   it("holds Space to listen, ignores repeats, pauses movement, and sends on release", async () => {
     setup();
     const walk = await area();

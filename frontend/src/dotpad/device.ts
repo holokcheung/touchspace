@@ -16,6 +16,7 @@ import {
 
 export type DeviceState = "disconnected" | "connecting" | "connected";
 export type Transport = "bluetooth" | "usb";
+export type ZoomAction = "in" | "out";
 export function supportedTransports(): Transport[] {
   if (!window.isSecureContext) return [];
   return ["bluetooth", "usb"].filter(
@@ -34,7 +35,10 @@ export class DotPadConnection {
   private handshake: ReturnType<typeof setTimeout> | null = null;
   private latest: { grid: PinGrid; text: string } | null = null;
 
-  constructor(private onState: (state: DeviceState, error?: string) => void) {
+  constructor(
+    private onState: (state: DeviceState, error?: string) => void,
+    onZoom?: (action: ZoomAction) => void,
+  ) {
     this.sdk.setCallBack((device, code) => {
       if (this.disposed) return;
       if (code === DataCodes.Connected) {
@@ -78,7 +82,12 @@ export class DotPadConnection {
           "The DotPad did not accept the display data. Reconnect to try again.",
         );
       }
-    }, null);
+    }, (device, code) => {
+      if (this.disposed || this.state !== "connected" || device !== this.device) return;
+      // The SDK's combined key callback fires once per press (including held keys).
+      if (code === "KeyFunction1") onZoom?.("out");
+      else if (code === "KeyFunction2") onZoom?.("in");
+    });
   }
 
   private isDisconnected(): boolean {

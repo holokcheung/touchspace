@@ -31,6 +31,23 @@ connected board. Firefox and Safari can show the preview but cannot connect thro
 these SDK transports. A file opened directly from disk may also be unable to connect;
 serve the standalone build on localhost or HTTPS to use hardware.
 
+## Zoom
+
+Use **Zoom in** / **Zoom out** in the panel, or **function button 2** to zoom in
+and **function button 1** to zoom out on the DotPad. Each press steps between
+overview, 2× and 4×; holding a button does not repeatedly zoom. The SDK's combined
+key callback handles presses and ignores other keys and combinations.
+
+Overview fits the entire map. At 2× and 4× the map stays north up and follows the
+user, with the X at column 31, row 21 of the 60 × 40 board. The viewport remains
+centered even near or outside the map boundary; unmapped areas are blank. Wall
+segments and door gaps are clipped before sampling, offscreen landmarks are
+omitted, and symbols keep their 3 × 3 pin size. The preview shows the same frame
+as the hardware and reports meters per pin. Zoom and hardware callbacks persist
+when switching panels; leaving the walkthrough resets zoom and disconnects.
+
+Button mapping and tactile readability still require validation on a real device.
+
 ## Reconnecting without rescanning
 
 After this origin has been granted access to a DotPad, the panel uses

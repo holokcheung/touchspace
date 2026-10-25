@@ -17,7 +17,9 @@ import Icon, { type IconName } from "../components/Icon";
 import PlanDescription from "../components/PlanDescription";
 import ReadAloud from "../components/ReadAloud";
 import { Notice } from "../components/Status";
-import { DotPadPanel, framePins, mapPins, statusLine } from "../dotpad";
+import {
+  DotPadPanel, ZOOM_LEVELS, framePins, mapPins, statusLine, type ZoomAction,
+} from "../dotpad";
 import { dist, planBounds, roomAt } from "../lib/geometry";
 import {
   SOUNDSCAPE,
@@ -181,6 +183,13 @@ export function WalkthroughView({
   const [typed, setTyped] = useState("");
   const [showText, setShowText] = useState(false);
   const [avoidStairs, setAvoidStairs] = useState(false);
+  const [dotZoomIndex, setDotZoomIndex] = useState(0);
+  const dotZoom = ZOOM_LEVELS[dotZoomIndex];
+  const zoomDotPad = useCallback((action: ZoomAction) => {
+    setDotZoomIndex((index) =>
+      Math.max(0, Math.min(ZOOM_LEVELS.length - 1, index + (action === "in" ? 1 : -1))),
+    );
+  }, []);
   const assistant = useWalkthroughAssistant(
     map,
     pose,
@@ -233,7 +242,11 @@ export function WalkthroughView({
     [scene, pose],
   );
   const dataHere = scene && pose ? hasMapData(scene, pose.position) : true;
-  const dot = useMemo(() => mapPins(map), [map]);
+  const dotCenter = dotZoom > 1 ? pose?.position : undefined;
+  const dot = useMemo(
+    () => mapPins(map, undefined, undefined, { zoom: dotZoom, center: dotCenter }),
+    [map, dotZoom, dotCenter],
+  );
   const frame = useMemo(
     () => framePins(dot.grid, dot.layout, pose, dot.placed),
     [dot, pose],
@@ -727,6 +740,8 @@ export function WalkthroughView({
               walker={frame.walker}
               text={padText}
               metersPerPin={dot.layout.metersPerPin}
+              zoom={dotZoom}
+              onZoom={zoomDotPad}
             />
           )}
           {t.id === "help" && (

@@ -25,6 +25,47 @@ const demoMap = {
 describe("DotPad pin grid", () => {
   const { grid, layout, placed } = mapPins(demoMap);
 
+  it("keeps the X centered while zooming and moving, including beyond map edges", () => {
+    for (const zoom of [2, 4]) {
+      for (const position of [{ x: 3.5, y: 2 }, { x: 8, y: 5 }, { x: 30, y: 30 }]) {
+        const view = mapPins(demoMap, 60, 40, { zoom, center: position });
+        const frame = framePins(view.grid, view.layout, { position, heading: 90 }, view.placed);
+        expect(frame.walker).toEqual({ col: 30, row: 20 });
+        expect(view.layout.metersPerPin).toBeCloseTo(layout.metersPerPin / zoom);
+        expect([...frame.grid.pins].filter((pin) => pin === PIN.walker)).toHaveLength(5);
+      }
+    }
+    // Overview restores the original map framing regardless of user location.
+    expect(mapPins(demoMap, 60, 40, { zoom: 1, center: { x: 30, y: 30 } }).grid)
+      .toEqual(grid);
+  });
+
+  it("pans the map with the user without changing north-up orientation", () => {
+    const a = mapPins(demoMap, 60, 40, { zoom: 2, center: { x: 7, y: 5 } });
+    const b = mapPins(demoMap, 60, 40, { zoom: 2, center: { x: 8, y: 6 } });
+    const fixed = { x: 8, y: 5 };
+    expect(toPin(b.layout, fixed).col).toBeLessThan(toPin(a.layout, fixed).col);
+    expect(toPin(b.layout, fixed).row).toBeGreaterThan(toPin(a.layout, fixed).row);
+    expect(b.grid.pins).not.toEqual(a.grid.pins);
+    expect(b.placed.every((p) => p.col >= 1 && p.col <= 58 && p.row >= 1 && p.row <= 38)).toBe(true);
+  });
+
+  it("clips crossing walls, preserves door gaps and hides offscreen landmarks", () => {
+    const map: FloorMap = {
+      ...demoMap,
+      walls: [{ ...demoMap.walls[0], id: "wall", start: { x: -1000, y: 5 }, end: { x: 1000, y: 5 } }],
+      doors: [], openings: [], landmarks: [],
+    };
+    const view = mapPins(map, 60, 40, { zoom: 4, center: { x: 8, y: 5 } });
+    for (let c = 0; c < 60; c++) expect(pinAt(view.grid, c, 20)).toBe(PIN.wall);
+    const doorway = mapPins(demoMap, 60, 40, { zoom: 4, center: { x: 3.5, y: 0 } });
+    expect(pinAt(doorway.grid, 30, 20)).toBe(PIN.empty);
+    expect(doorway.placed.length).toBeLessThan(placed.length);
+    const outside = mapPins(demoMap, 60, 40, { zoom: 4, center: { x: 1000, y: 1000 } });
+    expect(outside.placed).toEqual([]);
+    expect(outside.grid.pins.every((pin) => pin === PIN.empty)).toBe(true);
+  });
+
   it("fills the 60 × 40 graphic area, north up, with a margin", () => {
     expect(grid.cols).toBe(60);
     expect(grid.rows).toBe(40);
