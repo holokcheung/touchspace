@@ -56,7 +56,7 @@ export const api = {
   health: () =>
     request<{
       status: string;
-      features: { gemini: boolean; cartesia: boolean };
+      features: { claude: boolean; cartesia: boolean };
     }>("/api/health"),
   listMaps: () => request<MapSummary[]>("/api/maps"),
   createDemo: () => request<MapResponse>("/api/demo", { method: "POST" }),
