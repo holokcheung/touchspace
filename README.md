@@ -1,4 +1,4 @@
-# Touchspace AI
+# Touchspace 
 
 A native, accessible iOS app for exploring volunteer-scanned indoor maps with voice or text. Import a portable package, inspect its rooms and landmarks offline, attempt automatic ARKit positioning, and follow deterministic routes with speech and optional stereo waypoint cues.
 
