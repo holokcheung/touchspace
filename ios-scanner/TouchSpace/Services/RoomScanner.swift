@@ -28,6 +28,10 @@ import SwiftUI
         captureView.captureSession.delegate = self
         captureView.isModelEnabled = false
         captureView.captureSession.run(configuration:RoomCaptureSession.Configuration())
+        DotPadLink.shared.followWorldPose { [weak self] in
+            guard let frame = self?.arSession.currentFrame, case .normal = frame.camera.trackingState else { return nil }
+            return frame.camera.transform
+        }
         scanning = true
         instruction = "Move slowly to capture walls, furniture and floor. Finish this room before adding the next."
     }
@@ -36,7 +40,7 @@ import SwiftUI
         scanning = false; processing = true
         captureView.captureSession.stop(pauseARSession:false)
     }
-    func stop() { captureView.captureSession.stop(pauseARSession:true); arSession.pause() }
+    func stop() { captureView.captureSession.stop(pauseARSession:true); arSession.pause(); DotPadLink.shared.stopFollowingPose() }
     nonisolated func captureSession(_ session:RoomCaptureSession,didStartWith configuration:RoomCaptureSession.Configuration) {
         Task { @MainActor [weak self] in
             guard let self else { return }
@@ -44,6 +48,13 @@ import SwiftUI
                 let anchor = ARAnchor(name:"touchspace-frame:\(self.frameId.uuidString.lowercased())",transform:matrix_identity_float4x4)
                 self.frameAnchor = anchor; self.arSession.add(anchor:anchor)
             }
+        }
+    }
+    nonisolated func captureSession(_ session:RoomCaptureSession,didUpdate room:CapturedRoom) {
+        // Live preview on the DotPad while scanning (no-op unless a DotPad URL is set).
+        Task { @MainActor [weak self] in
+            guard let self, self.scanning else { return }
+            DotPadLink.shared.sendRooms(self.rooms+[room])
         }
     }
     nonisolated func captureSession(_ session:RoomCaptureSession,didEndWith data:CapturedRoomData,error:Error?) {
@@ -57,6 +68,7 @@ import SwiftUI
                     self.continuityLost = true; throw TouchSpaceError.invalid("Coordinate-frame continuity was lost during capture.")
                 }
                 self.rooms.append(room); self.roomCount = self.rooms.count
+                DotPadLink.shared.sendRooms(self.rooms,force:true)
                 self.package = try self.normalize()
                 self.instruction = "Room saved in this session. Add an adjacent room, or review labels and doorway links."
             } catch { self.error = error.localizedDescription }
