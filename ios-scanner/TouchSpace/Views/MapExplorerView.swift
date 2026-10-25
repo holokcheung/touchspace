@@ -20,7 +20,7 @@ struct MapExplorerView: View {
         ScrollView {
             VStack(alignment:.leading,spacing:18) {
                 if package.manifest.isSynthetic {
-                    Label("Interactive demo · No live position",systemImage:"cube.transparent").font(.headline).foregroundStyle(.blue)
+                    Label("Interactive demo · No live position",systemImage:"cube.transparent").font(.headline).foregroundStyle(Color.touchSpaceMint)
                 }
                 FloorPlanView(package:package,route:route,selected:package.landmarks.landmarks.first { $0.id == destinationId }?.position,onSelect:{ p in
                     if let place = package.landmarks.landmarks.min(by:{ $0.position.distance(to:p) < $1.position.distance(to:p) }), place.position.distance(to:p) < 1.3 { destinationId = place.id }
