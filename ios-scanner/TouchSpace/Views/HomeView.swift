@@ -14,6 +14,8 @@ struct HomeView: View {
     @State private var busy = false
     @State private var error: String?
     @State private var searchGeneration = 0
+    @State private var demoMaps: [MapPackage] = []
+    @State private var showingDemos = false
     private var api: APIClient? { URL(string:backendURL).map { APIClient(baseURL:$0) } }
     var body: some View {
         NavigationStack {
@@ -46,6 +48,7 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("TouchSpace")
+            .navigationDestination(isPresented:$showingDemos) { DemoSpacesView(maps:demoMaps,api:api) }
             .searchable(text:$query,prompt:"Search venues")
             .onSubmit(of:.search) { Task { await search() } }
             .toolbar { ToolbarItem(placement:.primaryAction) { Button("Settings",systemImage:"gear") { settings = true } } }
@@ -59,11 +62,15 @@ struct HomeView: View {
     }
     private func loadDemos() {
         do {
+            var loaded: [MapPackage] = []
             for name in ["harbour-clinic","neighbourhood-library"] {
                 guard let url = Bundle.main.url(forResource:name,withExtension:"touchspacemap") else { throw TouchSpaceError.invalid("Demo bundle is missing from this app build.") }
                 let map = try PackageCodec.load(url)
                 if !library.maps.contains(where:{ $0.id == map.id }) { _ = try library.importMap(url) }
+                loaded.append(map)
             }
+            demoMaps = loaded
+            showingDemos = true
         } catch { self.error = error.localizedDescription }
     }
     private func search() async {

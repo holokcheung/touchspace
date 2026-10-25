@@ -6,6 +6,7 @@ struct FloorPlanView: View {
     var pose: MapPoint?
     var heading: Double?
     var selected: MapPoint?
+    var showLandmarkLabels = true
     var onSelect: ((MapPoint) -> Void)?
     private var bounds: (Double,Double,Double,Double) {
         let points = package.geometry.rooms.flatMap(\.polygon)
@@ -38,7 +39,9 @@ struct FloorPlanView: View {
                 for landmark in package.landmarks.landmarks {
                     let p = point(landmark.position)
                     context.fill(Path(ellipseIn:CGRect(x:p.x-4,y:p.y-4,width:8,height:8)),with:.color(.green))
-                    context.draw(Text(landmark.name).font(.caption).foregroundStyle(.primary),at:CGPoint(x:p.x,y:p.y+14))
+                    if showLandmarkLabels {
+                        context.draw(Text(landmark.name).font(.caption).foregroundStyle(.primary),at:CGPoint(x:p.x,y:p.y+14))
+                    }
                 }
                 if let pose, let heading {
                     let origin = point(pose), target = CGPoint(x:origin.x+sin(heading)*20,y:origin.y-cos(heading)*20)

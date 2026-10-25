@@ -15,6 +15,7 @@
 		360937BFA72B448A73B3A849 /* harbour-clinic.touchspacemap in Resources */ = {isa = PBXBuildFile; fileRef = 48D26F6A088DA7DCBDFBB845 /* harbour-clinic.touchspacemap */; };
 		3A865E3EF166EA4CB3FE7B93 /* WalkthroughUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAB4DF9AEB26595A9F88BC /* WalkthroughUITests.swift */; };
 		487576B00D1D231133236AEC /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11C9D392A5EAFB807025A7 /* Models.swift */; };
+		48DAAA791EE01AC1CE9F6BD0 /* DemoSpacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC71FCCD6FDBE4E9CF709E79 /* DemoSpacesView.swift */; };
 		4BE564972E0AA68971008151 /* MapExplorerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC90D11420C235628A599DF /* MapExplorerView.swift */; };
 		50985B0E026F27B163654198 /* SimulationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D18FC4BA24EF2C9F215A44 /* SimulationTests.swift */; };
 		5DB036E4183E6D53F5266D37 /* VirtualMapScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BAB26827F25F49D03DBDE6 /* VirtualMapScene.swift */; };
@@ -95,6 +96,7 @@
 		DEC90D11420C235628A599DF /* MapExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapExplorerView.swift; sourceTree = "<group>"; };
 		DF7174CCEAB1B2BF54FE882F /* neighbourhood-library.touchspacemap */ = {isa = PBXFileReference; path = "neighbourhood-library.touchspacemap"; sourceTree = "<group>"; };
 		E44719976AF663ED4F1F677C /* SpatialTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialTests.swift; sourceTree = "<group>"; };
+		EC71FCCD6FDBE4E9CF709E79 /* DemoSpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSpacesView.swift; sourceTree = "<group>"; };
 		F607E073148EA719E28FE010 /* LiveNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveNavigationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -129,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				7F3BD52C48BF21A992975458 /* AskSheet.swift */,
+				EC71FCCD6FDBE4E9CF709E79 /* DemoSpacesView.swift */,
 				DAAACCC3C09D1DA7A4F2F291 /* FloorPlanView.swift */,
 				C0D3E5246199B5F2E955E29C /* HomeView.swift */,
 				F607E073148EA719E28FE010 /* LiveNavigationView.swift */,
@@ -369,6 +372,7 @@
 				8508A746C9821B9838169922 /* ARLocalization.swift in Sources */,
 				8C4B6799060A3CB406034558 /* AskSheet.swift in Sources */,
 				68A043D8970441551A4FEB7C /* AudioGuidance.swift in Sources */,
+				48DAAA791EE01AC1CE9F6BD0 /* DemoSpacesView.swift in Sources */,
 				28F5FA33FC1EAC8635F78C21 /* FloorPlanView.swift in Sources */,
 				ECA703E941FBA85B973AD462 /* GuidanceEngine.swift in Sources */,
 				9F00D923EDBA8DA7E89DA00A /* HomeView.swift in Sources */,

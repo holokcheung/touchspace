@@ -8,8 +8,7 @@ final class WalkthroughUITests: XCTestCase {
         app.launchArguments = ["--ui-test-mute","-AppleLanguages","(en)","-AppleLocale","en_US"]
         app.launch()
         app.buttons["load-demo-maps"].tap()
-        let clinic = app.buttons.matching(NSPredicate(format:"label CONTAINS %@","Harbour Community Clinic")).firstMatch
-        XCTAssertTrue(clinic.waitForExistence(timeout:5)); clinic.tap()
+        XCTAssertTrue(app.navigationBars["Demo spaces"].waitForExistence(timeout:5))
     }
     override func tearDownWithError() throws { app.terminate(); app = nil }
     func saveScreenshot(_ name:String) throws {
@@ -33,7 +32,7 @@ final class WalkthroughUITests: XCTestCase {
         XCTAssertTrue(element.isHittable)
     }
     func testExploreAndPlayThreeDimensionalRoute() throws {
-        let explore = app.buttons["explore-map"]; reveal(explore); explore.coordinate(withNormalizedOffset:CGVector(dx:0.4,dy:0.5)).tap()
+        let explore = app.buttons["Explore map of Harbour Community Clinic"]; reveal(explore); explore.tap()
         let preview = app.staticTexts["route-preview-status"]
         XCTAssertTrue(preview.waitForExistence(timeout:5))
         let planned = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label CONTAINS %@","Route preview:"),object:preview)
@@ -58,8 +57,26 @@ final class WalkthroughUITests: XCTestCase {
         app.alerts.buttons["OK"].tap()
         XCTAssertTrue(app.staticTexts["simulation-destination"].label.contains("No destination"))
     }
+    func testDemoButtonOpensChooserAgainForAlreadyLoadedMaps() throws {
+        app.navigationBars["Demo spaces"].buttons.element(boundBy:0).tap()
+        XCTAssertTrue(app.buttons["load-demo-maps"].waitForExistence(timeout:5))
+        app.buttons["load-demo-maps"].tap()
+        XCTAssertTrue(app.navigationBars["Demo spaces"].waitForExistence(timeout:5))
+        try saveScreenshot("touchspace-demo-chooser")
+        let library = app.buttons["Start 3D walkthrough of Neighbourhood Library"]
+        reveal(library); library.tap()
+        let play = app.buttons["simulation-play"]
+        XCTAssertTrue(play.waitForExistence(timeout:10))
+        let ready = XCTNSPredicateExpectation(predicate:NSPredicate(format:"enabled == true"),object:play)
+        XCTAssertEqual(XCTWaiter.wait(for:[ready],timeout:10),.completed)
+        try saveScreenshot("touchspace-library-walkthrough")
+        let initial = app.staticTexts["simulation-destination"].label
+        play.tap()
+        let moved = XCTNSPredicateExpectation(predicate:NSPredicate(format:"label != %@",initial),object:app.staticTexts["simulation-destination"])
+        XCTAssertEqual(XCTWaiter.wait(for:[moved],timeout:10),.completed)
+    }
     func testMockQuestionsWorkLocallyWithoutCatalogUpload() throws {
-        let explore = app.buttons["explore-map"]; reveal(explore); explore.coordinate(withNormalizedOffset:CGVector(dx:0.4,dy:0.5)).tap()
+        let explore = app.buttons["Explore map of Harbour Community Clinic"]; reveal(explore); explore.tap()
         let ask = app.buttons["Ask about this map"]; reveal(ask); ask.tap()
         let field = app.textFields["Type a map question"].exists ? app.textFields["Type a map question"] : app.textViews["Type a map question"]
         XCTAssertTrue(field.waitForExistence(timeout:5)); field.tap(); field.typeText("Where is Reception desk?")
