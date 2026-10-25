@@ -2,7 +2,7 @@
 
 Every fact in an answer comes from the map: landmark and room positions, the
 navigation graph, and text the map's editors wrote. The parser is deterministic. An
-optional language model (see `gemini.py`) may only help pick an intent and match a place
+optional language model (see `claude_interpreter.py`) may only help pick an intent and match a place
 name to a known id; it never writes geometry, places or routes.
 """
 
@@ -57,7 +57,7 @@ class AskResult(BaseModel):
     place_ids: list[str] = []
     route: RouteResult | None = None
     context: AskContext
-    understood_by: Literal["rules", "gemini"] = "rules"
+    understood_by: Literal["rules", "claude"] = "rules"
     safety_note: str | None = None
     suggestions: list[str] = []
 
@@ -359,7 +359,7 @@ def _known_places_sentence(fmap: FloorMap) -> str:
 
 
 def answer(fmap: FloorMap, question: str, ctx: AskContext | None = None, interpreter=None) -> AskResult:
-    """Answer from map facts. `interpreter` (optional, e.g. Gemini) only helps when the rules can't parse."""
+    """Answer from map facts. `interpreter` (optional, e.g. Claude) only helps when the rules can't parse."""
     ctx = ctx or AskContext()
     result = _answer_rules(fmap, question, ctx)
     # Only when the rules got nowhere: unknown question, unknown place, or no place named at all.
@@ -376,7 +376,7 @@ def answer(fmap: FloorMap, question: str, ctx: AskContext | None = None, interpr
     helped = _answer_rules(fmap, canonical, ctx)
     if helped.intent in ("unknown", "clarify"):
         return result
-    return helped.model_copy(update={"understood_by": "gemini"})
+    return helped.model_copy(update={"understood_by": "claude"})
 
 
 def _canonical_question(fmap: FloorMap, guess) -> str | None:

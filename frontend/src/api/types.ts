@@ -256,7 +256,7 @@ export interface AskResult {
   place_ids: string[];
   route: RouteResult | null;
   context: AskContext;
-  understood_by: "rules" | "gemini";
+  understood_by: "rules" | "claude";
   safety_note: string | null;
   suggestions: string[];
 }

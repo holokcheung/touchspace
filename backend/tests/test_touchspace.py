@@ -7,12 +7,13 @@ import hashlib
 import io
 import json
 import plistlib
+import time
 import zipfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from uuid import UUID, uuid4
 
-import httpx
+import httpx2  # the Anthropic SDK's HTTP layer; the SDK rejects clients from the httpx package
 import pytest
 from fastapi.testclient import TestClient
 
@@ -32,16 +33,45 @@ def package():
     return MapPackage.model_validate(copy.deepcopy(FIXTURE["package"]))
 
 
+MESSAGES_URL = "https://api.anthropic.com/v1/messages"
+# Claude Opus 5.5 always thinks; its thinking blocks must be passed back unchanged in the tool loop.
+THINKING = {"type": "thinking", "thinking": "", "signature": "sig-test"}
+
+
+@pytest.fixture(autouse=True)
+def _real_anthropic_endpoint(monkeypatch):
+    # Requests are asserted against the real endpoint; an operator's base-URL override must not change that.
+    monkeypatch.delenv("ANTHROPIC_BASE_URL", raising=False)
+
+
+def message(content, stop_reason=None, **extra):
+    """A complete Messages API response body, shaped like the real API's."""
+    if stop_reason is None:
+        stop_reason = "tool_use" if any(b.get("type") == "tool_use" for b in content) else "end_turn"
+    return {"id": "msg_test", "type": "message", "role": "assistant", "model": "claude-opus-5-5", "content": content,
+            "stop_reason": stop_reason, "stop_sequence": None, "usage": {"input_tokens": 10, "output_tokens": 5}, **extra}
+
+
+def mock_provider(handler, api_key="mock", **config):
+    """The real SDK client over a mock transport: the SDK builds each request and nothing leaves the process."""
+    return MessagesProvider(ProviderConfig(api_key, **config), httpx2.AsyncClient(transport=httpx2.MockTransport(handler)))
+
+
+def after_tool_results(body):
+    content = body["messages"][-1]["content"]
+    return isinstance(content, list) and content[0]["type"] == "tool_result"
+
+
 def service_for(*calls):
     """A typed LLM response, followed by completion. Never interpret keywords in tests."""
     def handler(request):
         body = json.loads(request.content)
-        if body.get("tool_choice"):
-            return httpx.Response(200, json={"content": [
-                {"type": "tool_use", "id": f"call-{i}", "name": name, "input": args}
-                for i, (name, args) in enumerate(calls)]})
-        return httpx.Response(200, json={"content": [{"type": "text", "text": "Done"}]})
-    return ChatService(MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(handler)))
+        if after_tool_results(body):
+            return httpx2.Response(200, json=message([{"type": "text", "text": "Done"}]))
+        return httpx2.Response(200, json=message([THINKING] + [
+            {"type": "tool_use", "id": f"call-{i}", "name": name, "input": args}
+            for i, (name, args) in enumerate(calls)]))
+    return ChatService(mock_provider(handler))
 
 
 def archive_for(package):
@@ -211,25 +241,78 @@ def test_pairing_expiry_and_stable_owner(client,monkeypatch):
 
 def test_provider_multiple_tools_and_tool_result_wire_format(package):
     bodies=[]
+    first=[THINKING,
+           {"type":"tool_use","id":"t1","name":"landmark","input":{"landmarkId":"desk"}},
+           {"type":"tool_use","id":"t2","name":"connectivity","input":{"roomId":"west"}}]
     def handler(request):
-        assert request.url.path == "/api/v1/messages"
-        assert request.headers["authorization"] == "Bearer mock-secret"
+        # The key goes to the Anthropic API only.
+        assert request.method == "POST" and str(request.url) == MESSAGES_URL
+        assert "mock-secret" in request.headers.get("x-api-key","")+request.headers.get("authorization","")
         body=json.loads(request.content); bodies.append(body)
         assert "max_tokens" in body and "input_schema" in body["tools"][0]
         assert "choices" not in body and "contents" not in body
         if len(bodies)==1:
-            return httpx.Response(200,json={"content":[
-                {"type":"tool_use","id":"t1","name":"landmark","input":{"landmarkId":"desk"}},
-                {"type":"tool_use","id":"t2","name":"connectivity","input":{"roomId":"west"}}]})
-        assert body["messages"][-1]["content"][0]["type"] == "tool_result"
-        return httpx.Response(200,json={"content":[{"type":"text","text":"Invented location is 999 metres left."}]})
-    service=ChatService(MessagesProvider(ProviderConfig("mock-secret"),httpx.MockTransport(handler)))
+            return httpx2.Response(200,json=message(first))
+        # Assistant content, thinking block included, is passed back exactly as received.
+        assert body["messages"][-2] == {"role":"assistant","content":first}
+        assert [b["tool_use_id"] for b in body["messages"][-1]["content"]] == ["t1","t2"]
+        assert all(b["type"] == "tool_result" for b in body["messages"][-1]["content"])
+        return httpx2.Response(200,json=message([{"type":"text","text":"Invented location is 999 metres left."}]))
+    service=ChatService(mock_provider(handler,"mock-secret"))
     reply=asyncio.run(service.answer(package,question(package,pose=False),None))
     assert reply.provider_used
     assert "Help desk is in East room" in reply.answer
     assert "West room has confirmed doorway links to East room" in reply.answer
     assert "999" not in reply.answer
     assert len(bodies)==2
+
+
+def test_claude_request_shape(package):
+    requests=[]
+    def handler(request):
+        requests.append(request)
+        body=json.loads(request.content)
+        if after_tool_results(body):
+            return httpx2.Response(200,json=message([{"type":"text","text":"Done"}]))
+        return httpx2.Response(200,json=message([THINKING,{"type":"tool_use","id":"t1","name":"overview","input":{}}]))
+    asyncio.run(ChatService(mock_provider(handler)).answer(package,question(package,pose=False),None))
+    assert len(requests)==2
+    for request in requests:
+        body=json.loads(request.content)
+        assert str(request.url) == MESSAGES_URL
+        assert "server-side-fallback-2026-07-01" in request.headers["anthropic-beta"]
+        assert body["model"] == "claude-opus-5-5" and body["max_tokens"] >= 4000
+        # Opus 5.5: no thinking config (disabled is a 400), effort controls latency, no forced tool choice.
+        assert "thinking" not in body
+        assert body["output_config"] == {"effort":"low"}
+        assert body["tool_choice"] == {"type":"auto"}
+        assert body["fallbacks"] == "default"
+        assert "Answer every message by calling one or more tools" in body["system"]
+        for tool in body["tools"]:
+            schema=tool["input_schema"]
+            assert tool["strict"] is True and schema["additionalProperties"] is False
+            assert isinstance(schema["required"],list)
+            assert not {"minLength","maxLength","minimum","maximum","minItems","maxItems"} & schema_keys(schema)
+
+
+def schema_keys(node):
+    if isinstance(node, dict):
+        return set(node) | {key for value in node.values() for key in schema_keys(value)}
+    if isinstance(node, list):
+        return {key for value in node for key in schema_keys(value)}
+    return set()
+
+
+def test_provider_omits_fallbacks_for_models_without_them(package):
+    bodies=[]
+    def handler(request):
+        bodies.append(json.loads(request.content))
+        assert "anthropic-beta" not in request.headers
+        return httpx2.Response(200,json=message([{"type":"tool_use","id":"t1","name":"overview","input":{}}]))
+    provider=mock_provider(handler,model="claude-haiku-5-5")
+    asyncio.run(provider.send("system",[{"role":"user","content":"hi"}],[]))
+    assert bodies[0]["model"] == "claude-haiku-5-5"
+    assert "fallbacks" not in bodies[0] and "tools" not in bodies[0] and "tool_choice" not in bodies[0]
 
 
 @pytest.mark.parametrize("bad_call",[
@@ -241,8 +324,8 @@ def test_invalid_provider_tool_cannot_create_actions(package,bad_call):
     def handler(request):
         nonlocal count
         count+=1
-        return httpx.Response(200,json={"content":[bad_call] if count==1 else [{"type":"text","text":"Done"}]})
-    service=ChatService(MessagesProvider(ProviderConfig("mock"),httpx.MockTransport(handler)))
+        return httpx2.Response(200,json=message([bad_call] if count==1 else [{"type":"text","text":"Done"}]))
+    service=ChatService(mock_provider(handler))
     reply=asyncio.run(service.answer(package,question(package),None))
     assert not reply.actions
     assert "Unknown" in reply.answer or "Invalid" in reply.answer
@@ -250,12 +333,29 @@ def test_invalid_provider_tool_cannot_create_actions(package,bad_call):
 
 def test_provider_failure_does_not_use_keyword_fallback(package):
     def handler(request):
-        raise httpx.ReadTimeout("mock timeout")
-    service = ChatService(MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(handler)))
+        raise httpx2.ReadTimeout("mock timeout")
+    service = ChatService(mock_provider(handler, max_retries=0))
     with pytest.raises(ChatUnavailable, match="language model"):
         asyncio.run(service.answer(package, question(package, "Is Help desk on my right?"), None))
     with pytest.raises(ChatUnavailable, match="API key"):
         asyncio.run(ChatService(MessagesProvider(ProviderConfig(None))).answer(package, question(package), None))
+
+
+@pytest.mark.parametrize("respond", [
+    lambda: httpx2.Response(529, json={"type": "error", "error": {"type": "overloaded_error", "message": "Overloaded"}}),
+    lambda: httpx2.Response(400, json={"type": "error", "error": {"type": "invalid_request_error", "message": "bad"}}),
+    lambda: httpx2.Response(401, json={"type": "error", "error": {"type": "authentication_error", "message": "bad key"}}),
+    lambda: httpx2.Response(200, json=message([], stop_reason="refusal", stop_details={"type": "refusal", "category": "cyber"})),
+    # A declined fallback chain still ends in a refusal; partial tool calls must not run.
+    lambda: httpx2.Response(200, json=message([{"type": "fallback", "from": {"model": "claude-opus-5-5"}, "to": {"model": "claude-opus-4-8"}},
+                                               {"type": "tool_use", "id": "t", "name": "route", "input": {"landmarkId": "desk", "navigate": True}}],
+                                              stop_reason="refusal")),
+])
+def test_provider_errors_and_refusals_are_unavailable(package, respond):
+    def handler(request):
+        return respond()
+    with pytest.raises(ChatUnavailable, match="language model"):
+        asyncio.run(ChatService(mock_provider(handler, max_retries=0)).answer(package, question(package), None))
 
 
 def test_llm_tool_still_requires_verified_pose(package):
@@ -268,8 +368,8 @@ def test_provider_bounded_loop_and_history(package):
     calls=[]
     def handler(request):
         calls.append(json.loads(request.content))
-        return httpx.Response(200,json={"content":[{"type":"tool_use","id":str(len(calls)),"name":"overview","input":{}}]})
-    service=ChatService(MessagesProvider(ProviderConfig("mock"),httpx.MockTransport(handler)))
+        return httpx2.Response(200,json=message([{"type":"tool_use","id":str(len(calls)),"name":"overview","input":{}}]))
+    service=ChatService(mock_provider(handler))
     req=question(package,pose=False)
     for _ in range(5):
         asyncio.run(service.answer(package,req,None))
@@ -279,10 +379,25 @@ def test_provider_bounded_loop_and_history(package):
 
 
 def test_provider_model_ids_and_secrets_redacted():
-    assert ProviderConfig("never-log-this",model="qwen/qwen3.7-flash").model
+    assert ProviderConfig("never-log-this").model == "claude-opus-5-5"
     assert "never-log-this" not in repr(ProviderConfig("never-log-this"))
     with pytest.raises(ValueError):
         ProviderConfig(None,model="bad model\n")
+    with pytest.raises(ValueError):
+        ProviderConfig(None,max_tokens=500)  # thinking tokens count against max_tokens
+
+
+def test_provider_config_reads_only_the_anthropic_key(monkeypatch):
+    for name in ("ANTHROPIC_API_KEY","TOUCHSPACE_LLM_MODEL","TOUCHSPACE_LLM_MAX_TOKENS","TOUCHSPACE_LLM_TIMEOUT"):
+        monkeypatch.delenv(name,raising=False)
+    monkeypatch.setenv("OPENROUTER_API_KEY","third-party-key")
+    config=ProviderConfig.from_env()
+    assert config.api_key is None
+    assert (config.model,config.max_tokens,config.timeout) == ("claude-opus-5-5",4000,30)
+    monkeypatch.setenv("ANTHROPIC_API_KEY","anthropic-key")
+    monkeypatch.setenv("TOUCHSPACE_LLM_MODEL","claude-sonnet-5-5")
+    config=ProviderConfig.from_env()
+    assert (config.api_key,config.model) == ("anthropic-key","claude-sonnet-5-5")
 
 
 def test_missing_wall_does_not_authorize_room_transition(package):
@@ -368,11 +483,42 @@ def test_chat_reports_provider_unavailable_as_503(client, package, monkeypatch):
     assert response.status_code == 503 and "API key" in response.json()["detail"]
 
 
+def test_tool_loop_budget_stays_under_ios_timeout(package, monkeypatch):
+    from app.touchspace import chat
+    assert chat.LOOP_BUDGET_S < 40  # APIClient.swift gives /chat 40 s
+    monkeypatch.setattr(chat, "LOOP_BUDGET_S", 0.2)
+    async def slow(request):
+        await asyncio.sleep(5)
+        return httpx2.Response(200, json=message([{"type": "text", "text": "late"}]))
+    started = time.monotonic()
+    with pytest.raises(ChatUnavailable, match="language model"):
+        asyncio.run(ChatService(mock_provider(slow, max_retries=0)).answer(package, question(package), None))
+    assert time.monotonic() - started < 3
+
+
 def test_chat_rejects_text_only_provider_without_keyword_fallback(package):
-    provider = MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(
-        lambda _: httpx.Response(200, json={"content": [{"type": "text", "text": "999 metres left"}]})))
+    bodies = []
+    def handler(request):
+        bodies.append(json.loads(request.content))
+        return httpx2.Response(200, json=message([THINKING, {"type": "text", "text": "999 metres left"}]))
     with pytest.raises(ChatUnavailable):
-        asyncio.run(ChatService(provider).answer(package, question(package, "Where is Help desk?"), None))
+        asyncio.run(ChatService(mock_provider(handler)).answer(package, question(package, "Where is Help desk?"), None))
+    # tool_choice "auto" cannot force a call, so the loop re-prompts exactly once.
+    assert len(bodies) == 2
+    assert bodies[1]["messages"][-2] == {"role": "assistant", "content": [THINKING, {"type": "text", "text": "999 metres left"}]}
+    assert "calling one of the spatial tools" in bodies[1]["messages"][-1]["content"][0]["text"]
+
+
+def test_text_only_reply_is_reprompted_into_a_tool_call(package):
+    def handler(request):
+        body = json.loads(request.content)
+        if after_tool_results(body):
+            return httpx2.Response(200, json=message([{"type": "text", "text": "Done"}]))
+        if len(body["messages"]) == 1:
+            return httpx2.Response(200, json=message([{"type": "text", "text": "It is in the east room."}]))
+        return httpx2.Response(200, json=message([{"type": "tool_use", "id": "t", "name": "landmark", "input": {"landmarkId": "desk"}}]))
+    reply = asyncio.run(ChatService(mock_provider(handler)).answer(package, question(package, "Where is Help desk?", pose=False), None))
+    assert reply.answer == "Help desk is in East room."
 
 
 def virtual_question(package, message="Could you escort me to the service counter?"):
@@ -438,7 +584,7 @@ def test_inline_context_rejects_invalid_navigation_geometry(client, package):
 
 @pytest.mark.parametrize("payload", [[], {"content": [None]}, {"content": "invalid"}])
 def test_malformed_provider_response_is_unavailable_without_keyword_fallback(package, payload):
-    provider = MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(lambda _: httpx.Response(200, json=payload)))
+    provider = mock_provider(lambda _: httpx2.Response(200, json=payload))
     with pytest.raises(ChatUnavailable):
         asyncio.run(ChatService(provider).answer(package, question(package, "Where is Help desk?"), None))
 
@@ -447,12 +593,12 @@ def test_online_follow_up_uses_llm_history_and_previous_destination(package):
     requests = []
     def handler(request):
         body = json.loads(request.content)
-        if body.get("tool_choice"):
+        if not after_tool_results(body):
             requests.append(body)
             name, args = ("landmark", {"landmarkId": "desk"}) if len(requests) == 1 else ("route", {"landmarkId": "desk", "navigate": True})
-            return httpx.Response(200, json={"content": [{"type": "tool_use", "id": "t", "name": name, "input": args}]})
-        return httpx.Response(200, json={"content": [{"type": "text", "text": "Done"}]})
-    service = ChatService(MessagesProvider(ProviderConfig("mock"), httpx.MockTransport(handler)))
+            return httpx2.Response(200, json=message([THINKING, {"type": "tool_use", "id": "t", "name": name, "input": args}]))
+        return httpx2.Response(200, json=message([{"type": "text", "text": "Done"}]))
+    service = ChatService(mock_provider(handler))
     req = question(package, "Where could I get assistance?")
     asyncio.run(service.answer(package, req, None))
     req.message = "I'd appreciate an escort there."

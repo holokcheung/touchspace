@@ -56,10 +56,10 @@ def section_at(mesh: trimesh.Trimesh, z: float):
 
 @pytest.fixture(autouse=True)
 def _no_real_external_calls():
-    """Tests never call Gemini, even if a developer's .env has a key. Tests that need it inject a fake."""
+    """Tests never call Claude, even if a developer's .env has a key. Tests that need it inject a fake."""
     from app.main import app, get_interpreter
-    from app.services.gemini import GeminiConfig, GeminiInterpreter
+    from app.services.claude_interpreter import ClaudeConfig, ClaudeInterpreter
 
-    app.dependency_overrides[get_interpreter] = lambda: GeminiInterpreter(GeminiConfig(api_key=None, model="test"))
+    app.dependency_overrides[get_interpreter] = lambda: ClaudeInterpreter(ClaudeConfig(api_key=None, model="test"))
     yield
     app.dependency_overrides.pop(get_interpreter, None)

@@ -32,7 +32,7 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | 1. Data pipeline: normalized schema, synthetic demo, floor-plan processing, tactile STL generator, tests | Done |
 | 2. FastAPI endpoints + React web app | Done; web UI consolidated into a space library and first-person walkthrough. Editing and STL APIs remain on the backend. |
 | 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. Native app builds for simulator; capture and saved-world restore still require device validation. |
-| 4. Voice and routing | Recorded-path routing and grounded Q&A are integrated into the walkthrough with hold-Space voice input and typed fallback. Cartesia and optional Gemini remain supported. |
+| 4. Voice and routing | Recorded-path routing and grounded Q&A are integrated into the walkthrough with hold-Space voice input and typed fallback. Cartesia and optional Claude (free-form question parsing) remain supported. |
 | Walk-through soundscape | Done on the web: walk the map with headphones, and the noise is muffled on the side of a nearby wall. Settings shared with the iPhone app; live LiDAR version not built. |
 | 5. Polish and docs | Not started |
 
