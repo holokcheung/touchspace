@@ -40,7 +40,7 @@ struct DemoSpacesView: View {
                 Text("These demos use virtual positions and saved map geometry. Questions require an online map assistant.")
                     .font(.footnote).foregroundStyle(.secondary)
             }.padding()
-        }
+        }.touchSpaceBackground()
         .navigationTitle("Demo spaces")
         .navigationBarTitleDisplayMode(.inline)
     }

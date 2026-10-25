@@ -50,7 +50,7 @@ struct MapExplorerView: View {
                 }
                 Text("Unknown areas and unconfirmed doors stay blocked. Geometry and route previews work offline.").font(.footnote).foregroundStyle(.secondary)
             }.padding()
-        }
+        }.touchSpaceBackground()
         .navigationTitle("Explore map").navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented:$asking) { AskSheet(package:package,api:api,sessionId:conversation) }
         .task(id:originId+"|"+destinationId) { await preview() }

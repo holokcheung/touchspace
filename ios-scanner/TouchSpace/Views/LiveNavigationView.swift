@@ -117,7 +117,7 @@ struct DestinationPicker: View {
                         }
                     }
                 }
-            }.navigationTitle("Destinations")
+            }.touchSpaceBackground().navigationTitle("Destinations")
                 .toolbar { ToolbarItem(placement:.confirmationAction) { Button("Done") { dismiss() } } }
         }
     }

@@ -32,7 +32,7 @@ struct AskSheet: View {
                 if busy { ProgressView("Consulting the saved map") }
                 if let audio { Button("Interrupt speech",systemImage:"speaker.slash") { audio.stop() } }
                 Text("Questions require an online map assistant. Saved map geometry and labels are sent to your configured backend for this conversation. Microphone transcription stays on device. No camera images are sent.").font(.footnote)
-            }
+            }.touchSpaceBackground()
             .navigationTitle("Ask TouchSpace")
             .toolbar { ToolbarItem(placement:.confirmationAction) { Button("Done") { audio?.stop(); dismiss() } } }
             .onChange(of:input.transcript) { _,new in message = new }

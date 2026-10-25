@@ -46,7 +46,7 @@ struct HomeView: View {
                     }
                     Text("Community scans may be partial or outdated. Check contributor, review status and capture date before visiting.").font(.footnote)
                 }
-            }
+            }.touchSpaceBackground()
             .navigationTitle("TouchSpace")
             .navigationDestination(isPresented:$showingDemos) { DemoSpacesView(maps:demoMaps,api:api) }
             .searchable(text:$query,prompt:"Search venues")
@@ -128,7 +128,7 @@ struct MapDetailView: View {
                 Button("Upload or publish",systemImage:"icloud.and.arrow.up") { publishing = true }.disabled(api == nil)
                 Text("Geometry remains browsable offline. Live guidance requires verified alignment with this saved AR world map. This prototype does not replace mobility aids or provide certified collision avoidance.").font(.footnote)
             }
-        }
+        }.touchSpaceBackground()
         .navigationTitle(package.manifest.venue)
         .sheet(isPresented:$publishing) { if let api { PublishView(api:api,url:library.url(for:package.id)) } }
     }
@@ -147,7 +147,7 @@ struct SettingsView: View {
                     Text("For an iPhone on the same Wi-Fi, use your Mac's LAN address on port 8000. Use HTTPS for a hosted backend. Server API keys stay on the backend.").font(.footnote)
                     if let error { Text(error).foregroundStyle(.red) }
                 }
-            }.navigationTitle("Settings")
+            }.touchSpaceBackground().navigationTitle("Settings")
                 .toolbar { ToolbarItem(placement:.confirmationAction) { Button("Save") {
                     guard let url=URL(string:draft), ["http","https"].contains(url.scheme), url.host != nil, url.user == nil, url.password == nil, url.query == nil, url.fragment == nil else { error = "Enter a valid HTTP or HTTPS server URL."; return }
                     backendURL = draft.trimmingCharacters(in:CharacterSet(charactersIn:"/")); dismiss()
@@ -191,7 +191,7 @@ struct PublishView: View {
                 } }.disabled(busy || (!paired && api.token == nil) || (makePublic && !consent))
                 if busy { ProgressView("Working") }
                 if !status.isEmpty { Text(status).accessibilityAddTraits(.updatesFrequently) }
-            }.navigationTitle("Share a map")
+            }.touchSpaceBackground().navigationTitle("Share a map")
                 .toolbar { ToolbarItem(placement:.confirmationAction) { Button("Done") { dismiss() } } }
         }
     }

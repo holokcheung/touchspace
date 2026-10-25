@@ -104,7 +104,7 @@ struct ScanReviewView: View {
                 }
                 Text("Saved locally and private by default. Publishing to the community requires a separate explicit action.").font(.footnote)
             }
-        }
+        }.touchSpaceBackground()
         .alert("Review status",isPresented:Binding(get:{ error != nil },set:{ if !$0 { error = nil } })) { Button("OK") { error = nil } } message: { Text(error ?? "") }
     }
     private func addDestination() {
