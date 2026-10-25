@@ -11,7 +11,7 @@ The geometry uses metre-scale X/Z coordinates, wall thickness 0.15 m, body clear
 
 ## Import on iOS
 
-Build the updated app, then choose **Import a map package** and select either `.touchspacemap` file. You can transfer the files using Files, AirDrop or a share sheet. The map displays **Synthetic fixture · Interactive demo**. The updated app also bundles both files: **Try demo spaces** on Home opens a chooser for both venues without transferring files. Select **Start 3D walkthrough** or **Explore floor plan**; the chooser appears on every tap, including when the bundles are already downloaded.
+Build the updated app, then choose **Import from community** and select either `.touchspacemap` file. You can transfer the files using Files, AirDrop or a share sheet. The map displays **Synthetic fixture · Interactive demo**. The updated app also bundles both files: **Try demo spaces** on Home opens a chooser for both venues without transferring files. Select **Start 3D walkthrough** or **Explore floor plan**; the chooser appears on every tap, including when the bundles are already downloaded.
 
 - **Explore map** opens an interactive floor plan, destination/room list and offline route previews between saved places.
 - **3D walkthrough** opens directly into a full-screen first-person scene. Swipe left/right to turn and use the wide up/down chevrons to step forward/back. Walls, furniture, unknown areas and unconfirmed doors block movement. The overview tab and bottom toolbar have been removed.
