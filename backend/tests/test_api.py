@@ -164,3 +164,10 @@ def test_palace_of_fine_arts_sample(client):
     assert "OpenStreetMap" in m["source"]["description"]
     names = {lm["name"] for lm in m["landmarks"]}
     assert {"Public entrance", "Business entrance", "Palace Games", "Theater", "Atrium"} <= names
+    assert not r.json()["issues"]
+    # The main app preserves the north-up trace used by the standalone viewer.
+    from tests.conftest import REPO_ROOT
+    original = json.loads((REPO_ROOT / "sample-data/palace-of-fine-arts.json").read_text())
+    assert len(m["walls"]) == len(original["walls"])
+    assert m["walls"][0]["start"] == original["walls"][0]["start"]
+    assert m["walls"][0]["end"] == original["walls"][0]["end"]
