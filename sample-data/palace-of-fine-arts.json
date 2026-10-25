@@ -1,0 +1,973 @@
+{
+  "schema_version": "1.0",
+  "id": "palace-of-fine-arts",
+  "name": "Palace of Fine Arts, first floor",
+  "units": "meters",
+  "source": {
+    "kind": "manual",
+    "description": "Traced from the Palace of Fine Arts public floor plan (palaceoffinearts.com), scaled with the dimensions printed on it. Approximate and simplified for the DotPad. North up."
+  },
+  "floor_level": 0,
+  "walls": [
+    {
+      "id": "w_shell_00",
+      "start": {
+        "x": 46.01,
+        "y": 12.2
+      },
+      "end": {
+        "x": 36.38,
+        "y": 42.8
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_01",
+      "start": {
+        "x": 36.38,
+        "y": 42.8
+      },
+      "end": {
+        "x": 31.67,
+        "y": 70.62
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_02",
+      "start": {
+        "x": 31.67,
+        "y": 70.62
+      },
+      "end": {
+        "x": 29.96,
+        "y": 96.3
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_03",
+      "start": {
+        "x": 29.96,
+        "y": 96.3
+      },
+      "end": {
+        "x": 32.1,
+        "y": 119.84
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_04",
+      "start": {
+        "x": 32.1,
+        "y": 119.84
+      },
+      "end": {
+        "x": 38.95,
+        "y": 139.1
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_05",
+      "start": {
+        "x": 38.95,
+        "y": 139.1
+      },
+      "end": {
+        "x": 47.51,
+        "y": 160.5
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_06",
+      "start": {
+        "x": 47.51,
+        "y": 160.5
+      },
+      "end": {
+        "x": 60.99,
+        "y": 181.9
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_07",
+      "start": {
+        "x": 60.99,
+        "y": 181.9
+      },
+      "end": {
+        "x": 74.9,
+        "y": 194.74
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_08",
+      "start": {
+        "x": 74.9,
+        "y": 194.74
+      },
+      "end": {
+        "x": 88.81,
+        "y": 205.44
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_09",
+      "start": {
+        "x": 88.81,
+        "y": 205.44
+      },
+      "end": {
+        "x": 100.58,
+        "y": 216.14
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_10",
+      "start": {
+        "x": 100.58,
+        "y": 216.14
+      },
+      "end": {
+        "x": 111.28,
+        "y": 224.7
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_11",
+      "start": {
+        "x": 111.28,
+        "y": 224.7
+      },
+      "end": {
+        "x": 117.27,
+        "y": 210.79
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_12",
+      "start": {
+        "x": 117.27,
+        "y": 210.79
+      },
+      "end": {
+        "x": 122.41,
+        "y": 193.67
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_13",
+      "start": {
+        "x": 122.41,
+        "y": 193.67
+      },
+      "end": {
+        "x": 129.47,
+        "y": 184.04
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_14",
+      "start": {
+        "x": 129.47,
+        "y": 184.04
+      },
+      "end": {
+        "x": 121.98,
+        "y": 178.69
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_15",
+      "start": {
+        "x": 121.98,
+        "y": 178.69
+      },
+      "end": {
+        "x": 108.07,
+        "y": 171.2
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_16",
+      "start": {
+        "x": 108.07,
+        "y": 171.2
+      },
+      "end": {
+        "x": 100.58,
+        "y": 164.78
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_17",
+      "start": {
+        "x": 100.58,
+        "y": 164.78
+      },
+      "end": {
+        "x": 90.95,
+        "y": 154.08
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_18",
+      "start": {
+        "x": 90.95,
+        "y": 154.08
+      },
+      "end": {
+        "x": 81.75,
+        "y": 134.82
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_19",
+      "start": {
+        "x": 81.75,
+        "y": 134.82
+      },
+      "end": {
+        "x": 73.83,
+        "y": 117.7
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_20",
+      "start": {
+        "x": 73.83,
+        "y": 117.7
+      },
+      "end": {
+        "x": 70.19,
+        "y": 96.3
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_21",
+      "start": {
+        "x": 70.19,
+        "y": 96.3
+      },
+      "end": {
+        "x": 72.76,
+        "y": 74.9
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_22",
+      "start": {
+        "x": 72.76,
+        "y": 74.9
+      },
+      "end": {
+        "x": 77.47,
+        "y": 53.5
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_23",
+      "start": {
+        "x": 77.47,
+        "y": 53.5
+      },
+      "end": {
+        "x": 83.89,
+        "y": 34.24
+      },
+      "thickness": 0.4
+    },
+    {
+      "id": "w_shell_24",
+      "start": {
+        "x": 83.89,
+        "y": 34.24
+      },
+      "end": {
+        "x": 46.01,
+        "y": 12.2
+      },
+      "thickness": 0.4
+    }
+  ],
+  "doors": [
+    {
+      "id": "d_public_entrance",
+      "position": {
+        "x": 72.64,
+        "y": 75.88
+      },
+      "width": 4.0,
+      "wall_id": "w_shell_21"
+    },
+    {
+      "id": "d_business_entrance",
+      "position": {
+        "x": 119.53,
+        "y": 203.27
+      },
+      "width": 6.0,
+      "wall_id": "w_shell_12"
+    },
+    {
+      "id": "d_loading",
+      "position": {
+        "x": 30.77,
+        "y": 84.13
+      },
+      "width": 4.0,
+      "wall_id": "w_shell_02"
+    }
+  ],
+  "openings": [],
+  "windows": [],
+  "objects": [],
+  "rooms": [
+    {
+      "id": "r_breakout12",
+      "name": "Breakouts 1 and 2",
+      "polygon": [
+        {
+          "x": 53.5,
+          "y": 117.7
+        },
+        {
+          "x": 58.31,
+          "y": 116.41
+        },
+        {
+          "x": 61.84,
+          "y": 112.88
+        },
+        {
+          "x": 63.13,
+          "y": 108.07
+        },
+        {
+          "x": 61.84,
+          "y": 103.25
+        },
+        {
+          "x": 58.31,
+          "y": 99.73
+        },
+        {
+          "x": 53.5,
+          "y": 98.44
+        },
+        {
+          "x": 48.69,
+          "y": 99.73
+        },
+        {
+          "x": 45.16,
+          "y": 103.25
+        },
+        {
+          "x": 43.87,
+          "y": 108.07
+        },
+        {
+          "x": 45.16,
+          "y": 112.88
+        },
+        {
+          "x": 48.68,
+          "y": 116.41
+        }
+      ]
+    },
+    {
+      "id": "r_breakout3",
+      "name": "Breakout 3",
+      "polygon": [
+        {
+          "x": 44.94,
+          "y": 121.98
+        },
+        {
+          "x": 49.65,
+          "y": 138.67
+        },
+        {
+          "x": 56.92,
+          "y": 136.96
+        },
+        {
+          "x": 53.93,
+          "y": 119.63
+        }
+      ]
+    },
+    {
+      "id": "r_breakout4",
+      "name": "Breakout 4",
+      "polygon": [
+        {
+          "x": 53.93,
+          "y": 119.63
+        },
+        {
+          "x": 56.92,
+          "y": 136.96
+        },
+        {
+          "x": 64.2,
+          "y": 135.25
+        },
+        {
+          "x": 62.49,
+          "y": 117.27
+        }
+      ]
+    },
+    {
+      "id": "r_staff",
+      "name": "Staff offices (no access)",
+      "polygon": [
+        {
+          "x": 46.01,
+          "y": 139.1
+        },
+        {
+          "x": 51.36,
+          "y": 162.64
+        },
+        {
+          "x": 70.62,
+          "y": 173.77
+        },
+        {
+          "x": 77.04,
+          "y": 170.13
+        },
+        {
+          "x": 73.83,
+          "y": 159.43
+        },
+        {
+          "x": 64.2,
+          "y": 138.03
+        }
+      ]
+    },
+    {
+      "id": "r_pavilion",
+      "name": "Pavilion",
+      "polygon": [
+        {
+          "x": 46.01,
+          "y": 12.2
+        },
+        {
+          "x": 36.38,
+          "y": 42.8
+        },
+        {
+          "x": 34.93,
+          "y": 51.36
+        },
+        {
+          "x": 78.18,
+          "y": 51.36
+        },
+        {
+          "x": 83.89,
+          "y": 34.24
+        }
+      ]
+    },
+    {
+      "id": "r_atrium",
+      "name": "Atrium",
+      "polygon": [
+        {
+          "x": 34.93,
+          "y": 51.36
+        },
+        {
+          "x": 31.67,
+          "y": 70.62
+        },
+        {
+          "x": 30.39,
+          "y": 89.88
+        },
+        {
+          "x": 70.96,
+          "y": 89.88
+        },
+        {
+          "x": 72.76,
+          "y": 74.9
+        },
+        {
+          "x": 77.47,
+          "y": 53.5
+        },
+        {
+          "x": 78.18,
+          "y": 51.36
+        }
+      ]
+    },
+    {
+      "id": "r_broadway1",
+      "name": "Broadway 1",
+      "polygon": [
+        {
+          "x": 30.39,
+          "y": 89.88
+        },
+        {
+          "x": 29.96,
+          "y": 96.3
+        },
+        {
+          "x": 32.1,
+          "y": 119.84
+        },
+        {
+          "x": 35.14,
+          "y": 128.4
+        },
+        {
+          "x": 78.78,
+          "y": 128.4
+        },
+        {
+          "x": 73.83,
+          "y": 117.7
+        },
+        {
+          "x": 70.19,
+          "y": 96.3
+        },
+        {
+          "x": 70.96,
+          "y": 89.88
+        }
+      ]
+    },
+    {
+      "id": "r_broadway2",
+      "name": "Broadway 2",
+      "polygon": [
+        {
+          "x": 35.14,
+          "y": 128.4
+        },
+        {
+          "x": 38.95,
+          "y": 139.1
+        },
+        {
+          "x": 46.65,
+          "y": 158.36
+        },
+        {
+          "x": 94.8,
+          "y": 158.36
+        },
+        {
+          "x": 90.95,
+          "y": 154.08
+        },
+        {
+          "x": 81.75,
+          "y": 134.82
+        },
+        {
+          "x": 78.78,
+          "y": 128.4
+        }
+      ]
+    },
+    {
+      "id": "r_broadway3",
+      "name": "Broadway 3",
+      "polygon": [
+        {
+          "x": 46.65,
+          "y": 158.36
+        },
+        {
+          "x": 47.51,
+          "y": 160.5
+        },
+        {
+          "x": 60.99,
+          "y": 181.9
+        },
+        {
+          "x": 68.05,
+          "y": 188.32
+        },
+        {
+          "x": 104.86,
+          "y": 169.06
+        },
+        {
+          "x": 108.07,
+          "y": 171.2
+        },
+        {
+          "x": 100.58,
+          "y": 164.78
+        },
+        {
+          "x": 90.95,
+          "y": 154.08
+        }
+      ]
+    },
+    {
+      "id": "r_east",
+      "name": "North wing",
+      "polygon": [
+        {
+          "x": 68.05,
+          "y": 188.32
+        },
+        {
+          "x": 74.9,
+          "y": 194.74
+        },
+        {
+          "x": 88.81,
+          "y": 205.44
+        },
+        {
+          "x": 100.58,
+          "y": 216.14
+        },
+        {
+          "x": 111.28,
+          "y": 224.7
+        },
+        {
+          "x": 117.27,
+          "y": 210.79
+        },
+        {
+          "x": 122.41,
+          "y": 193.67
+        },
+        {
+          "x": 129.47,
+          "y": 184.04
+        },
+        {
+          "x": 121.98,
+          "y": 178.69
+        },
+        {
+          "x": 108.07,
+          "y": 171.2
+        },
+        {
+          "x": 104.86,
+          "y": 169.06
+        }
+      ]
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "lm_public_entrance",
+      "name": "Public entrance",
+      "type": "entrance",
+      "position": {
+        "x": 71.26,
+        "y": 75.97
+      },
+      "description": "Main public doors on the lagoon side, facing the rotunda.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_business_entrance",
+      "name": "Business entrance",
+      "type": "entrance",
+      "position": {
+        "x": 117.27,
+        "y": 203.3
+      },
+      "description": "Doors at the north end, next to the small theater seating.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_loading",
+      "name": "Loading doors",
+      "type": "other",
+      "position": {
+        "x": 32.53,
+        "y": 84.1
+      },
+      "description": "Loading doors on the Palace Drive side.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_palace_games",
+      "name": "Palace Games",
+      "type": "room",
+      "position": {
+        "x": 44.3,
+        "y": 142.95
+      },
+      "description": "Escape rooms along the Palace Drive wall, past the restrooms and catering prep. Palace Games lists its own public door at 3362 Palace Drive.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_restroom_north",
+      "name": "Restrooms by catering prep",
+      "type": "restroom",
+      "position": {
+        "x": 39.59,
+        "y": 122.41
+      },
+      "description": "Restrooms on the Palace Drive side, next to Palace Games.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_restroom_east",
+      "name": "Restroom, north end",
+      "type": "restroom",
+      "position": {
+        "x": 107.0,
+        "y": 214.0
+      },
+      "description": "Restroom at the north end, near Breakout 7.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_restroom_south",
+      "name": "Restroom by the business entrance",
+      "type": "restroom",
+      "position": {
+        "x": 124.12,
+        "y": 187.89
+      },
+      "description": "Restroom beside the business entrance.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_stairs",
+      "name": "Stairs to the mezzanine",
+      "type": "stairs",
+      "position": {
+        "x": 90.95,
+        "y": 184.47
+      },
+      "description": "Stairs up to the mezzanine, between Breakout 5 and Breakout 7, toward the north end.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_theater",
+      "name": "Theater",
+      "type": "room",
+      "position": {
+        "x": 113.85,
+        "y": 182.33
+      },
+      "description": "Small tiered seating area labeled Theater on the venue plan, by the business entrance. The main Palace of Fine Arts Theatre is at the far south end and is not on this map.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_pavilion",
+      "name": "Pavilion",
+      "type": "room",
+      "position": {
+        "x": 55.0,
+        "y": 44.94
+      },
+      "description": "Open area at the south end of the hall.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_green_rooms",
+      "name": "Green rooms",
+      "type": "room",
+      "position": {
+        "x": 69.98,
+        "y": 28.25
+      },
+      "description": "Small rooms at the south end.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_atrium",
+      "name": "Atrium",
+      "type": "room",
+      "position": {
+        "x": 60.78,
+        "y": 70.19
+      },
+      "description": "Open area just inside the public entrance.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_catering",
+      "name": "Catering prep",
+      "type": "room",
+      "position": {
+        "x": 37.66,
+        "y": 104.22
+      },
+      "description": "Catering prep area on the Palace Drive side.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout1",
+      "name": "Breakout 1",
+      "type": "room",
+      "position": {
+        "x": 50.93,
+        "y": 103.15
+      },
+      "description": "South half of the round room.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout2",
+      "name": "Breakout 2",
+      "type": "room",
+      "position": {
+        "x": 56.07,
+        "y": 112.78
+      },
+      "description": "North half of the round room.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout3",
+      "name": "Breakout 3",
+      "type": "room",
+      "position": {
+        "x": 52.0,
+        "y": 127.76
+      },
+      "description": "West room (Palace Drive side) of the block north of the round room.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout4",
+      "name": "Breakout 4",
+      "type": "room",
+      "position": {
+        "x": 60.35,
+        "y": 126.26
+      },
+      "description": "East room (lagoon side) of the block north of the round room.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_broadway1",
+      "name": "Broadway 1",
+      "type": "room",
+      "position": {
+        "x": 64.2,
+        "y": 99.08
+      },
+      "description": "Main floor southeast of the round room, toward the lagoon wall.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_broadway2",
+      "name": "Broadway 2",
+      "type": "room",
+      "position": {
+        "x": 72.33,
+        "y": 139.1
+      },
+      "description": "Main floor in the middle of the hall.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_broadway3",
+      "name": "Broadway 3",
+      "type": "room",
+      "position": {
+        "x": 82.82,
+        "y": 161.57
+      },
+      "description": "Main floor toward the north end.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_back_of_house",
+      "name": "Available back of house",
+      "type": "room",
+      "position": {
+        "x": 71.9,
+        "y": 112.78
+      },
+      "description": "Back-of-house space along the lagoon wall.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout5",
+      "name": "Breakout 5",
+      "type": "room",
+      "position": {
+        "x": 80.89,
+        "y": 179.33
+      },
+      "description": "Room beside the stairs.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout6",
+      "name": "Breakout 6",
+      "type": "room",
+      "position": {
+        "x": 94.16,
+        "y": 165.42
+      },
+      "description": "Room along the lagoon wall near the north end.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_breakout7",
+      "name": "Breakout 7",
+      "type": "room",
+      "position": {
+        "x": 92.45,
+        "y": 197.95
+      },
+      "description": "Room at the north end.",
+      "source": "manual"
+    },
+    {
+      "id": "lm_staff",
+      "name": "Staff offices (no access)",
+      "type": "room",
+      "position": {
+        "x": 62.06,
+        "y": 152.37
+      },
+      "description": "Staff offices along the Palace Drive wall. No access.",
+      "source": "manual"
+    }
+  ],
+  "start_landmark_id": "lm_public_entrance"
+}

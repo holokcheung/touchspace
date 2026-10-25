@@ -6,8 +6,14 @@ import type { FloorMap } from "../src/api/types";
 import { WalkthroughView } from "../src/pages/Walkthrough";
 import apartment from "./maps/apartment.json";
 import demo from "./maps/demo.json";
+import palace from "./maps/palace-of-fine-arts.json";
 const MAPS = [
   { id: "demo", label: "Demo building", map: demo as unknown as FloorMap },
+  {
+    id: "palace-of-fine-arts",
+    label: "Palace of Fine Arts",
+    map: palace as unknown as FloorMap,
+  },
   {
     id: "apartment",
     label: "Apartment scan",

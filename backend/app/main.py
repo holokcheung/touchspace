@@ -20,7 +20,7 @@ from pydantic import BaseModel, Field
 from app.models.map import FloorMap, SourceInfo, ValidationIssue
 from app.models.tactile import TactileReport, TactileSettings
 from app.services.assistant import AskContext, AskResult, answer
-from app.services.floorplan import FloorPlanError, process_map, validate_map
+from app.services.floorplan import FloorPlanError, ProcessingOptions, process_map, validate_map
 from app.services.gemini import GeminiConfig, GeminiInterpreter
 from app.services.importers import ImportError_, import_scan
 from app.services.routing import SAFETY_NOTE, RouteResult, RoutingError, plan_route
@@ -59,6 +59,7 @@ class Settings(BaseModel):
     data_dir: Path
     demo_path: Path
     roomplan_sample_path: Path
+    palace_fine_arts_path: Path
     cors_origins: list[str]
 
 
@@ -72,6 +73,7 @@ def get_settings() -> Settings:
         data_dir=data_dir,
         demo_path=REPO_ROOT / "sample-data" / "demo-building.json",
         roomplan_sample_path=REPO_ROOT / "sample-data" / "third-party" / "open3dfloorplan-test-roomplan.json",
+        palace_fine_arts_path=REPO_ROOT / "sample-data" / "palace-of-fine-arts.json",
         cors_origins=[o.strip() for o in origins.split(",") if o.strip()],
     )
 
@@ -209,7 +211,8 @@ def _map_response(store: MapStore, fmap: FloorMap, steps: list[str] | None = Non
                        model=_model_status(store, fmap), processing_steps=steps or [])
 
 
-def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None) -> MapResponse:
+def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None,
+            options: ProcessingOptions | None = None) -> MapResponse:
     try:
         imported = import_scan(data, name=name)
     except ImportError_ as exc:
@@ -217,7 +220,7 @@ def _ingest(store: MapStore, data: Any, *, map_id: str, name: str | None) -> Map
     fmap = imported.map
     fmap.id = map_id
     try:
-        result = process_map(fmap)
+        result = process_map(fmap, options)
     except FloorPlanError as exc:
         raise ApiError(422, "unprocessable_plan", str(exc)) from None
     saved = store.save(result.map)
@@ -311,6 +314,17 @@ def create_roomplan_sample(store: MapStore = Depends(get_store)) -> MapResponse:
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         raise ApiError(500, "sample_invalid", "The checked-in RoomPlan sample file could not be read.") from None
     return _ingest(store, data, map_id=new_map_id("roomplan"), name="Public RoomPlan sample")
+
+
+@app.post("/api/samples/palace-of-fine-arts", status_code=201, response_model=MapResponse)
+def create_palace_fine_arts_sample(store: MapStore = Depends(get_store)) -> MapResponse:
+    """Create a copy of the Palace of Fine Arts first floor (sample-data/scripts/make_palace_of_fine_arts.py)."""
+    path = get_settings().palace_fine_arts_path
+    if not path.is_file():
+        raise ApiError(500, "sample_missing", "The Palace of Fine Arts map file is missing from sample-data/.")
+    # Already north up: only translate it. Axis alignment would turn this curved hall about 28 degrees.
+    return _ingest(store, json.loads(path.read_text()), map_id=new_map_id("palace"), name=None,
+                   options=ProcessingOptions(align_to_axes=False))
 
 
 @app.get("/api/maps", response_model=list[MapSummary])
