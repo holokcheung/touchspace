@@ -22,6 +22,17 @@ def test_viewer_assets_and_state_follow_python(viewer, mock_pad):
     assert state["braille_hex"] == "40" + "00" * 19
 
 
+def test_viewer_resources_work_from_an_unrelated_directory(mock_pad, tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    with ViewerServer(mock_pad, port=0) as server:
+        for asset in ("/", "/viewer.css", "/viewer.js", "/pins.js", "/hardware", "/hardware.js"):
+            status, content = request(server.url + asset)
+            assert status == 200
+            assert content
+        mock_pad.display_braille(b"\x40")
+        assert request(server.url + "/api/state")[1]["braille_hex"] == "40" + "00" * 19
+
+
 def test_mock_buttons_reach_python(viewer, mock_pad):
     done = Event()
     mock_pad.on_button(lambda e: done.set() if e.button.value == "function2" and e.action.value == "down" else None)

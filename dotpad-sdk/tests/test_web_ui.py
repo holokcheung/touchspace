@@ -20,7 +20,7 @@ def browser():
         instance.close()
 
 
-def test_viewer_live_graphics_braille_encoding_buttons_and_mobile(browser, viewer, mock_pad):
+def test_viewer_live_graphics_braille_encoding_buttons_and_mobile(browser, viewer, mock_pad, tmp_path):
     page = browser.new_page(viewport={"width": 1100, "height": 950}, device_scale_factor=1)
     try:
         page.goto(viewer.url)
@@ -43,10 +43,10 @@ def test_viewer_live_graphics_braille_encoding_buttons_and_mobile(browser, viewe
         page.wait_for_function("document.querySelector('#event-log').textContent.includes('right ↑')")
         page.get_by_role("button", name="Load demo", exact=True).click()
         page.wait_for_function("Number(document.querySelector('#graphics').dataset.raised) > 8")
-        page.screenshot(path="/tmp/dotpad-sdk-viewer-desktop.png", full_page=True)
+        page.screenshot(path=str(tmp_path / "viewer-desktop.png"), full_page=True)
         page.set_viewport_size({"width": 390, "height": 844})
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
-        page.screenshot(path="/tmp/dotpad-sdk-viewer-mobile.png", full_page=True)
+        page.screenshot(path=str(tmp_path / "viewer-mobile.png"), full_page=True)
         page.get_by_role("button", name="Clear", exact=True).click()
         page.wait_for_function("document.querySelector('#graphics').dataset.raised === '0' && document.querySelector('#braille').dataset.raised === '0'")
     finally:
