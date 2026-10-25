@@ -32,3 +32,5 @@ dist-walk
 # Swift Package Manager
 .build/
 .swiftpm/
+
+dotpad-sdk-guide/

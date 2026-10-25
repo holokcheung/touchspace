@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dot Pad bridge</title>
+<style>
+  :root { --bg:#fff; --fg:#111; --muted:#666; --line:#ddd; --pin:#111; --flat:#e6e6e6; --ok:#137333; --bad:#b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#121212; --fg:#eee; --muted:#9a9a9a; --line:#333; --pin:#f2f2f2; --flat:#2a2a2a; --ok:#81c995; --bad:#f28b82; } }
+  body { margin:0; padding:20px; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, sans-serif; }
+  h1 { font-size:20px; margin:0 0 12px; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  button { font:inherit; padding:8px 14px; border-radius:8px; border:1px solid var(--line); background:transparent; color:var(--fg); cursor:pointer; }
+  button:disabled { opacity:.45; cursor:default; }
+  .status span { margin-right:16px; }
+  .ok { color:var(--ok); } .bad { color:var(--bad); } .muted { color:var(--muted); }
+  canvas { border:1px solid var(--line); border-radius:6px; max-width:100%; image-rendering:pixelated; }
+  #log { font:12px/1.4 ui-monospace, monospace; color:var(--muted); max-height:220px; overflow:auto; border-top:1px solid var(--line); margin-top:12px; padding-top:8px; white-space:pre-wrap; }
+</style>
+</head>
+<body>
+<h1>Dot Pad bridge</h1>
+<p class="muted">Keep this tab open. It holds the Dot Pad connection and draws whatever the proxy sends.</p>
+
+<div class="row">
+  <button id="ble">Connect Bluetooth</button>
+  <button id="usb">Connect USB</button>
+  <button id="disc" disabled>Disconnect</button>
+</div>
+
+<div class="row status">
+  <span>Proxy <b id="proxyState" class="bad">offline</b></span>
+  <span>Dot Pad <b id="devState" class="bad">disconnected</b></span>
+  <span>Zoom <b id="zoom">-</b></span>
+  <span class="muted">display <b id="dispId"></b></span>
+</div>
+
+<canvas id="preview" width="600" height="400"></canvas>
+<div id="log"></div>
+
+<script type="module">
+import { DotPadSDK, DotPadScanner, DataCodes, DisplayMode } from "/bridge/sdk.js";
+
+// ?display=dotpad-1 picks the display; ?interval=1000 is the minimum ms between device writes.
+const params = new URLSearchParams(location.search);
+const displayId = params.get("display") || "dotpad-1";
+const minIntervalMs = Number(params.get("interval") || 1000);
+document.getElementById("dispId").textContent = displayId;
+
+const $ = (id) => document.getElementById(id);
+const log = (msg) => { $("log").textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n` + $("log").textContent; };
+const setState = (id, text, good) => { $(id).textContent = text; $(id).className = good ? "ok" : "bad"; };
+
+const sdk = new DotPadSDK();
+const scanner = new DotPadScanner();
+let device = null;     // connected DotDevice
+let ws = null;         // socket to the proxy
+let latest = null;     // newest frame from the proxy, not yet written
+let busy = false;      // a write went out less than minIntervalMs ago
+
+// ---------- proxy link ----------
+
+function send(obj) { if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj)); }
+
+function reportDevice() {
+  if (device) send({ type: "device", state: "connected", cellCols: device.numberCellColumns, cellRows: device.numberCellRows });
+  else send({ type: "device", state: "disconnected" });
+}
+
+function openProxy(delay = 0) {
+  setTimeout(() => {
+    const proto = location.protocol === "https:" ? "wss" : "ws";
+    ws = new WebSocket(`${proto}://${location.host}/v1/bridge/${encodeURIComponent(displayId)}`);
+    ws.onopen = () => { setState("proxyState", "online", true); log("proxy connected"); reportDevice(); };
+    ws.onmessage = (ev) => {
+      const msg = JSON.parse(ev.data);
+      if (msg.type !== "frame") return;
+      $("zoom").textContent = `${msg.zoom}x`;
+      drawPreview(msg.hex, msg.cellCols, msg.cellRows);
+      latest = msg.hex;
+      flush();
+    };
+    ws.onclose = (ev) => {
+      setState("proxyState", "offline", false);
+      if (ev.code === 4001) { log("another bridge took over this display; not reconnecting"); return; }
+      log("proxy disconnected, retrying in 2 s");
+      openProxy(2000);
+    };
+  }, delay);
+}
+
+// ---------- device output, paced ----------
+// The SDK paces line writes internally but does not tell the page when a frame is fully out.
+// So the page keeps only the newest frame and writes at most once per minIntervalMs.
+
+function flush() {
+  if (!device || busy || latest === null) return;
+  const hex = latest;
+  latest = null;
+  busy = true;
+  sdk.displayGraphicData(hex, device, DisplayMode.GraphicMode);
+  setTimeout(() => { busy = false; flush(); }, minIntervalMs);
+}
+
+// ---------- SDK callbacks ----------
+
+sdk.setCallBack(
+  (dev, code, msg) => {
+    if (code === DataCodes.Disconnected) { device = null; onDeviceChange(); log("Dot Pad disconnected"); }
+  },
+  (dev, keyCode) => { log(`key ${keyCode}`); send({ type: "key", key: keyCode }); },
+);
+
+function onDeviceChange() {
+  setState("devState", device ? `connected (${device.numberCellColumns}x${device.numberCellRows} cells)` : "disconnected", !!device);
+  $("disc").disabled = !device;
+  reportDevice();
+}
+
+async function connect(kind) {
+  try {
+    setState("devState", "connecting", false);
+    send({ type: "device", state: "connecting" });
+    const target = kind === "ble" ? await scanner.startBleScan() : await scanner.startUsbScan();
+    if (!target) { onDeviceChange(); return; }
+    const dev = kind === "ble" ? await sdk.connectBleDevice(target) : await sdk.connectUsbDevice(target);
+    if (!dev) throw new Error("SDK returned no device");
+    device = dev;
+    log(`connected over ${kind.toUpperCase()}`);
+    onDeviceChange();
+  } catch (err) {
+    log(`connect failed: ${err.message || err}`);
+    setState("devState", "error", false);
+    send({ type: "device", state: "error" });
+  }
+}
+
+$("ble").onclick = () => connect("ble");
+$("usb").onclick = () => connect("usb");
+$("disc").onclick = () => { if (device) sdk.disconnect(device); device = null; onDeviceChange(); };
+
+// ---------- on-screen preview ----------
+// Decodes the hex with the Dot Pad GRAPHIC pin map (pins 1-4 down the left column,
+// 5-8 down the right, bit n = pin n+1). If this preview looks right but the device does not,
+// the bit order is the first suspect.
+
+const PIN_OF_BIT = [[0,0],[0,1],[0,2],[0,3],[1,0],[1,1],[1,2],[1,3]];
+
+function drawPreview(hex, cellCols, cellRows) {
+  const cols = cellCols * 2, rows = cellRows * 4, s = 10;
+  const c = $("preview");
+  c.width = cols * s; c.height = rows * s;
+  const g = c.getContext("2d");
+  const css = getComputedStyle(document.documentElement);
+  g.fillStyle = css.getPropertyValue("--bg"); g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i < cellCols * cellRows; i++) {
+    const byte = parseInt(hex.substr(i * 2, 2), 16);
+    const cx = (i % cellCols) * 2, cy = Math.floor(i / cellCols) * 4;
+    PIN_OF_BIT.forEach(([dc, dr], bit) => {
+      g.fillStyle = (byte >> bit) & 1 ? css.getPropertyValue("--pin") : css.getPropertyValue("--flat");
+      g.beginPath(); g.arc((cx + dc) * s + s / 2, (cy + dr) * s + s / 2, s * 0.35, 0, Math.PI * 2); g.fill();
+    });
+  }
+}
+
+openProxy();
+</script>
+</body>
+</html>
