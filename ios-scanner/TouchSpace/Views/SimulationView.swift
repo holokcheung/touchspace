@@ -125,7 +125,7 @@ private struct VoicePromptControl: View {
                 .background(.black.opacity(0.58),in:Capsule())
                 .accessibilityIdentifier("simulation-voice-status")
             ZStack {
-                Circle().fill(voice.phase == .listening ? Color.red : Color.touchSpaceMint)
+                Circle().fill(voice.phase == .listening ? Color.red : Color.touchSpaceMintFill)
                 Circle().strokeBorder(.white.opacity(0.8),lineWidth:2)
                 Image(systemName:voice.phase == .listening ? "waveform" : voice.phase == .thinking ? "ellipsis" : "mic.fill")
                     .resizable().scaledToFit().frame(width:28,height:32).foregroundStyle(.white)

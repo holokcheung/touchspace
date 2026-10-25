@@ -23,7 +23,7 @@ struct DemoSpacesView: View {
                             Label("Start 3D walkthrough",systemImage:"figure.walk")
                                 .frame(maxWidth:.infinity,minHeight:32)
                         }
-                        .buttonStyle(.borderedProminent).controlSize(.large)
+                        .buttonStyle(.borderedProminent).tint(.touchSpaceMintFill).controlSize(.large)
                         .accessibilityLabel("Start 3D walkthrough of \(name)")
                         NavigationLink {
                             MapExplorerView(package:map,api:api)

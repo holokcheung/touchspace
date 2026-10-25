@@ -23,6 +23,9 @@ extension UIColor {
 extension Color {
     static let touchSpaceMint = Color(uiColor:.touchSpaceMint)
     static let touchSpaceBackground = Color(uiColor:.touchSpaceBackground)
+    /// Fill for prominent buttons and the mic circle in both themes: white on #00796B is 5.3:1.
+    /// (The dark-mode tint #63E6BE is for text and icons; white on it would be only 1.5:1.)
+    static let touchSpaceMintFill = Color(red:0x00/255.0,green:0x79/255.0,blue:0x6B/255.0)
 }
 
 extension View {
