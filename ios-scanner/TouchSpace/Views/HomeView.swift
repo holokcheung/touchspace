@@ -22,7 +22,7 @@ struct HomeView: View {
             List {
                 Section {
                     Button("Scan space",systemImage:"camera.viewfinder") { scanning = true }
-                    Button("Import a map package",systemImage:"square.and.arrow.down") { importing = true }
+                    Button("Import from community",systemImage:"square.and.arrow.down") { importing = true }
                     Button("Try demo spaces",systemImage:"cube.transparent") { loadDemos() }.accessibilityIdentifier("load-demo-maps")
                 }.controlSize(.large)
                 Section("Downloaded maps · available offline") {
