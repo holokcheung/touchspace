@@ -1,4 +1,4 @@
-# Touchspace 
+# TouchSpace
 
 **Scan a Space. Feel the Layout. Explore with Confidence.**
 
@@ -22,7 +22,7 @@ Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process 
 | `backend/` | FastAPI service: RoomPlan import, floor-plan processing, STL generation, routing, voice Q&A |
 | `ios-scanner/` | SwiftUI RoomPlan scanner app |
 | `sample-data/` | Synthetic demo fixtures (not real venue scans) |
-| `shared/` | Settings shared by the web app and the iPhone app (`soundscape.json`) |
+| `shared/` | Web soundscape settings and shared spatial test fixtures |
 | `docs/` | Architecture and usage docs |
 
 ## Status
@@ -59,9 +59,9 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 and click **Try Demo** to enter the walkthrough. No API keys are needed. To use Cartesia voice, see [docs/voice.md](docs/voice.md).
+Open http://localhost:5173 and click **Try Demo** to enter the walkthrough. No API keys are needed. Optional voice and chat provider settings are listed in [.env.example](.env.example); keep provider keys on the backend.
 
-To try the RoomPlan import path without an iPhone, upload `sample-data/synthetic-roomplan-capturedroom.json`. It is synthetic data in RoomPlan's format. For real scans, see [ios-scanner/README.md](ios-scanner/README.md) and [docs/roomplan-import.md](docs/roomplan-import.md).
+To try the RoomPlan import path without an iPhone, upload `sample-data/synthetic-roomplan-capturedroom.json`. It is synthetic data in RoomPlan's format. For real scans, see [ios-scanner/README.md](ios-scanner/README.md) and [the iOS implementation guide](docs/IOS_MVP.md).
 
 **Tests:**
 
@@ -100,10 +100,11 @@ the walkthrough. The backend's editing and tactile/STL APIs remain available.
   ticks warn about obstacles ahead, and doorway/bump/out-of-map cues remain.
   Sound ducks while you use the assistant. Volume and spoken announcements live in
   the Audio panel.
-- **DotPad:** an independent [module](frontend/src/dotpad/README.md) retains the pin
+- **DotPad:** the authoritative web [module](frontend/src/dotpad/README.md) retains the pin
   preview and uses the vendor Web SDK 3.0.4 to send graphics and room/heading braille
   to a 60 × 40 pin DotPad over Bluetooth or USB. Hardware needs Chrome on localhost
-  or HTTPS; physical-device validation is still required.
+  or HTTPS; physical-device validation is still required. It connects directly from
+  the walkthrough, with no Python gateway or iOS bridge.
 
 The separate floor-plan/path editing, print settings, STL download, marketing sections,
 and standalone Voice Explorer UI have been removed from the web navigation. Map
@@ -136,13 +137,11 @@ Errors return `{"error": {"code", "message", "details"}}`. Maps are stored as JS
 
 ## More docs
 
-- [docs/voice-explorer.md](docs/voice-explorer.md): routing, grounded answers, the path editor, Gemini
-- [docs/soundscape.md](docs/soundscape.md): the walk-through's sound design, shared settings, using it on a phone, plan for live LiDAR
-- [docs/voice.md](docs/voice.md): Cartesia setup
-- [docs/roomplan-import.md](docs/roomplan-import.md): RoomPlan format and coordinates
-- [docs/ACCESSIBILITY_CHECKLIST.md](docs/ACCESSIBILITY_CHECKLIST.md): run before the demo
-- [docs/DEMO.md](docs/DEMO.md): 3-minute pitch script and likely questions
-- [docs/DEVPOST.md](docs/DEVPOST.md): submission draft
+- [iOS setup and testing](ios-scanner/README.md): scanning, demo walkthroughs and speech
+- [iOS implementation guide](docs/IOS_MVP.md): map packages, localization and device validation
+- [Product specification](docs/SPEC.md): native app and backend requirements
+- [DotPad module](frontend/src/dotpad/README.md): browser hardware setup and validation
+- [Soundscape settings](shared/soundscape.json): web audio and movement configuration
 
 ## Tactile model, in short
 

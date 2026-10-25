@@ -28,9 +28,7 @@ import SwiftUI
         return (SpeechInput(),"Hold to ask · swipe to look")
         #endif
     }
-    @Published private(set) var engine: SimulationEngine {
-        didSet { if engine.pose != oldValue.pose { DotPadLink.shared.sendMapPose(engine.pose.position,heading:engine.pose.heading) } }
-    }
+    @Published private(set) var engine: SimulationEngine
     @Published private(set) var planning = false
     @Published private(set) var remaining = 0.0
     private var generation = 0
@@ -50,8 +48,6 @@ import SwiftUI
     }
     func start(initialDestination:String?) {
         stopped = false
-        DotPadLink.shared.sendMap(package)
-        DotPadLink.shared.sendMapPose(engine.pose.position,heading:engine.pose.heading)
         if engine.route == nil, let initialDestination { plan(to:initialDestination) }
     }
     func plan(to id:String) {
@@ -116,7 +112,7 @@ import SwiftUI
         generation += 1; planning = false; engine.pause(); audio.stop()
     }
     func suspend() { generation += 1; planning = false; voice.cancel(); engine.pause(); audio.stop() }
-    func stop() { stopped = true; suspend(); scene.stop(); DotPadLink.shared.sendNoPose() }
+    func stop() { stopped = true; suspend(); scene.stop() }
     private func cue() {
         guard let update = engine.tick(seconds:0.1) else { return }
         remaining = update.remaining
