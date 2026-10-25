@@ -200,6 +200,21 @@ export default function Landing() {
             Apartment scan from an open-source project, not a scan by our team.
             Room labels are unconfirmed.
           </p>
+          <button
+            className="sample-link"
+            disabled={Boolean(busy)}
+            aria-describedby="palace-note"
+            onClick={() =>
+              void open("Opening the Palace of Fine Arts…", api.createPalaceSample)
+            }
+          >
+            Or explore the Palace of Fine Arts (Cal Hacks venue){" "}
+            <span aria-hidden="true">↗</span>
+          </button>
+          <p id="palace-note" className="sample-note">
+            First floor traced from the venue's public floor plan. Approximate
+            and simplified for the DotPad.
+          </p>
         </section>
         {busy && (
           <p role="status" className="library-status">

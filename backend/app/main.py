@@ -59,6 +59,7 @@ class Settings(BaseModel):
     data_dir: Path
     demo_path: Path
     roomplan_sample_path: Path
+    palace_fine_arts_path: Path
     cors_origins: list[str]
 
 
@@ -72,6 +73,7 @@ def get_settings() -> Settings:
         data_dir=data_dir,
         demo_path=REPO_ROOT / "sample-data" / "demo-building.json",
         roomplan_sample_path=REPO_ROOT / "sample-data" / "third-party" / "open3dfloorplan-test-roomplan.json",
+        palace_fine_arts_path=REPO_ROOT / "sample-data" / "palace-of-fine-arts.json",
         cors_origins=[o.strip() for o in origins.split(",") if o.strip()],
     )
 
@@ -311,6 +313,15 @@ def create_roomplan_sample(store: MapStore = Depends(get_store)) -> MapResponse:
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         raise ApiError(500, "sample_invalid", "The checked-in RoomPlan sample file could not be read.") from None
     return _ingest(store, data, map_id=new_map_id("roomplan"), name="Public RoomPlan sample")
+
+
+@app.post("/api/samples/palace-of-fine-arts", status_code=201, response_model=MapResponse)
+def create_palace_fine_arts_sample(store: MapStore = Depends(get_store)) -> MapResponse:
+    """Create a copy of the Palace of Fine Arts first floor (sample-data/scripts/make_palace_of_fine_arts.py)."""
+    path = get_settings().palace_fine_arts_path
+    if not path.is_file():
+        raise ApiError(500, "sample_missing", "The Palace of Fine Arts map file is missing from sample-data/.")
+    return _ingest(store, json.loads(path.read_text()), map_id=new_map_id("palace"), name=None)
 
 
 @app.get("/api/maps", response_model=list[MapSummary])

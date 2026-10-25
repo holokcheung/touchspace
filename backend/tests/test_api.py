@@ -154,3 +154,13 @@ def test_list_maps(client):
     maps = client.get("/api/maps").json()
     assert len(maps) == 2
     assert {m["synthetic"] for m in maps} == {True}
+
+
+def test_palace_of_fine_arts_sample(client):
+    r = client.post("/api/samples/palace-of-fine-arts")
+    assert r.status_code == 201, r.text
+    m = r.json()["map"]
+    assert m["name"] == "Palace of Fine Arts, first floor" and m["source"]["kind"] == "manual"
+    assert "OpenStreetMap" in m["source"]["description"]
+    names = {lm["name"] for lm in m["landmarks"]}
+    assert {"Public entrance", "Business entrance", "Palace Games", "Theater", "Atrium"} <= names

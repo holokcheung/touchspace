@@ -62,6 +62,8 @@ export const api = {
   createDemo: () => request<MapResponse>("/api/demo", { method: "POST" }),
   createRoomPlanSample: () =>
     request<MapResponse>("/api/samples/roomplan", { method: "POST" }),
+  createPalaceSample: () =>
+    request<MapResponse>("/api/samples/palace-of-fine-arts", { method: "POST" }),
   uploadScan: (file: File) => {
     const form = new FormData();
     form.append("file", file);
