@@ -187,7 +187,7 @@ def build() -> dict:
         "units": "meters",
         "source": {
             "kind": "synthetic",
-            "description": "Invented single-floor layout for demonstrating TouchSpace AI. Not a scan of a real place.",
+            "description": "Invented single-floor layout for demonstrating TouchSpace. Not a scan of a real place.",
         },
         "floor_level": 0,
         "walls": walls,

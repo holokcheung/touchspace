@@ -2,7 +2,7 @@
 
 **Scan a Space. Feel the Layout. Explore with Confidence.**
 
-TouchSpace AI turns real indoor spaces into 3D-printable tactile maps for blind and visually impaired people, and pairs them with a voice assistant that answers questions about the space. Built for Cal Hacks 13.0.
+TouchSpace turns real indoor spaces into 3D-printable tactile maps for blind and visually impaired people, and pairs them with a voice assistant that answers questions about the space. Built for Cal Hacks 13.0.
 
 ## Native iOS AR app
 
