@@ -15,7 +15,7 @@ import {
   toCellBytes,
   toHex,
   toPin,
-} from "../lib/dotpad";
+} from "../dotpad";
 
 const demoMap = {
   ...(demo as unknown as FloorMap),
@@ -40,31 +40,45 @@ describe("DotPad pin grid", () => {
   it("raises the outside walls", () => {
     const nw = toPin(layout, { x: 0, y: 10 });
     const ne = toPin(layout, { x: 16, y: 10 });
-    for (let c = nw.col; c <= ne.col; c++) expect(pinAt(grid, c, nw.row)).toBe(PIN.wall);
+    for (let c = nw.col; c <= ne.col; c++)
+      expect(pinAt(grid, c, nw.row)).toBe(PIN.wall);
   });
 
   it("leaves a finger-wide gap at the main entrance", () => {
     const door = toPin(layout, { x: 3.5, y: 0 });
     expect(pinAt(grid, door.col, door.row)).toBe(PIN.empty);
-    const open = [-1, 0, 1].filter((d) => pinAt(grid, door.col + d, door.row) === PIN.empty).length;
+    const open = [-1, 0, 1].filter(
+      (d) => pinAt(grid, door.col + d, door.row) === PIN.empty,
+    ).length;
     expect(open).toBeGreaterThanOrEqual(DOTPAD.minGapPins);
   });
 
   it("places a symbol for each marked landmark, clear of walls and each other", () => {
-    const types = new Set(demoMap.landmarks.filter((l) => PIN_SYMBOLS[l.type] && l.show_on_tactile !== false).map((l) => l.id));
+    const types = new Set(
+      demoMap.landmarks
+        .filter((l) => PIN_SYMBOLS[l.type] && l.show_on_tactile !== false)
+        .map((l) => l.id),
+    );
     expect(types.size).toBeGreaterThanOrEqual(6);
     expect(new Set(placed.map((p) => p.landmarkId))).toEqual(types);
     for (const p of placed) {
       for (let dr = -2; dr <= 2; dr++)
-        for (let dc = -2; dc <= 2; dc++) expect(pinAt(grid, p.col + dc, p.row + dr)).not.toBe(PIN.wall);
+        for (let dc = -2; dc <= 2; dc++)
+          expect(pinAt(grid, p.col + dc, p.row + dr)).not.toBe(PIN.wall);
     }
     for (const a of placed)
       for (const b of placed)
-        if (a !== b) expect(Math.max(Math.abs(a.col - b.col), Math.abs(a.row - b.row))).toBeGreaterThanOrEqual(4);
+        if (a !== b)
+          expect(
+            Math.max(Math.abs(a.col - b.col), Math.abs(a.row - b.row)),
+          ).toBeGreaterThanOrEqual(4);
   });
 
   it("uses a different pattern for every symbol and for the walker", () => {
-    const patterns = [...Object.values(PIN_SYMBOLS).map((s) => s!.pattern), WALKER_SYMBOL.pattern].map((p) => JSON.stringify(p));
+    const patterns = [
+      ...Object.values(PIN_SYMBOLS).map((s) => s!.pattern),
+      WALKER_SYMBOL.pattern,
+    ].map((p) => JSON.stringify(p));
     expect(new Set(patterns).size).toBe(patterns.length);
   });
 
@@ -96,15 +110,31 @@ describe("DotPad pin grid", () => {
       [-0.8, 0.3],
       [2, 0],
     ]) {
-      const { grid: g, walker } = framePins(grid, layout, { position: { x: pos.x + dx, y: pos.y + dy }, heading: 0 }, placed);
+      const { grid: g, walker } = framePins(
+        grid,
+        layout,
+        { position: { x: pos.x + dx, y: pos.y + dy }, heading: 0 },
+        placed,
+      );
       // Either the whole plus is there or none of it: never a broken half-symbol.
       const left = [-1, 0, 1]
-        .flatMap((dr) => [-1, 0, 1].map((dc) => pinAt(g, info.col + dc, info.row + dr) === PIN.symbol))
+        .flatMap((dr) =>
+          [-1, 0, 1].map(
+            (dc) => pinAt(g, info.col + dc, info.row + dr) === PIN.symbol,
+          ),
+        )
         .filter(Boolean).length;
-      const near = Math.max(Math.abs(info.col - walker!.col), Math.abs(info.row - walker!.row)) <= 3;
+      const near =
+        Math.max(
+          Math.abs(info.col - walker!.col),
+          Math.abs(info.row - walker!.row),
+        ) <= 3;
       expect(left).toBe(near ? 0 : 5);
       for (let dr = -2; dr <= 2; dr++)
-        for (let dc = -2; dc <= 2; dc++) expect(pinAt(g, walker!.col + dc, walker!.row + dr)).not.toBe(PIN.symbol);
+        for (let dc = -2; dc <= 2; dc++)
+          expect(pinAt(g, walker!.col + dc, walker!.row + dr)).not.toBe(
+            PIN.symbol,
+          );
     }
   });
 
@@ -134,13 +164,21 @@ describe("sending to the device", () => {
   });
 
   it("fits where-you-are on the 20-cell text line", () => {
-    expect(statusLine(demoMap, { position: { x: 3.5, y: 2 }, heading: 0 })).toBe("Lobby N");
-    expect(statusLine(demoMap, { position: { x: 8, y: 5 }, heading: 135 })).toBe("Central Hallway SE");
-    expect(statusLine(demoMap, { position: { x: 3, y: 8 }, heading: 270 }).length).toBeLessThanOrEqual(20);
-    expect(statusLine(demoMap, { position: { x: 30, y: 30 }, heading: 0 })).toBe("off map N");
+    expect(
+      statusLine(demoMap, { position: { x: 3.5, y: 2 }, heading: 0 }),
+    ).toBe("Lobby N");
+    expect(
+      statusLine(demoMap, { position: { x: 8, y: 5 }, heading: 135 }),
+    ).toBe("Central Hallway SE");
+    expect(
+      statusLine(demoMap, { position: { x: 3, y: 8 }, heading: 270 }).length,
+    ).toBeLessThanOrEqual(20);
+    expect(
+      statusLine(demoMap, { position: { x: 30, y: 30 }, heading: 0 }),
+    ).toBe("off map N");
   });
 
   it("previews braille text", () => {
-    expect(previewBraille("ab 1")).toBe("⠁⠃⠀⠁");
+    expect(previewBraille("ab 1")).toBe("⠁⠃⠀⠼⠁");
   });
 });

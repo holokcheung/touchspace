@@ -1,72 +1,70 @@
-# Touchspace AI iOS apps
+# TouchSpace for iOS
 
-The current app is [TouchspaceAI.xcodeproj](TouchspaceAI.xcodeproj). See the [main setup guide](../README.md) and [validation guide](../docs/ios-testing.md). Regenerate it with `xcodegen generate --spec project.yml`.
+Native SwiftUI app for RoomPlan capture, complete map sharing, offline exploration and automatically localized AR navigation. Requires iOS 17+. Capture requires a LiDAR iPhone/iPad; restoring a world map requires an ARKit-capable physical device at the scanned venue.
 
-## Legacy RoomPlan scanner reference
+Open `TouchSpace.xcodeproj`, select the **TouchSpace** scheme and set your development team under Signing & Capabilities. The project and pinned Swift package resolution are checked in. To regenerate it after changing target configuration:
 
-The separate `TouchSpaceScanner.xcodeproj` below is preserved for the existing web import workflow. Its generator is `legacy-scanner.yml`.
-
-A small SwiftUI app that scans a room with Apple RoomPlan and exports the result for TouchSpace AI.
-
-**Status:** source code and Xcode project are complete, but the app has **not been built or run yet**. The machine it was written on has no Xcode. Expect to fix small compile errors on the first build. Nothing here has been tested on a device.
-
-## What it does
-
-1. Checks `RoomCaptureSession.isSupported`. RoomPlan needs a LiDAR iPhone or iPad (iPhone 12 Pro or newer Pro models, iPad Pro 2020 or newer).
-2. **Start a new scan** opens Apple's `RoomCaptureView`, with its coaching overlay. Coaching instructions are also announced to VoiceOver.
-3. **Done** stops capture. RoomPlan post-processes the scan and shows its result.
-4. Name the scan and **Save** it. The app writes:
-   - `touchspace-<name>.json`: the `CapturedRoom`, encoded with `JSONEncoder` exactly as RoomPlan defines it. There is no custom schema.
-   - `touchspace-<name>.usdz`: a parametric 3D model, for previewing.
-5. From a saved scan you can:
-   - share the JSON or USDZ (AirDrop, Files, Mail, and so on);
-   - preview the USDZ in Quick Look;
-   - **Send to TouchSpace**: upload the JSON straight to the backend on your computer.
-
-## Build and run
-
-Requirements: a Mac with Xcode 15 or newer, an Apple ID (a free account works for running on your own device), and a LiDAR device running iOS 17 or newer.
-
-1. Open `ios-scanner/TouchSpaceScanner.xcodeproj` in Xcode.
-2. Select the **TouchSpaceScanner** target, then **Signing & Capabilities**. Choose your **Team**. If the bundle ID `ai.touchspace.scanner` is taken, change it to something unique.
-3. Plug in the device, select it as the run destination, and press **Run**.
-4. On the device, trust the developer certificate if asked: Settings → General → VPN & Device Management.
-
-The simulator can build the app, but RoomPlan reports itself unsupported there, so scanning needs a real device.
-
-If you add or remove Swift files, regenerate the project:
-
-```bash
-brew install xcodegen
-cd ios-scanner && xcodegen generate --spec legacy-scanner.yml
+```sh
+xcodegen generate --spec ios-scanner/project.yml
 ```
 
-## Sending scans to your computer
+From the repository root, start the existing backend:
 
-1. On the computer, start the backend so other devices can reach it:
-   ```bash
-   cd backend && .venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
-   ```
-2. Find the computer's IP address. On a Mac, use System Settings → Wi-Fi → Details.
-3. In the app, open a saved scan and set **Server address** to `http://<that-ip>:8000`. Tap **Send to TouchSpace**. The phone and computer must be on the same Wi-Fi network.
-4. The scan appears on the TouchSpace website under **Upload scan → Your maps**.
+```sh
+cd backend
+.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
 
-Without the network route, share the JSON to your computer (AirDrop works well) and upload it on the website.
+In the app's Settings, enter the backend's LAN URL for a physical phone (`http://<Mac-LAN-IP>:8000`) or `http://localhost:8000` for the simulator. HTTPS is required for a hosted backend. No API key belongs in the app.
 
-## After importing
+Set `TOUCHSPACE_PUBLISH_CODE` on the backend to enable demo pairing and uploads. Pair in **Map detail → Upload or publish**. Credentials expire after one hour and live in Keychain. Pairing again from the same installation restores access to its private uploads, provided the server retains its signing key. Public publishing needs both the public toggle and a separate permission confirmation.
 
-RoomPlan does not record room names, entrances, exits, restrooms or walkable routes. Mark these in the TouchSpace floor-plan editor before printing. RoomPlan's room-type guesses, such as "Living room (unconfirmed)", and detected stairs are labeled so you can confirm them.
+The app sends a `.touchspacemap` ZIP, including all JSON payloads and `worldmap.archive`, to `/api/touchspace/maps`. The legacy `/api/scans` RoomPlan-JSON upload remains available for the web/printing workflow.
 
-## Files
+Run portable algorithm/policy tests on a Mac:
 
-| File | Purpose |
-| --- | --- |
-| `TouchSpaceScannerApp.swift` | App entry point |
-| `ContentView.swift` | Home screen: support check, start scan, saved scans |
-| `ScanFlowView.swift` | Full-screen scan → process → name → save flow |
-| `RoomCaptureViewController.swift` | Hosts `RoomCaptureView`, implements the RoomPlan delegates |
-| `ScanStore.swift` | Saves the `CapturedRoom` JSON and USDZ in the app's Documents folder |
-| `ScanDetailView.swift` | Scan summary, share, Quick Look, upload |
-| `Uploader.swift` | Multipart `POST /api/scans` to the TouchSpace backend |
-| `SoundscapeSettings.swift` | Decodes `shared/soundscape.json` (bundled) for a future live LiDAR soundscape; not used by a screen yet. See [docs/soundscape.md](../docs/soundscape.md). |
-| `legacy-scanner.yml` | XcodeGen spec for the legacy scanner |
+```sh
+cd ios-scanner
+swift test
+```
+
+Run native tests/build from the repository root (substitute an installed simulator):
+
+```sh
+xcodebuild -project ios-scanner/TouchSpace.xcodeproj -scheme TouchSpace \
+  -destination 'platform=iOS Simulator,name=iPhone 18 Pro' \
+  CODE_SIGNING_ALLOWED=NO test
+```
+
+The simulator supports UI and unit testing, not real RoomPlan capture or saved-world relocalization. See [the implementation and device validation guide](../docs/IOS_MVP.md).
+
+## Testing without LiDAR
+
+Two importable [synthetic map bundles](../sample-data/mock-maps/README.md) are included: a furnished community clinic and a neighbourhood library. Tap **Try demo spaces**, then **Start 3D walkthrough** for either venue. It opens directly in a full-screen first-person scene. Swipe left/right to turn; the wide up/down chevrons move forward/back half a metre with collision checks. There is no overview tab, bottom toolbar or text chat in the walkthrough. The close button returns to the chooser, which also offers **Explore floor plan**.
+
+Hold the microphone while speaking and release to send. Every question goes to the configured backend’s `/api/touchspace/chat` LLM tool pipeline, and the reply is spoken using local speech synthesis. Holding again interrupts its reply. Try “Where am I?”, “What is nearby?” or “Take me to Treatment bed.” A navigation request draws a validated route from the current virtual position; you move along it manually. Questions send saved map geometry and labels as temporary chat context; publishing a map is unnecessary. Configure `OPENROUTER_API_KEY` on the backend. Chat requires a connection and has no keyword or offline fallback; browsing, movement and route previews still work offline. Virtual poses and navigation actions are explicitly separate from physical AR tracking. VoiceOver supports double-tap to start and double-tap again to send.
+
+Physical iPhones use Apple’s on-device recognizer and require microphone/speech permissions plus a speech language. The walkthrough in the Simulator instead records PCM audio and sends it to the configured Mac backend’s existing `/api/stt` endpoint with `local_only=true`. This flag never falls back to Cartesia or any cloud provider. The microphone label says **speech via your Mac**. Approve microphone permission on both Simulator and macOS if prompted; then hold again.
+
+Set up simulator speech once, from the repository root:
+
+```sh
+brew install whisper.cpp
+bash backend/scripts/setup_local_speech.sh
+cd backend
+.venv/bin/python -m uvicorn app.main:app --port 8000
+```
+
+The setup script downloads a checksum-verified 74 MiB English Whisper model to gitignored `backend/data/speech/`. Existing installations are left intact. `/api/health` reports `features.local_stt=true` when the CLI/model are available. Override their paths with `TOUCHSPACE_WHISPER_CLI` / `TOUCHSPACE_WHISPER_MODEL`. In app Settings use `http://localhost:8000` for this Simulator. Audio is deleted after transcription; the question text then goes to online map chat with saved map context. The app gives specific errors for an unreachable server, unavailable model, or silent microphone input. For silent input, check **Simulator → I/O → Audio Input** and macOS microphone permission.
+
+The tested iOS 27.0 Simulator advertises `supportsOnDeviceRecognition=true`, but its downloaded English Apple model cannot run: initially `mini.json` is absent because the model is still in a cryptex, and expanding it reveals only an iPhone H19 specialization while the Simulator expects CPU/JIT models. Merely checking the support flag is insufficient. Changing to Apple’s standard recognition mode also failed. The Mac transcription path avoids this runtime limitation and requires no cloud key.
+
+Synthetic provenance disables physical venue localization; simulated poses remain separate from verified AR tracking. Native tests cover import, movement, routes and voice cancellation/permission timing. UI tests use a DEBUG-only injected transcription (`--ui-test-voice`) for gestures and a local HTTP chat stub to verify online requests. A separate integration test feeds a synthesized WAV through the actual simulator networking → local Whisper → online LLM chat → speech pipeline twice (requires the backend provider key):
+
+```sh
+# After build-for-testing with -derivedDataPath /tmp/touchspace-derived,
+# and with the local speech backend running:
+python3 ios-scanner/scripts/test_local_speech.py
+```
+
+The source fixture is `TouchSpaceTests/Fixtures/reception-question.wav`, generated with macOS `say -v Samantha -r 145` and converted to mono 16 kHz PCM with `afconvert`. The integration test does not fake recognition results; microphone hardware and audible playback still require a manual check. Apple’s native recognizer also has an opt-in integration test for a physical-device setup with working speech assets.

@@ -1,4 +1,4 @@
-# TouchSpace AI — Geometry backend
+# TouchSpace — Geometry backend
 
 Turns an Apple RoomPlan JSON export into a 3D-printable tactile floor map (STL).
 

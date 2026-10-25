@@ -1,0 +1,276 @@
+{
+  "clearance": 0.3,
+  "doors": [
+    {
+      "end": {
+        "x": 3.4,
+        "z": 4.0
+      },
+      "id": "foyer-reading-door",
+      "roomIds": [
+        "foyer",
+        "reading"
+      ],
+      "start": {
+        "x": 2.0,
+        "z": 4.0
+      },
+      "traversability": "confirmed",
+      "wallId": "front-reading"
+    },
+    {
+      "end": {
+        "x": 8.3,
+        "z": 4.0
+      },
+      "id": "children-reading-door",
+      "roomIds": [
+        "children",
+        "reading"
+      ],
+      "start": {
+        "x": 7.0,
+        "z": 4.0
+      },
+      "traversability": "confirmed",
+      "wallId": "front-reading"
+    },
+    {
+      "end": {
+        "x": 10.0,
+        "z": 7.4
+      },
+      "id": "reading-stacks-door",
+      "roomIds": [
+        "reading",
+        "stacks"
+      ],
+      "start": {
+        "x": 10.0,
+        "z": 6.0
+      },
+      "traversability": "confirmed",
+      "wallId": "stacks-divider"
+    },
+    {
+      "end": {
+        "x": 10.0,
+        "z": 2.8
+      },
+      "id": "children-stacks-door",
+      "roomIds": [
+        "children",
+        "stacks"
+      ],
+      "start": {
+        "x": 10.0,
+        "z": 1.6
+      },
+      "traversability": "blocked",
+      "wallId": "stacks-divider"
+    },
+    {
+      "end": {
+        "x": 16.0,
+        "z": 9.5
+      },
+      "id": "staff-boundary-door",
+      "roomIds": [
+        "stacks"
+      ],
+      "start": {
+        "x": 16.0,
+        "z": 8.1
+      },
+      "traversability": "unknown",
+      "wallId": "outer-right"
+    }
+  ],
+  "edges": [
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-library-entrance",
+      "target": "node-library-returns"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-library-entrance",
+      "target": "foyer-reading-door-foyer"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-library-returns",
+      "target": "foyer-reading-door-foyer"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-library-study-reading",
+      "target": "node-library-quiet"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-library-study-reading",
+      "target": "foyer-reading-door-reading"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-library-study-children",
+      "target": "children-reading-door-children"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-library-quiet",
+      "target": "children-reading-door-reading"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "node-library-quiet",
+      "target": "reading-stacks-door-reading"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "foyer-reading-door-foyer",
+      "target": "foyer-reading-door-reading"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "foyer-reading-door-reading",
+      "target": "children-reading-door-reading"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "children-reading-door-children",
+      "target": "children-reading-door-reading"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "children-reading-door-reading",
+      "target": "reading-stacks-door-reading"
+    },
+    {
+      "clearance": 0.3,
+      "confirmed": true,
+      "source": "reading-stacks-door-stacks",
+      "target": "reading-stacks-door-reading"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "node-library-entrance",
+      "position": {
+        "x": 1.2,
+        "z": 2.8
+      },
+      "roomId": "foyer"
+    },
+    {
+      "id": "node-library-returns",
+      "position": {
+        "x": 3.6,
+        "z": 1.9
+      },
+      "roomId": "foyer"
+    },
+    {
+      "id": "node-library-study-reading",
+      "position": {
+        "x": 2.4,
+        "z": 7.6
+      },
+      "roomId": "reading"
+    },
+    {
+      "id": "node-library-study-children",
+      "position": {
+        "x": 8.5,
+        "z": 2.5
+      },
+      "roomId": "children"
+    },
+    {
+      "id": "node-library-quiet",
+      "position": {
+        "x": 7.8,
+        "z": 8.0
+      },
+      "roomId": "reading"
+    },
+    {
+      "id": "node-library-travel",
+      "position": {
+        "x": 12.35,
+        "z": 6.5
+      },
+      "roomId": "stacks"
+    },
+    {
+      "id": "node-library-staff-boundary",
+      "position": {
+        "x": 15.0,
+        "z": 9.1
+      },
+      "roomId": "stacks"
+    },
+    {
+      "id": "foyer-reading-door-foyer",
+      "position": {
+        "x": 2.7,
+        "z": 3.4
+      },
+      "roomId": "foyer"
+    },
+    {
+      "id": "foyer-reading-door-reading",
+      "position": {
+        "x": 2.7,
+        "z": 4.6
+      },
+      "roomId": "reading"
+    },
+    {
+      "id": "children-reading-door-children",
+      "position": {
+        "x": 7.65,
+        "z": 3.4
+      },
+      "roomId": "children"
+    },
+    {
+      "id": "children-reading-door-reading",
+      "position": {
+        "x": 7.65,
+        "z": 4.6
+      },
+      "roomId": "reading"
+    },
+    {
+      "id": "reading-stacks-door-stacks",
+      "position": {
+        "x": 10.6,
+        "z": 6.7
+      },
+      "roomId": "stacks"
+    },
+    {
+      "id": "reading-stacks-door-reading",
+      "position": {
+        "x": 9.4,
+        "z": 6.7
+      },
+      "roomId": "reading"
+    }
+  ],
+  "resolution": 0.1
+}

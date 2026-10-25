@@ -9,11 +9,7 @@ export default defineConfig({
     port: 5173,
     // shared/soundscape.json lives outside the frontend so the iPhone app can use it too.
     fs: { allow: [".."] },
-    proxy: {
-      "/api": { target: process.env.VITE_API_TARGET ?? "http://127.0.0.1:8000", changeOrigin: true },
-      // Live DotPad bridge (python -m app.live), same origin so a phone needs only this port.
-      "/bridge": { target: "ws://127.0.0.1:8765", ws: true, rewrite: (path) => path.replace(/^\/bridge/, "") },
-    },
+    proxy: { "/api": { target: process.env.VITE_API_TARGET ?? "http://127.0.0.1:8000", changeOrigin: true } },
   },
   test: {
     environment: "jsdom",
