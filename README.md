@@ -1,4 +1,4 @@
-# TouchSpace AI
+# Touchspace 
 
 **Scan a Space. Feel the Layout. Explore with Confidence.**
 
