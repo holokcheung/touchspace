@@ -8,7 +8,7 @@ struct DemoSpacesView: View {
         ScrollView {
             VStack(alignment:.leading,spacing:20) {
                 Text("Choose a space to explore").font(.title2.bold())
-                Text("These virtual spaces work offline. Play a route or move around using the walkthrough controls.")
+                Text("Step into a space in first person. Swipe to look, use the chevrons to move, and hold the microphone to ask a question.")
                     .foregroundStyle(.secondary)
                 ForEach(maps) { map in
                     let name = map.manifest.venue.replacingOccurrences(of:" (Synthetic)",with:"")
@@ -37,7 +37,7 @@ struct DemoSpacesView: View {
                     .padding().frame(maxWidth:.infinity,alignment:.leading)
                     .background(.quaternary.opacity(0.4),in:RoundedRectangle(cornerRadius:18))
                 }
-                Text("Simulation uses virtual positions. Camera-based AR model preview is available on supported physical devices.")
+                Text("These offline demos use virtual positions and saved map geometry.")
                     .font(.footnote).foregroundStyle(.secondary)
             }.padding()
         }

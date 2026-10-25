@@ -29,6 +29,8 @@
 		877B645AE9111EA5C663BE6A /* LiveNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F607E073148EA719E28FE010 /* LiveNavigationView.swift */; };
 		8A9D758AAB559FDE075B2B58 /* PackageCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542F666CCEA38BC67B3E3C4A /* PackageCodec.swift */; };
 		8C4B6799060A3CB406034558 /* AskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3BD52C48BF21A992975458 /* AskSheet.swift */; };
+		9080DDC0B21ACC61F84F1F9C /* SpeechInputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C618233D535018A3CB03A774 /* SpeechInputTests.swift */; };
+		90CF87D67F38F259BAC0C7A5 /* ServerSpeechInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EBC000D512D2D502EADDA42 /* ServerSpeechInput.swift */; };
 		9592E484F2A7B1E99B77D84E /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = C97A133E076708B57CCA3C16 /* ZIPFoundation */; };
 		9821DE933ACDF99086647607 /* PolygonMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2A496FEB4198C0547CB1EA /* PolygonMesh.swift */; };
 		9F00D923EDBA8DA7E89DA00A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3E5246199B5F2E955E29C /* HomeView.swift */; };
@@ -36,11 +38,14 @@
 		A457E372D9FDCFD0CA62B4EA /* SimulationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7890D4BEB06667EC2FFA751E /* SimulationEngine.swift */; };
 		AF9C8B50E6A259DC586FFBB4 /* SpatialTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E44719976AF663ED4F1F677C /* SpatialTests.swift */; };
 		B7074A2EF58336248E60A3DA /* neighbourhood-library.touchspacemap in Resources */ = {isa = PBXBuildFile; fileRef = DF7174CCEAB1B2BF54FE882F /* neighbourhood-library.touchspacemap */; };
+		C3486580C78A1422C7B25890 /* WalkthroughVoiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E095138E2B8BF8A08E8B9AB4 /* WalkthroughVoiceTests.swift */; };
 		CFB3BAEC84F8BB97151469AF /* LocalizationVerifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0827CFA92ABCB993123CB6BF /* LocalizationVerifier.swift */; };
 		D6A88391C419F1FC2D387B5C /* RoomScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379C3B7B1E619C29B5AC3CAD /* RoomScanner.swift */; };
 		DFB1543AF5C830EFF6D08FA0 /* OfflineMapAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389312CE0821EE1F1571B846 /* OfflineMapAssistant.swift */; };
+		E99BABE2FD2A7A10BC6AC619 /* reception-question.wav in Resources */ = {isa = PBXBuildFile; fileRef = 30B7D7C2F144C5F90522C928 /* reception-question.wav */; };
 		EA8F612E17D93BB6F5034E3D /* PackageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B63E759140392DAEBC13ADD /* PackageTests.swift */; };
 		ECA703E941FBA85B973AD462 /* GuidanceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB65297DF133E199CE0797 /* GuidanceEngine.swift */; };
+		ECD73935330DA21401770755 /* WalkthroughVoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965BFE5618101114DD468C08 /* WalkthroughVoice.swift */; };
 		EEF8BD057B1A7A346409D66D /* JSONGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F8A0F2EF6A05FB74FAF26A /* JSONGuard.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +70,7 @@
 		0827CFA92ABCB993123CB6BF /* LocalizationVerifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationVerifier.swift; sourceTree = "<group>"; };
 		1B9A05338CCBC0444FE9D297 /* ARLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARLocalization.swift; sourceTree = "<group>"; };
 		292384204A1A9A05C96F2F28 /* TouchSpace.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = TouchSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		30B7D7C2F144C5F90522C928 /* reception-question.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "reception-question.wav"; sourceTree = "<group>"; };
 		37817220ACEA24E43D5C4055 /* SimulationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationView.swift; sourceTree = "<group>"; };
 		379C3B7B1E619C29B5AC3CAD /* RoomScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomScanner.swift; sourceTree = "<group>"; };
 		389312CE0821EE1F1571B846 /* OfflineMapAssistant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineMapAssistant.swift; sourceTree = "<group>"; };
@@ -84,17 +90,21 @@
 		7FAF896C63FA529238DD6E14 /* SimulationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationSession.swift; sourceTree = "<group>"; };
 		8A00641590B35015D4667F57 /* TouchSpaceTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = TouchSpaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		93F8A0F2EF6A05FB74FAF26A /* JSONGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONGuard.swift; sourceTree = "<group>"; };
+		965BFE5618101114DD468C08 /* WalkthroughVoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughVoice.swift; sourceTree = "<group>"; };
 		9CF5E5AB3526F499A50ED61A /* routes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = routes.json; sourceTree = "<group>"; };
+		9EBC000D512D2D502EADDA42 /* ServerSpeechInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSpeechInput.swift; sourceTree = "<group>"; };
 		A7512B860A15E5E14A473AE6 /* NavigationSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSession.swift; sourceTree = "<group>"; };
 		AA11C9D392A5EAFB807025A7 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		C0D3E5246199B5F2E955E29C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		C2D18FC4BA24EF2C9F215A44 /* SimulationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationTests.swift; sourceTree = "<group>"; };
+		C618233D535018A3CB03A774 /* SpeechInputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechInputTests.swift; sourceTree = "<group>"; };
 		CD2A496FEB4198C0547CB1EA /* PolygonMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonMesh.swift; sourceTree = "<group>"; };
 		D426525F9884F1D59106B857 /* SpatialEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialEngine.swift; sourceTree = "<group>"; };
 		D9AAB4DF9AEB26595A9F88BC /* WalkthroughUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughUITests.swift; sourceTree = "<group>"; };
 		DAAACCC3C09D1DA7A4F2F291 /* FloorPlanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorPlanView.swift; sourceTree = "<group>"; };
 		DEC90D11420C235628A599DF /* MapExplorerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapExplorerView.swift; sourceTree = "<group>"; };
 		DF7174CCEAB1B2BF54FE882F /* neighbourhood-library.touchspacemap */ = {isa = PBXFileReference; path = "neighbourhood-library.touchspacemap"; sourceTree = "<group>"; };
+		E095138E2B8BF8A08E8B9AB4 /* WalkthroughVoiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughVoiceTests.swift; sourceTree = "<group>"; };
 		E44719976AF663ED4F1F677C /* SpatialTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpatialTests.swift; sourceTree = "<group>"; };
 		EC71FCCD6FDBE4E9CF709E79 /* DemoSpacesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoSpacesView.swift; sourceTree = "<group>"; };
 		F607E073148EA719E28FE010 /* LiveNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveNavigationView.swift; sourceTree = "<group>"; };
@@ -121,8 +131,10 @@
 				A7512B860A15E5E14A473AE6 /* NavigationSession.swift */,
 				542F666CCEA38BC67B3E3C4A /* PackageCodec.swift */,
 				379C3B7B1E619C29B5AC3CAD /* RoomScanner.swift */,
+				9EBC000D512D2D502EADDA42 /* ServerSpeechInput.swift */,
 				7FAF896C63FA529238DD6E14 /* SimulationSession.swift */,
 				50BAB26827F25F49D03DBDE6 /* VirtualMapScene.swift */,
+				965BFE5618101114DD468C08 /* WalkthroughVoice.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -140,6 +152,14 @@
 				37817220ACEA24E43D5C4055 /* SimulationView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		4D664C60021A5A9D87B8C3B5 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				30B7D7C2F144C5F90522C928 /* reception-question.wav */,
+			);
+			path = Fixtures;
 			sourceTree = "<group>";
 		};
 		A061CE50830331D557E1B5FE /* TouchSpaceUITests */ = {
@@ -193,6 +213,9 @@
 				3B63E759140392DAEBC13ADD /* PackageTests.swift */,
 				C2D18FC4BA24EF2C9F215A44 /* SimulationTests.swift */,
 				E44719976AF663ED4F1F677C /* SpatialTests.swift */,
+				C618233D535018A3CB03A774 /* SpeechInputTests.swift */,
+				E095138E2B8BF8A08E8B9AB4 /* WalkthroughVoiceTests.swift */,
+				4D664C60021A5A9D87B8C3B5 /* Fixtures */,
 			);
 			path = TouchSpaceTests;
 			sourceTree = "<group>";
@@ -340,6 +363,7 @@
 			files = (
 				360937BFA72B448A73B3A849 /* harbour-clinic.touchspacemap in Resources */,
 				737E75F615FA08AF2E530B2B /* neighbourhood-library.touchspacemap in Resources */,
+				E99BABE2FD2A7A10BC6AC619 /* reception-question.wav in Resources */,
 				A114883BCF035D354370C7F6 /* routes.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,12 +411,14 @@
 				9821DE933ACDF99086647607 /* PolygonMesh.swift in Sources */,
 				D6A88391C419F1FC2D387B5C /* RoomScanner.swift in Sources */,
 				157A4ED1523D8663D1D12580 /* ScannerView.swift in Sources */,
+				90CF87D67F38F259BAC0C7A5 /* ServerSpeechInput.swift in Sources */,
 				A457E372D9FDCFD0CA62B4EA /* SimulationEngine.swift in Sources */,
 				699AF93447759C1F78C466AC /* SimulationSession.swift in Sources */,
 				1DE733719B26D2438B0B862B /* SimulationView.swift in Sources */,
 				719CD6A2DF4FAF1872D99B3A /* SpatialEngine.swift in Sources */,
 				003DCB32153ECA90AD66E328 /* TouchSpaceApp.swift in Sources */,
 				5DB036E4183E6D53F5266D37 /* VirtualMapScene.swift in Sources */,
+				ECD73935330DA21401770755 /* WalkthroughVoice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,6 +429,8 @@
 				EA8F612E17D93BB6F5034E3D /* PackageTests.swift in Sources */,
 				50985B0E026F27B163654198 /* SimulationTests.swift in Sources */,
 				AF9C8B50E6A259DC586FFBB4 /* SpatialTests.swift in Sources */,
+				9080DDC0B21ACC61F84F1F9C /* SpeechInputTests.swift in Sources */,
+				C3486580C78A1422C7B25890 /* WalkthroughVoiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -40,4 +40,31 @@ The simulator supports UI and unit testing, not real RoomPlan capture or saved-w
 
 ## Testing without LiDAR
 
-Two importable [synthetic map bundles](../sample-data/mock-maps/README.md) are included: a furnished community clinic and a neighbourhood library. Tap **Try demo spaces** on Home to open the demo chooser, then select **Explore floor plan** or **Start 3D walkthrough** for either venue. The chooser opens even when both bundles are already downloaded. The demo renders a real 3D scene from the geometry, supports collision-checked virtual movement and route playback, and answers fixture questions locally. **AR model** additionally previews a miniature map on camera-capable physical devices without LiDAR. Synthetic provenance still disables physical venue localization; a non-restorable placeholder occupies the normal world-map entry. Simulated poses remain separate from verified AR tracking. Native tests exercise import, virtual movement, route playback, local questions and the full simulator UI flow.
+Two importable [synthetic map bundles](../sample-data/mock-maps/README.md) are included: a furnished community clinic and a neighbourhood library. Tap **Try demo spaces**, then **Start 3D walkthrough** for either venue. It opens directly in a full-screen first-person scene. Swipe left/right to turn; the wide up/down chevrons move forward/back half a metre with collision checks. There is no overview tab, bottom toolbar or text chat in the walkthrough. The close button returns to the chooser, which also offers **Explore floor plan**.
+
+Hold the microphone while speaking and release to send. The saved-map assistant answers aloud using local speech synthesis. Holding again interrupts its reply. Try “Where am I?”, “What is nearby?” or “Take me to Treatment bed.” A navigation request draws a validated route from the current virtual position; you move along it manually. Fixture questions use saved geometry without uploading the map or requiring an API key. VoiceOver supports double-tap to start and double-tap again to send.
+
+Physical iPhones use Apple’s on-device recognizer and require microphone/speech permissions plus a speech language. The walkthrough in the Simulator instead records PCM audio and sends it to the configured Mac backend’s existing `/api/stt` endpoint with `local_only=true`. This flag never falls back to Cartesia or any cloud provider. The microphone label says **speech via your Mac**. Approve microphone permission on both Simulator and macOS if prompted; then hold again.
+
+Set up simulator speech once, from the repository root:
+
+```sh
+brew install whisper.cpp
+bash backend/scripts/setup_local_speech.sh
+cd backend
+.venv/bin/python -m uvicorn app.main:app --port 8000
+```
+
+The setup script downloads a checksum-verified 74 MiB English Whisper model to gitignored `backend/data/speech/`. Existing installations are left intact. `/api/health` reports `features.local_stt=true` when the CLI/model are available. Override their paths with `TOUCHSPACE_WHISPER_CLI` / `TOUCHSPACE_WHISPER_MODEL`. In app Settings use `http://localhost:8000` for this Simulator. Audio is deleted after transcription; only the question text reaches the saved-map assistant. The app gives specific errors for an unreachable server, unavailable model, or silent microphone input. For silent input, check **Simulator → I/O → Audio Input** and macOS microphone permission.
+
+The tested iOS 27.0 Simulator advertises `supportsOnDeviceRecognition=true`, but its downloaded English Apple model cannot run: initially `mini.json` is absent because the model is still in a cryptex, and expanding it reveals only an iPhone H19 specialization while the Simulator expects CPU/JIT models. Merely checking the support flag is insufficient. Changing to Apple’s standard recognition mode also failed. The Mac transcription path avoids this runtime limitation and requires no cloud key.
+
+Synthetic provenance disables physical venue localization; simulated poses remain separate from verified AR tracking. Native tests cover import, movement, routes and voice cancellation/permission timing. UI tests use a DEBUG-only injected transcription (`--ui-test-voice`) for gestures. A separate integration test feeds a synthesized WAV through the actual simulator networking → local Whisper → map-answer/speech pipeline twice:
+
+```sh
+# After build-for-testing with -derivedDataPath /tmp/touchspace-derived,
+# and with the local speech backend running:
+python3 ios-scanner/scripts/test_local_speech.py
+```
+
+The source fixture is `TouchSpaceTests/Fixtures/reception-question.wav`, generated with macOS `say -v Samantha -r 145` and converted to mono 16 kHz PCM with `afconvert`. The integration test does not fake recognition results; microphone hardware and audible playback still require a manual check. Apple’s native recognizer also has an opt-in integration test for a physical-device setup with working speech assets.

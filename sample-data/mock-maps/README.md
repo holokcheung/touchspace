@@ -1,6 +1,6 @@
 # Synthetic TouchSpace map bundles
 
-Two fictional venues for testing without a LiDAR device. These are **not scans of real places**. Both import in the iOS app, browse offline, share as complete ZIPs, and support an interactive 3D walkthrough with collision-checked movement, route playback and spoken cues. The catalog and map-grounded Q&A endpoints also accept them. No provider key is needed to generate or validate them.
+Two fictional venues for testing without a LiDAR device. These are **not scans of real places**. Both import in the iOS app, browse offline, share as complete ZIPs, and support an interactive 3D walkthrough with collision-checked movement and spoken questions/guidance. The catalog and map-grounded Q&A endpoints also accept them. No provider key is needed to generate or validate them.
 
 | Bundle | Layout and test cases | Plan |
 | --- | --- | --- |
@@ -14,15 +14,15 @@ The geometry uses metre-scale X/Z coordinates, wall thickness 0.15 m, body clear
 Build the updated app, then choose **Import a map package** and select either `.touchspacemap` file. You can transfer the files using Files, AirDrop or a share sheet. The map displays **Synthetic fixture · Interactive demo**. The updated app also bundles both files: **Try demo spaces** on Home opens a chooser for both venues without transferring files. Select **Start 3D walkthrough** or **Explore floor plan**; the chooser appears on every tap, including when the bundles are already downloaded.
 
 - **Explore map** opens an interactive floor plan, destination/room list and offline route previews between saved places.
-- **3D walkthrough** builds a virtual space directly from the package geometry. Choose a destination, then **Play route** to follow the validated path in first person. **Forward**, **Back**, **Left 30°** and **Right 30°** control the virtual camera. Walls, furniture, unknown areas and unconfirmed doors block movement. Overview, minimap, pause/reset and local speech are available.
-- **Ask** works locally for these fixtures, without a backend upload or API key. Ask where a destination is, what's nearby, which way it lies relative to the virtual camera, or “Take me to Treatment bed.” Ambiguous labels require clarification; impossible routes are refused.
-- **AR model** on a camera-capable physical iPhone places a miniature model in front of the device using ordinary ARKit, without LiDAR. The simulator uses the fully interactive 3D view because it has no live AR camera. This model preview does not align with the fictional venue or provide physical walking guidance.
+- **3D walkthrough** opens directly into a full-screen first-person scene. Swipe left/right to turn and use the wide up/down chevrons to step forward/back. Walls, furniture, unknown areas and unconfirmed doors block movement. The overview tab and bottom toolbar have been removed.
+- **Hold to ask** records while the microphone is held; release to submit. Answers are spoken, without a chat transcript. Questions use the local saved-map assistant, without a map upload or API key. Ask where a destination is, what's nearby, which way it lies relative to the virtual camera, or “Take me to Treatment bed.” Navigation requests draw a validated yellow route for you to follow manually. Ambiguous labels require clarification; impossible routes are refused.
+- On a physical iPhone, voice requires microphone/speech permissions and an on-device speech language. In the Simulator, voice uses offline Whisper on your Mac through the configured backend; run the [local speech setup](../../ios-scanner/README.md) first. Audio is processed locally, never sent to a cloud provider, and deleted after transcription. Approve initial microphone permission and hold again. UI tests inject speech; a separate integration test transcribes a real WAV through the local server.
 
 Floor geometry and routes come from the bundle; 3D wall/furniture heights are illustrative because the portable geometry contains floor footprints.
 
 The explicit `synthetic-fixture` provenance keeps these maps unverified. `worldmap.archive` contains a small, versioned binary-plist **placeholder** with matching frame/anchor IDs and `relocalizable=false`. It does not contain an Apple ARWorldMap, feature points, camera imagery or fabricated scan data. Real scan packages still require the usual secure ARWorldMap archive. Merely relabeling a fixture as a real scan fails archive validation.
 
-**Physical venue localization and live navigation remain disabled for these maps.** Simulated navigation and miniature AR model preview do not require a fabricated ARWorldMap. Virtual poses have a separate type and are never encoded as verified tracking or sent to the backend. These fixtures cannot test restored-world alignment or real venue guidance. The backend still refuses live-pose actions on fixtures, even if a client submits `verified=true`.
+**Physical venue localization and live navigation remain disabled for these maps.** Simulated navigation does not require a fabricated ARWorldMap. Virtual poses have a separate type and are never encoded as verified tracking or sent to the backend. These fixtures cannot test restored-world alignment or real venue guidance. The backend still refuses live-pose actions on fixtures, even if a client submits `verified=true`.
 
 ## Test community search and Q&A locally
 
@@ -38,7 +38,7 @@ backend/.venv/bin/python sample-data/scripts/make_mock_bundles.py --seed-catalog
 
 This uses the configured local data directory; it makes no HTTP upload and publishes nothing to a remote service. The local catalog entries are public so the app's **Search community** can discover them. Search for `synthetic`, `clinic` or `library`, then download and explore. Configure the app's backend URL as usual. Existing entries with these fixed IDs are retained on repeated seeding.
 
-Example text questions:
+Example questions (spoken in the walkthrough, or sent to the backend chat endpoint):
 
 - Clinic: “Describe the map”; “Where is Reception desk?”; “What is near Reception desk?”
 - Library: “Where is Returns desk?”; “Where is Study desk?” (clarification expected).

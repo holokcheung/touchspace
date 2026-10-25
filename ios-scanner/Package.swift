@@ -6,6 +6,6 @@ let package = Package(
     products:[.library(name:"TouchSpaceCore",targets:["TouchSpaceCore"])],
     targets:[
         .target(name:"TouchSpaceCore",path:"TouchSpace/Core"),
-        .testTarget(name:"TouchSpaceCoreTests",dependencies:["TouchSpaceCore"],path:"TouchSpaceTests")
+        .testTarget(name:"TouchSpaceCoreTests",dependencies:["TouchSpaceCore"],path:"TouchSpaceTests",exclude:["Fixtures"])
     ]
 )

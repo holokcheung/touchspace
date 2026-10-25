@@ -47,7 +47,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Ask a question about the saved map using your voice.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Turn a spoken map question into text after you tap the microphone.</string>
+	<string>Recognize a map question while you hold the microphone, then send it when you release.</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchScreen</key>

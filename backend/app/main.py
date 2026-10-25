@@ -26,7 +26,8 @@ from app.services.importers import ImportError_, import_scan
 from app.services.routing import SAFETY_NOTE, RouteResult, RoutingError, plan_route
 from app.services.storage import MapNotFound, MapStore, map_revision, new_map_id
 from app.services.tactile import TactileGenerationError, export_stl, generate_tactile_model, stl_filename
-from app.services.voice import MAX_TTS_CHARS, CartesiaVoice, VoiceConfig, VoiceUnavailable
+from app.services.local_speech import LocalSpeech
+from app.services.voice import MAX_STT_BYTES, MAX_TTS_CHARS, CartesiaVoice, VoiceConfig, VoiceUnavailable
 
 VERSION = "0.4.0"
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -83,6 +84,11 @@ def get_store() -> MapStore:
 @lru_cache
 def get_voice() -> CartesiaVoice:
     return CartesiaVoice(VoiceConfig.from_env())
+
+
+@lru_cache
+def get_local_speech() -> LocalSpeech:
+    return LocalSpeech()
 
 
 @lru_cache
@@ -229,6 +235,7 @@ def health(voice: CartesiaVoice = Depends(get_voice), interpreter: GeminiInterpr
         "features": {
             "gemini": interpreter.enabled,
             "cartesia": voice.config.enabled,
+            "local_stt": get_local_speech().enabled,
         },
     }
 
@@ -246,13 +253,15 @@ def text_to_speech(body: SpeakRequest, voice: CartesiaVoice = Depends(get_voice)
 
 
 @app.post("/api/stt", response_model=TranscriptResponse)
-def speech_to_text(file: UploadFile = File(...), voice: CartesiaVoice = Depends(get_voice)) -> TranscriptResponse:
-    """Transcribe a short recording with Cartesia. 503 means: use browser speech recognition or typing."""
-    # Sync handler on purpose: FastAPI runs it in a worker thread, so the blocking Cartesia call
-    # does not stall other requests.
-    audio = file.file.read()
+def speech_to_text(file: UploadFile = File(...), local_only: bool = Form(False),
+                   voice: CartesiaVoice = Depends(get_voice), local: LocalSpeech = Depends(get_local_speech)) -> TranscriptResponse:
+    """Transcribe a short recording. local_only never sends audio to an external provider."""
+    # Keep local inference and provider requests in a worker thread.
+    audio = file.file.read(MAX_STT_BYTES + 1)
+    if len(audio) > MAX_STT_BYTES:
+        raise ApiError(413, "file_too_large", "Recordings must be at most 10 MB.")
     try:
-        text = voice.transcribe(audio, file.filename or "speech.webm", file.content_type)
+        text = local.transcribe(audio) if local_only else voice.transcribe(audio, file.filename or "speech.webm", file.content_type)
     except VoiceUnavailable as exc:
         raise ApiError(503, "voice_unavailable", str(exc)) from None
     except ValueError as exc:

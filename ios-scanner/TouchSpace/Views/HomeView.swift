@@ -110,7 +110,7 @@ struct MapDetailView: View {
                 NavigationLink { MapExplorerView(package:package,api:api) } label: { Label("Explore map",systemImage:"map") }.accessibilityIdentifier("explore-map")
                 if package.manifest.isSynthetic {
                     NavigationLink { SimulationEntry(package:package) } label: { Label("3D walkthrough",systemImage:"figure.walk") }.accessibilityIdentifier("demo-walkthrough")
-                    Text("Explore the virtual space, play routes and test spoken cues. AR model preview is available on camera-capable devices. No physical venue localization is claimed.").font(.footnote)
+                    Text("Explore in first person: swipe to turn, use the chevrons to move, and hold the microphone for spoken map questions. This is a virtual space.").font(.footnote)
                 } else {
                     NavigationLink { LiveEntry(package:package,url:library.url(for:package.id),api:api) } label: { Label("Start AR navigation",systemImage:"viewfinder") }
                 }

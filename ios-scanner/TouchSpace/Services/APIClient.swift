@@ -19,7 +19,7 @@ struct APIClient {
         guard (200..<300).contains(response.statusCode) else {
             // Never include request headers, prompts or raw provider errors in UI/logs.
             let object = try? JSONSerialization.jsonObject(with:data) as? [String:Any]
-            let message = object?["detail"] as? String
+            let message = object?["detail"] as? String ?? (object?["error"] as? [String:Any])?["message"] as? String
             throw TouchSpaceError.invalid(message ?? "Server request failed (\(response.statusCode)).")
         }
         return data
@@ -63,6 +63,23 @@ struct APIClient {
         append("--\(boundary)\r\nContent-Disposition: form-data; name=\"file\"; filename=\"map.touchspacemap\"\r\nContent-Type: application/vnd.touchspace.map+zip\r\n\r\n")
         body.append(try Data(contentsOf:url)); append("\r\n--\(boundary)--\r\n")
         _ = try await request("maps",method:"POST",data:body,contentType:"multipart/form-data; boundary=\(boundary)")
+    }
+    func transcribeLocally(_ audio:Data) async throws -> String {
+        let boundary = UUID().uuidString
+        var body = Data("--\(boundary)\r\nContent-Disposition: form-data; name=\"local_only\"\r\n\r\ntrue\r\n".utf8)
+        body.append(Data("--\(boundary)\r\nContent-Disposition: form-data; name=\"file\"; filename=\"question.wav\"\r\nContent-Type: audio/wav\r\n\r\n".utf8))
+        body.append(audio); body.append(Data("\r\n--\(boundary)--\r\n".utf8))
+        var request = URLRequest(url:baseURL.appendingPathComponent("api/stt"))
+        request.httpMethod = "POST"; request.httpBody = body; request.timeoutInterval = 45
+        request.setValue("multipart/form-data; boundary=\(boundary)",forHTTPHeaderField:"Content-Type")
+        struct Transcript: Decodable { let text:String }
+        do {
+            let text = try JSONDecoder().decode(Transcript.self,from:await send(request)).text.trimmingCharacters(in:.whitespacesAndNewlines)
+            guard !text.isEmpty else { throw TouchSpaceError.invalid("No speech was detected. Check the microphone input and try again.") }
+            return text
+        } catch let error as URLError where error.code != .cancelled {
+            throw TouchSpaceError.invalid("Cannot reach local transcription. Start the TouchSpace backend on your Mac and check the server URL in Settings.")
+        }
     }
     func ask(map: UUID, session: UUID, message: String, pose: VerifiedPose?) async throws -> ChatReply {
         struct Question: Encodable { var mapId: UUID; var sessionId: UUID; var message: String; var pose: VerifiedPose? }

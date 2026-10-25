@@ -31,7 +31,7 @@ targets:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSCameraUsageDescription: Scan rooms and align saved maps with the venue for AR guidance.
         NSMicrophoneUsageDescription: Ask a question about the saved map using your voice.
-        NSSpeechRecognitionUsageDescription: Turn a spoken map question into text after you tap the microphone.
+        NSSpeechRecognitionUsageDescription: Recognize a map question while you hold the microphone, then send it when you release.
         NSLocalNetworkUsageDescription: Connect to your chosen TouchSpace demo backend on the local network.
         NSAppTransportSecurity:
           NSAllowsLocalNetworking: true
