@@ -8,6 +8,7 @@ import {
   PIN_SYMBOLS,
   WALKER_SYMBOL,
   framePins,
+  describeGrid,
   mapPins,
   pinAt,
   previewBraille,
@@ -185,6 +186,48 @@ describe("DotPad pin grid", () => {
     for (const p of real.grid.pins) if (p === PIN.wall) walls++;
     expect(walls).toBeGreaterThan(60);
     expect(real.placed.length).toBe(0); // its landmarks are rooms, which get no symbol
+  });
+});
+
+describe("DotPad routes", () => {
+  it("draws spaced route pins, preserves map geometry, and removes them when dismissed", () => {
+    const base = mapPins(demoMap);
+    const route = [{ x: 3.5, y: 2 }, { x: 3.5, y: 5 }, { x: 8, y: 5 }, { x: 8, y: 8 }];
+    const frame = framePins(base.grid, base.layout, null, base.placed, route);
+    expect(describeGrid(frame.grid).route).toBeGreaterThan(5);
+    expect(describeGrid(base.grid).route).toBe(0);
+    base.grid.pins.forEach((kind, index) => {
+      if (kind !== PIN.empty) expect(frame.grid.pins[index]).toBe(kind);
+    });
+    frame.grid.pins.forEach((kind, index) => {
+      if (kind !== PIN.route) return;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          const neighbor = pinAt(frame.grid, index % 60 + dc, Math.floor(index / 60) + dr);
+          expect(neighbor).not.toBe(PIN.wall);
+          expect(neighbor).not.toBe(PIN.symbol);
+        }
+      }
+    });
+    expect(toCellBytes(frame.grid)).not.toEqual(toCellBytes(base.grid));
+    expect(framePins(base.grid, base.layout, null, base.placed).grid).toEqual(base.grid);
+  });
+
+  it("clips zoomed routes and leaves space around the centered X", () => {
+    const position = { x: 8, y: 5 };
+    const base = mapPins(demoMap, 60, 40, { zoom: 4, center: position });
+    const frame = framePins(base.grid, base.layout, { position, heading: 0 }, base.placed,
+      [{ x: -1000, y: 5 }, { x: 1000, y: 5 }]);
+    expect(describeGrid(frame.grid).route).toBeGreaterThan(0);
+    expect(frame.walker).toEqual({ col: 30, row: 20 });
+    expect([...frame.grid.pins].filter((pin) => pin === PIN.walker)).toHaveLength(5);
+    for (let dr = -2; dr <= 2; dr++)
+      for (let dc = -2; dc <= 2; dc++)
+        expect(pinAt(frame.grid, 30 + dc, 20 + dr)).not.toBe(PIN.route);
+    const offscreen = framePins(base.grid, base.layout, null, [],
+      [{ x: 1000, y: 1000 }, { x: 2000, y: 1000 }]);
+    expect(offscreen.grid).toEqual(base.grid);
+    expect(framePins(base.grid, base.layout, null, [], [position, position]).grid).toEqual(base.grid);
   });
 });
 

@@ -86,6 +86,27 @@ describe("DotPad vendor SDK integration", () => {
     expect(zoom).toHaveBeenCalledTimes(2);
     expect(sdk.keyCallback).toBeNull();
   });
+  it("dismisses routes with function button 3 and ignores other keys and inactive connections", async () => {
+    const dismiss = vi.fn();
+    const zoom = vi.fn();
+    const connection = new DotPadConnection(vi.fn(), zoom, dismiss);
+    const key = sdk.keyCallback!;
+    key(device, "KeyFunction3", "2");
+    await connection.connect("usb");
+    sdk.callback!(device, "Connected", "");
+    key({ ...device }, "KeyFunction3", "2");
+    key(device, "KeyFunction13", "10");
+    key(device, "KeyFunction4", "1");
+    expect(dismiss).not.toHaveBeenCalled();
+    key(device, "KeyFunction3", "2");
+    expect(dismiss).toHaveBeenCalledOnce();
+    expect(zoom).not.toHaveBeenCalled();
+    connection.disconnect();
+    key(device, "KeyFunction3", "2");
+    connection.dispose();
+    key(device, "KeyFunction3", "2");
+    expect(dismiss).toHaveBeenCalledOnce();
+  });
   it("waits for readiness, sends 300 graphic cells and 20 text cells, and coalesces motion", async () => {
     const state = vi.fn();
     const connection = new DotPadConnection(state);

@@ -1,9 +1,9 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import demo from "../../../sample-data/demo-building.json";
-import type { FloorMap } from "../api/types";
+import type { AskResult, FloorMap, Point2D, RouteResult } from "../api/types";
 import Walkthrough from "../pages/Walkthrough";
 const voice = vi.hoisted(() => ({
   start: vi.fn(),
@@ -17,8 +17,35 @@ const voice = vi.hoisted(() => ({
   },
   setup: null as null | Promise<void>,
 }));
+const padSdk = vi.hoisted(() => ({
+  message: null as null | ((device: object, code: string, message: string) => void),
+  key: null as null | ((device: object, code: string, message: string) => void),
+  device: { numberCellColumns: 30, numberCellRows: 10, numberBrailleCellColumns: 20 },
+}));
+vi.mock("../dotpad/vendor/DotPadSDK-3.0.4.js", () => ({
+  DataCodes: { Connected: "Connected" },
+  DisplayMode: { GraphicMode: "GraphicMode", TextMode: "TextMode" },
+  DotPadScanner: class {
+    async startUsbScan() { return {}; }
+  },
+  DotPadSDK: class {
+    setCallBack(message: typeof padSdk.message, key: typeof padSdk.key) {
+      padSdk.message = message;
+      padSdk.key = key;
+    }
+    async connectUsbDevice() {
+      padSdk.message?.(padSdk.device, "Connected", "");
+      return padSdk.device;
+    }
+    displayGraphicData() {}
+    async displayTextData() {}
+    disconnect() {}
+  },
+}));
 vi.mock("../components/WalkthroughScene", () => ({
-  default: () => <div data-testid="first-person-scene" />,
+  default: ({ route }: { route?: Point2D[] }) => (
+    <div data-testid="first-person-scene" data-route={JSON.stringify(route ?? [])} />
+  ),
 }));
 vi.mock("../lib/voice", () => ({
   stopSpeaking: vi.fn(),
@@ -95,7 +122,95 @@ function setup() {
 async function area() {
   return screen.findByRole("application", { name: "Walk area" });
 }
+const plannedRoute: RouteResult = {
+  found: true, origin_node: "start", destination_node: "end",
+  origin_name: "Lobby", destination_name: "Restroom",
+  node_ids: ["start", "end"],
+  points: [{ x: 3.5, y: 2 }, { x: 3.5, y: 5 }, { x: 8, y: 5 }, { x: 8, y: 8 }],
+  distance_m: 10.5, steps: [], avoided_stairs: false, reason: null, spoken: "Walk to the restroom.",
+};
+const routeAnswer = (route: RouteResult): AskResult => ({
+  answer: "Planned route.", intent: "route", route,
+  place_ids: [], context: { current_place_id: null, last_place_id: null, avoid_stairs: false },
+  understood_by: "rules", safety_note: null, suggestions: [],
+});
+async function askTyped(text: string) {
+  const input = screen.getByRole("textbox", { name: "Your question" });
+  await userEvent.clear(input);
+  await userEvent.type(input, text);
+  await userEvent.click(screen.getByRole("button", { name: "Send question" }));
+}
 describe("Immersive walkthrough", () => {
+  it("keeps routes across questions, movement and zoom, and dismisses from all views via hardware while the panel is hidden", async () => {
+    vi.stubGlobal("isSecureContext", true);
+    vi.stubGlobal("navigator", { serial: {} });
+    setup();
+    await area();
+    await userEvent.click(screen.getByRole("button", { name: "DotPad" }));
+    await userEvent.click(screen.getByRole("button", { name: "Connect USB" }));
+    await screen.findByRole("button", { name: "Disconnect DotPad" });
+    await userEvent.click(screen.getByRole("button", { name: "Type a question" }));
+    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(routeAnswer(plannedRoute))));
+    await askTyped("How do I get to the restroom?");
+    const pad = screen.getByRole("img", { name: /^DotPad preview/ });
+    expect(pad).toHaveAccessibleName(/Route to Restroom: [1-9]\d* route pins visible/);
+    const scene = screen.getByTestId("first-person-scene");
+    expect(scene).toHaveAttribute("data-route", JSON.stringify(plannedRoute.points));
+    await askTyped("Where am I?"); // local answer clears assistant.result
+    expect(pad).toHaveAccessibleName(/Route to Restroom/);
+    await askTyped("Where is the restroom?"); // non-route server answer
+    expect(pad).toHaveAccessibleName(/Route to Restroom/);
+    fetchMock.mockRejectedValueOnce(new Error("Network unavailable"));
+    await askTyped("What is near the exit?");
+    expect(pad).toHaveAccessibleName(/Route to Restroom/);
+    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(routeAnswer({
+      ...plannedRoute, found: false, points: [], reason: "No route found",
+    }))));
+    await askTyped("How do I get to the stairs?");
+    expect(pad).toHaveAccessibleName(/Route to Restroom/);
+    await userEvent.click(screen.getByRole("button", { name: "Zoom in" }));
+    fireEvent.click(screen.getByRole("button", { name: "Step forward" }));
+    expect(pad).toHaveAccessibleName(/Route to Restroom/);
+    expect(scene).toHaveAttribute("data-route", JSON.stringify(plannedRoute.points));
+
+    const replacement = { ...plannedRoute, destination_name: "Exit", points: plannedRoute.points.slice(0, 3) };
+    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(routeAnswer(replacement))));
+    await askTyped("How do I get to the exit?");
+    expect(pad).toHaveAccessibleName(/Route to Exit/);
+    await userEvent.click(screen.getByRole("button", { name: "Floor plan" }));
+    expect(screen.getByText("To Exit")).toBeInTheDocument();
+    act(() => padSdk.key?.(padSdk.device, "KeyFunction3", "2"));
+    expect(scene).toHaveAttribute("data-route", "[]");
+    expect(screen.queryByText("To Exit")).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "DotPad" }));
+    expect(pad).not.toHaveAccessibleName(/Route to/);
+    expect(screen.getByRole("status", { name: "DotPad route" })).toHaveTextContent("No active route");
+    await askTyped("Where is the restroom?");
+    expect(pad).not.toHaveAccessibleName(/Route to/);
+  });
+
+  it("does not restore a dismissed route from an answer already in flight", async () => {
+    vi.stubGlobal("isSecureContext", true);
+    vi.stubGlobal("navigator", { serial: {} });
+    setup();
+    await area();
+    await userEvent.click(screen.getByRole("button", { name: "DotPad" }));
+    await userEvent.click(screen.getByRole("button", { name: "Connect USB" }));
+    await screen.findByRole("button", { name: "Disconnect DotPad" });
+    await userEvent.click(screen.getByRole("button", { name: "Type a question" }));
+    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(routeAnswer(plannedRoute))));
+    await askTyped("How do I get to the restroom?");
+    let finish!: (response: Response) => void;
+    fetchMock.mockReturnValueOnce(new Promise<Response>((resolve) => { finish = resolve; }));
+    await askTyped("How do I get to the exit?");
+    act(() => padSdk.key?.(padSdk.device, "KeyFunction3", "2"));
+    await act(async () => { finish(new Response(JSON.stringify(routeAnswer(plannedRoute)))); });
+    expect(screen.getByRole("img", { name: /^DotPad preview/ })).not.toHaveAccessibleName(/Route to/);
+    // A fresh request after dismissal can highlight a route again.
+    fetchMock.mockResolvedValueOnce(new Response(JSON.stringify(routeAnswer(plannedRoute))));
+    await askTyped("How do I get to the restroom?");
+    expect(screen.getByRole("img", { name: /^DotPad preview/ })).toHaveAccessibleName(/Route to Restroom/);
+  });
   it("shares position between the first-person view, map and keyboard navigation", async () => {
     setup();
     const walk = await area();

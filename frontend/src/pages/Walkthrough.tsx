@@ -247,9 +247,11 @@ export function WalkthroughView({
     () => mapPins(map, undefined, undefined, { zoom: dotZoom, center: dotCenter }),
     [map, dotZoom, dotCenter],
   );
+  const route = assistant.activeRoute;
+  const routePoints = route?.points;
   const frame = useMemo(
-    () => framePins(dot.grid, dot.layout, pose, dot.placed),
-    [dot, pose],
+    () => framePins(dot.grid, dot.layout, pose, dot.placed, routePoints),
+    [dot, pose, routePoints],
   );
   const padText = useMemo(() => statusLine(map, pose), [map, pose]);
 
@@ -448,8 +450,6 @@ export function WalkthroughView({
     ? (room?.name ?? "On the map")
     : "Outside the mapped area";
   const hits = readings.flatMap((r) => (r.hit ? [r.hit] : []));
-  const route = assistant.result?.route;
-  const routePoints = route?.found ? route.points : undefined;
   const tabs: {
     id: NonNullable<typeof panel>;
     name: string;
@@ -742,6 +742,8 @@ export function WalkthroughView({
               metersPerPin={dot.layout.metersPerPin}
               zoom={dotZoom}
               onZoom={zoomDotPad}
+              routeName={route?.destination_name}
+              onDismissRoute={assistant.dismissRoute}
             />
           )}
           {t.id === "help" && (

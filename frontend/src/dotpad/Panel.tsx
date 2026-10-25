@@ -16,10 +16,14 @@ export default function DotPadPanel(props: {
   metersPerPin: number;
   zoom: number;
   onZoom: (action: ZoomAction) => void;
+  routeName?: string;
+  onDismissRoute: () => void;
 }) {
   const connection = useRef<DotPadConnection | null>(null);
   const onZoom = useRef(props.onZoom);
   onZoom.current = props.onZoom;
+  const onDismissRoute = useRef(props.onDismissRoute);
+  onDismissRoute.current = props.onDismissRoute;
   const [state, setState] = useState<DeviceState>("disconnected");
   const [error, setError] = useState("");
   const [knownDevices, setKnownDevices] = useState<KnownDotPad[]>([]);
@@ -37,7 +41,7 @@ export default function DotPadPanel(props: {
       setState(next);
       setError(message ?? "");
       if (next !== "connecting") refreshKnownDevices();
-    }, (action) => onZoom.current(action));
+    }, (action) => onZoom.current(action), () => onDismissRoute.current());
     connection.current = device;
     const refreshOnFocus = () => refreshKnownDevices();
     window.addEventListener("focus", refreshOnFocus);
@@ -58,6 +62,11 @@ export default function DotPadPanel(props: {
         Walls are raised, doors are gaps, and your position is an X.
         Zoom in to keep your position centered as you walk. On the DotPad,
         function button 1 zooms out and function button 2 zooms in.
+      </p>
+      <p role="status" aria-label="DotPad route" className="text-sm">
+        {props.routeName
+          ? `Route to ${props.routeName}. Follow the spaced raised dots. Press function button 3 on the DotPad to dismiss the route.`
+          : "No active route. Ask for directions to highlight a route."}
       </p>
       <div className="flex flex-wrap items-center gap-2" role="group" aria-label="DotPad zoom">
         <button

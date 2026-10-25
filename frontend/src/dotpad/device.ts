@@ -38,6 +38,7 @@ export class DotPadConnection {
   constructor(
     private onState: (state: DeviceState, error?: string) => void,
     onZoom?: (action: ZoomAction) => void,
+    onDismissRoute?: () => void,
   ) {
     this.sdk.setCallBack((device, code) => {
       if (this.disposed) return;
@@ -87,6 +88,7 @@ export class DotPadConnection {
       // The SDK's combined key callback fires once per press (including held keys).
       if (code === "KeyFunction1") onZoom?.("out");
       else if (code === "KeyFunction2") onZoom?.("in");
+      else if (code === "KeyFunction3") onDismissRoute?.();
     });
   }
 

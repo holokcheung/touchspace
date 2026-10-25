@@ -48,6 +48,24 @@ when switching panels; leaving the walkthrough resets zoom and disconnects.
 
 Button mapping and tactile readability still require validation on a real device.
 
+## Route highlighting
+
+A successful route answer highlights the same planned path on the DotPad, floor
+plan and 3D walkthrough. The DotPad draws spaced raised dots in the current
+viewport, including at 2× and 4× zoom. Route dots leave a flat pin beside walls,
+landmark symbols and the user's X so the shapes remain distinguishable. This
+can interrupt the dotted path in narrow spaces. The preview colors route pins
+amber and reports the destination and visible route pin count.
+
+The active route is independent of the latest assistant answer. It persists
+through follow-up questions, failed route requests, movement, zoom, panel changes
+and device reconnects within the walkthrough. A newly planned successful route
+replaces it. Press **function button 3** on the DotPad to dismiss it from all three
+views, even when the DotPad panel is hidden. Buttons 1 and 2 retain their zoom
+functions. Dismissal also prevents a pending answer from restoring the route;
+a fresh route request can highlight a route again. Leaving the walkthrough ends
+the active route session.
+
 ## Reconnecting without rescanning
 
 After this origin has been granted access to a DotPad, the panel uses
@@ -102,5 +120,7 @@ not a general language translation service.
 
 `npm test` covers packing, moving position markers, braille indicators, SDK handshake,
 Bluetooth/USB selection, frame coalescing, incompatible boards, cancellation,
-disconnection, timeout and unmount cleanup using an SDK fake. Physical pin order,
+disconnection, timeout and unmount cleanup using an SDK fake. It also covers zoom,
+clipping, route rendering, persistence, replacement and hardware dismissal from
+all views. Physical pin order,
 firmware behavior, and actual BLE/USB output still need validation on a real DotPad.
