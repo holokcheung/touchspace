@@ -1,154 +1,177 @@
 # TouchSpace
 
+[![Cal Hacks 13.0 Anthropic Track Winner](https://img.shields.io/badge/Cal_Hacks_13.0-Anthropic_Prize_Winner-D4AF37?style=flat-square)](https://devpost.com/software/touchspace)
+
 **Scan a Space. Feel the Layout. Explore with Confidence.**
 
-TouchSpace turns real indoor spaces into 3D-printable tactile maps for blind and visually impaired people, and pairs them with a voice assistant that answers questions about the space. Built for Cal Hacks 13.0.
+[![Watch the TouchSpace demo: the web walkthrough alongside a Dot Pad displaying the tactile map](https://github.com/user-attachments/assets/048edcb6-0cf2-4992-b2d2-cbb1808a2591)](https://www.youtube.com/watch?v=zCSkCPO-3cc)
 
-## Native iOS AR app
+_Watch the TouchSpace demo_
 
-The SwiftUI app now lives in [`ios-scanner/`](ios-scanner/README.md). It captures RoomPlan geometry and AR world data in one `.touchspacemap` package, supports offline map exploration, and restores the saved frame for camera-overlay navigation with local speech. Complete bundles use `/api/touchspace/maps`; the original JSON scan/print API below remains available.
 
-See [setup, architecture and physical-device validation](docs/IOS_MVP.md). Simulator builds and automated tests do not validate real-world relocalization or capture; those require a physical device at the scanned venue.
+TouchSpace turns indoor spaces into interactive tactile and audio maps for blind and visually impaired people. It helps people learn an unfamiliar place **before visiting**, from the comfort of home, through touch, spatial sound, and a first-person 3D walkthrough.
 
-## Workflow
+Built at Cal Hacks 13.0 (2026), where it won Anthropic's **Claude for Public Benefit** prize.
 
-Scan Room (iPhone/iPad LiDAR + RoomPlan) → Export JSON → Upload → Process Geometry → Generate Tactile Map → Preview 3D → Download STL → Print
+[Project introduction on Devpost](https://devpost.com/software/touchspace) · [Watch the demo](https://www.youtube.com/watch?v=zCSkCPO-3cc)
 
-## Repository layout
+## What it does
 
-| Path | Contents |
+A set of turn-by-turn directions cannot convey the whole layout of a building. TouchSpace brings several ways of exploring the same map together so users can build a spatial understanding and decide where they want to go.
+
+- **Interactive tactile maps:** feel walls, doorway gaps, landmarks, your virtual position, and highlighted routes on a Dot Pad refreshable tactile display.
+- **Spatial audio:** hear nearby walls and furniture through stereo sound, with cues for obstacles ahead, doorway crossings, and the edge of the mapped area.
+- **3D exploration:** practice moving through a space with keyboard, mouse, or touch controls while a floor plan follows your position.
+- **Voice questions:** ask about surroundings, destinations, and routes. Claude helps interpret free-form questions; answers and directions are computed from recorded map data.
+- **Community sharing:** capture and label spaces with the iOS app, then share complete map packages for others to download and explore.
+
+The intended workflow is **scan → review and label → share → explore**. The iOS and web apps currently support different map formats; see [map compatibility](#map-compatibility) before transferring a scan between them.
+
+## iOS app
+
+The native SwiftUI app uses Apple RoomPlan and LiDAR on supported iPhones and iPads to capture walls, doorways, floor boundaries, and furniture. Contributors review the floor plan, name rooms and destinations, and confirm passable doorways before saving a `.touchspacemap` package containing geometry, labels, navigation data, and AR world data.
+
+Maps can be shared as files or uploaded to the backend's community catalog from the app. Downloaded maps support offline floor-plan exploration and a virtual 3D walkthrough. Two built-in demo spaces let you try exploration without LiDAR. The iOS voice assistant uses the configured backend and requires an Anthropic API key.
+
+## Web app
+
+The website opens to a library of saved spaces. Choose a map, import a RoomPlan or TouchSpace JSON file, or try a sample to enter the walkthrough. The **Floor plan**, **Audio**, and **DotPad** panels keep visual, auditory, and tactile exploration together.
+
+Use headphones and enable spatial audio in the Audio panel. Sound changes as you approach walls and furniture; movement checks collisions against the mapped geometry. Spoken announcements and a readable map description provide additional context.
+
+| Action | Controls |
 | --- | --- |
-| `frontend/` | React + TypeScript + Vite web app |
-| `backend/` | FastAPI service: RoomPlan import, floor-plan processing, STL generation, routing, voice Q&A |
-| `ios-scanner/` | SwiftUI RoomPlan scanner app |
-| `sample-data/` | Synthetic demo fixtures (not real venue scans) |
-| `shared/` | Web soundscape settings and shared spatial test fixtures |
-| `docs/` | Architecture and usage docs |
+| Move forward / backward | ↑ / ↓ or W / S |
+| Turn left / right | ← / → or A / D; drag the 3D view to look around |
+| Turn 90° | Shift + left / right turn key |
+| Turn around | T |
+| Describe surroundings | E or Enter while focused on the walkthrough |
+| Ask a spoken question | Hold Space or the microphone button; release to send |
+| Toggle recording accessibly | Focus the microphone button and press Enter |
 
-## Status
+On-screen movement controls also support touch and holding to repeat. A typed question is available alongside voice input.
 
-| Phase | State |
+Try “Where am I?”, “Where is the restroom?”, or “Take me to the elevator.” Surroundings descriptions use your virtual position and heading. Route answers use the map's recorded path graph, identify their starting landmark, and highlight the route in the 3D view, floor plan, and tactile display. The Floor plan panel includes a starting-location picker and an option to avoid stairs. A recorded route starts at a mapped landmark; it does not include a verified connection from an arbitrary virtual position to that landmark.
+
+## Tactile map
+
+The web app connects directly to a **Dot Pad with a 60 × 40 pin graphic display**. Raised walls, open doorway gaps, landmark symbols, and an X marking the walker update as you explore. Planned routes appear as spaced raised dots. A braille line shows the current room and heading using basic uncontracted English braille.
+
+Open **DotPad** in the walkthrough to see the pin preview, which works without hardware. To use a physical display, open the app in **Chrome on localhost or HTTPS**, choose **Connect Bluetooth** or **Connect USB**, and select the device in the browser picker.
+
+| Control | Effect |
 | --- | --- |
-| 1. Data pipeline: normalized schema, synthetic demo, floor-plan processing, tactile STL generator, tests | Done |
-| 2. FastAPI endpoints + React web app | Done; web UI consolidated into a space library and first-person walkthrough. Editing and STL APIs remain on the backend. |
-| 3. Apple RoomPlan import + iOS scanner | Importer done and tested on synthetic data. Native app builds for simulator; capture and saved-world restore still require device validation. |
-| 4. Voice and routing | Recorded-path routing and grounded Q&A are integrated into the walkthrough with hold-Space voice input and typed fallback. Cartesia and optional Claude (free-form question parsing) remain supported. |
-| Walk-through soundscape | Done on the web: walk the map with headphones, and the noise is muffled on the side of a nearby wall. Settings shared with the iPhone app; live LiDAR version not built. |
-| 5. Polish and docs | Not started |
+| Zoom in / out in the panel | Switch between overview, 2×, and 4× zoom |
+| Dot Pad function button 1 / 2 | Zoom out / in |
+| Dot Pad function button 3 | Dismiss the highlighted route from all views |
+| Lower all pins | Clear the display until the next movement update |
 
-The demo building in `sample-data/demo-building.json` is **synthetic**. It is not a scan of any real place.
+The map stays north up. Overview fits the whole space; zoomed views follow the walker. See the [DotPad guide](frontend/src/dotpad/README.md) for connection troubleshooting, symbols, rendering details, and hardware validation limits.
 
-## Running it locally
+## Running locally
 
-Requires Python 3.11+ and Node 20+.
+Requires **Python 3.11+** and **Node.js 20+ with npm**. The web demo needs neither an iPhone nor a Dot Pad, and works without API keys.
 
-**1. Backend** (FastAPI on port 8000):
+### Backend
 
-```bash
+From the repository root:
+
+```sh
 cd backend
 python3 -m venv .venv
-.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/python -m pip install -r requirements-dev.txt
 .venv/bin/python -m uvicorn app.main:app --reload --port 8000
 ```
 
-**2. Frontend** (Vite on port 5173, proxies `/api` to the backend), in a second terminal:
+The API runs at [http://localhost:8000](http://localhost:8000). [Health status](http://localhost:8000/api/health) reports optional service availability; [interactive API documentation](http://localhost:8000/docs) lists the endpoints.
 
-```bash
+### Frontend
+
+In a second terminal, from the repository root:
+
+```sh
 cd frontend
 npm install
 npm run dev
 ```
 
-Open http://localhost:5173 and click **Try Demo** to enter the walkthrough. No API keys are needed. Optional voice and chat provider settings are listed in [.env.example](.env.example); keep provider keys on the backend.
+Open [http://localhost:5173](http://localhost:5173) and select **Try Demo**. Vite proxies `/api` requests to the backend on port 8000. Imported and demo maps are saved under `backend/data/` by default.
 
-To try the RoomPlan import path without an iPhone, upload `sample-data/synthetic-roomplan-capturedroom.json`. It is synthetic data in RoomPlan's format. For real scans, see [ios-scanner/README.md](ios-scanner/README.md) and [the iOS implementation guide](docs/IOS_MVP.md).
+The library also offers:
 
-**Tests:**
+- **Demo building:** a synthetic layout with labeled destinations and recorded routes.
+- **Public RoomPlan sample:** a third-party apartment scan; room labels are unconfirmed. See its [source and license](sample-data/third-party/README.md).
+- **Palace of Fine Arts:** an approximate first-floor reconstruction from the Cal Hacks venue's official floor plan. See the [source and limitations](sample-data/palace-of-fine-arts/README.md).
 
-```bash
-cd backend && .venv/bin/python -m pytest
-cd frontend && npm test
-```
+To test JSON import without a phone, choose **Import a scan** and upload [`sample-data/synthetic-roomplan-capturedroom.json`](sample-data/synthetic-roomplan-capturedroom.json).
 
-**STL from the command line** (no server needed):
+### Optional voice and Claude configuration
 
-```bash
-cd backend
-.venv/bin/python -m app.cli generate ../sample-data/demo-building.json -o demo.stl --set wall_height_mm=3
-```
+Copy [`.env.example`](.env.example) to `.env` at the repository root and fill in the settings you need. If a `.env` already exists, update it rather than replacing it. Restart the backend after changing settings. Keys stay on the backend.
 
-## Web app
+| Setting | Purpose |
+| --- | --- |
+| `ANTHROPIC_API_KEY` | Enables Claude interpretation of web questions and the iOS map assistant |
+| `CARTESIA_API_KEY` | Enables web speech recognition and synthesis through Cartesia |
+| `CARTESIA_VOICE_ID` | Optionally selects a Cartesia voice |
+| `TOUCHSPACE_INTERPRETER_MODEL` | Overrides the web question interpreter's Claude model |
+| `TOUCHSPACE_LLM_MODEL` | Overrides the iOS assistant's Claude model |
+| `TOUCHSPACE_PUBLISH_CODE` | Enables pairing and uploads to the iOS community catalog |
 
-The web app centers on **practicing navigation**. Choose a saved space, import a
-RoomPlan/TouchSpace JSON map, or try a demo, then enter a full-screen first-person
-Three.js walkthrough. Old editor, print preview and voice-explorer links redirect into
-the walkthrough. The backend's editing and tactile/STL APIs remain available.
+Without provider keys, the web app still supports typed questions, rule-based map answers, local surroundings descriptions, and browser speech where available. Browser speech support varies; typed input remains available. The iOS assistant requires an online backend with `ANTHROPIC_API_KEY` configured.
 
-- **Move:** arrow keys or W/S and A/D. Shift turns 90°, T turns around. Drag to look;
-  hold the on-screen movement controls on touch devices. Collision checks use the
-  same walls, doorway gaps and furniture as the audio simulation.
-- **Ask:** hold **Space** while speaking and release to send, or hold the microphone.
-  Enter on the microphone toggles recording for keyboard/assistive-technology users.
-  A typed question is always available. Speech uses Cartesia when configured, with
-  browser recognition/synthesis fallbacks. Local surroundings answers use the exact
-  virtual position and heading; other questions use the existing grounded map Q&A.
-- **Floor plan:** a collapsible side panel follows your position and shows recorded
-  routes, landmarks, a start-location picker, stair avoidance and a readable/spoken
-  map description. Routes explicitly identify the recorded landmark they start from;
-  they do not invent a path from an arbitrary virtual point to the graph.
-- **Spatial audio:** headphone noise muffles near walls/furniture on either side,
-  ticks warn about obstacles ahead, and doorway/bump/out-of-map cues remain.
-  Sound ducks while you use the assistant. Volume and spoken announcements live in
-  the Audio panel.
-- **DotPad:** the authoritative web [module](frontend/src/dotpad/README.md) retains the pin
-  preview and uses the vendor Web SDK 3.0.4 to send graphics and room/heading braille
-  to a 60 × 40 pin DotPad over Bluetooth or USB. Hardware needs Chrome on localhost
-  or HTTPS; physical-device validation is still required. It connects directly from
-  the walkthrough, with no Python gateway or iOS bridge.
+The backend reads `backend/.env` before the root `.env`; existing process environment variables take precedence over both. Additional storage, CORS, speech, and publishing settings are documented in [`.env.example`](.env.example).
 
-The separate floor-plan/path editing, print settings, STL download, marketing sections,
-and standalone Voice Explorer UI have been removed from the web navigation. Map
-import, both samples, saved maps, keyboard/touch controls, audio cues, text descriptions,
-and grounded Q&A remain together in the navigation workflow.
+### iOS setup
 
-`npm run build:walk` still produces a self-contained HTML walkthrough with bundled
-maps, 3D, audio and the DotPad module. Without a backend its assistant describes local
-surroundings; connected map Q&A requires the main app. This is virtual practice from
-recorded maps, not live position tracking or obstacle sensing.
+On a Mac with Xcode and the iOS SDK installed:
 
-## API
+1. Open [`ios-scanner/TouchSpace.xcodeproj`](ios-scanner/TouchSpace.xcodeproj), select the **TouchSpace** scheme, and set your development team under **Signing & Capabilities**.
+2. Run on an iOS 17+ device. RoomPlan capture requires a LiDAR-equipped iPhone or iPad; the simulator can explore bundled demo maps.
+3. To connect a physical phone, start the backend with `.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000` from `backend/`. Set the app's backend URL to `http://<Mac-LAN-IP>:8000` on the same network, or `http://localhost:8000` for the simulator.
+4. For community uploads, set `TOUCHSPACE_PUBLISH_CODE` on the backend, restart it, and pair through **Map detail → Upload or publish**. Maps are private by default; public publishing requires explicit consent.
 
-| Method | Path | Purpose |
+The Xcode project is checked in; XcodeGen is only needed to regenerate it. See the [iOS guide](ios-scanner/README.md) for native testing and optional local Whisper transcription for simulator voice input. The current provider configuration is [`.env.example`](.env.example): iOS chat uses `ANTHROPIC_API_KEY` directly.
+
+### Checks and builds
+
+Run each command from the directory shown:
+
+| Directory | Command | Purpose |
 | --- | --- | --- |
-| GET | `/api/health` | Health check, plus which optional services are configured |
-| POST | `/api/scans` | Upload scan JSON (multipart `file`), then parse, clean up, and save it |
-| POST | `/api/demo` | Create an editable copy of the synthetic demo building |
-| GET | `/api/maps` | List saved maps |
-| GET / PUT | `/api/maps/{id}` | Read or replace a map. Responses include validation issues and 3D model status. |
-| POST | `/api/maps/{id}/route` | Shortest route between two places over recorded paths, with spoken directions |
-| POST | `/api/maps/{id}/ask` | Answer a question using only this map's data |
-| POST | `/api/tts` | Speak text with Cartesia (503 means use the browser voice) |
-| POST | `/api/stt` | Transcribe a recording with Cartesia |
-| POST | `/api/maps/{id}/generate` | Generate the tactile model, optionally with new `settings` |
-| GET | `/api/maps/{id}/model` | Model status (`none` / `ready` / `stale`) and the generation report |
-| GET | `/api/maps/{id}/stl` | Download the binary STL |
+| `backend/` | `.venv/bin/python -m pytest` | Backend tests |
+| `frontend/` | `npm test` | Frontend tests |
+| `frontend/` | `npm run build` | Type-check and build the web app |
+| `ios-scanner/` | `swift test` | Portable core tests on macOS |
 
-Errors return `{"error": {"code", "message", "details"}}`. Maps are stored as JSON files under `backend/data/` (gitignored).
+For a standalone web walkthrough, run `npm run build:walk` in `frontend/`. It creates `frontend/dist-walk/touchspace-walk.html` with bundled sample maps, 3D exploration, spatial audio, and the DotPad module. Its assistant describes local surroundings; questions about other places and routes require the main app. Serve it on localhost or HTTPS for hardware access.
 
-## More docs
+## Map compatibility
 
-- [iOS setup and testing](ios-scanner/README.md): scanning, demo walkthroughs and speech
-- [iOS implementation guide](docs/IOS_MVP.md): map packages, localization and device validation
-- [Product specification](docs/SPEC.md): native app and backend requirements
-- [DotPad module](frontend/src/dotpad/README.md): browser hardware setup and validation
-- [Soundscape settings](shared/soundscape.json): web audio and movement configuration
+The two clients currently use separate map formats and catalogs:
 
-## Tactile model, in short
+| Client | Import format | Backend API |
+| --- | --- | --- |
+| Web walkthrough | RoomPlan `CapturedRoom` / `CapturedStructure` JSON or normalized TouchSpace `FloorMap` JSON | `/api/scans`, `/api/maps`, and `/api/maps/{id}/ask` |
+| iOS app | Complete `.touchspacemap` ZIP packages | `/api/touchspace/maps` and `/api/touchspace/chat` |
 
-- Flat base (3 mm), with the top-left corner cut off so the reader can tell which way is up.
-- Raised walls (2.5 mm tall, 2 mm wide) with door and opening gaps. A gap narrower than 5 mm at print scale is widened so a finger can find it.
-- Landmark symbols: triangle = entrance, square = exit, circle = restroom, three bars = stairs, ring = elevator, plus = information. Symbols are moved clear of walls and doorways automatically.
-- A legend strip along the bottom edge, plus optional raised dot paths along recorded routes.
-- Every model is checked before export: watertight, one connected solid, fits the print area, all features on the base, correct height.
+**The website does not currently import `.touchspacemap` packages or browse the iOS community catalog.** The iOS scanner saves packages rather than exporting the JSON format accepted by the website. Completing that handoff is part of the intended scan-to-tactile workflow; the web samples and JSON importer can be used independently today.
 
-These dimensions are prototype defaults for FDM printing, not an accessibility standard. Blind users have not tested them yet.
+## Repository layout
+
+| Path | Contents |
+| --- | --- |
+| [`frontend/`](frontend/) | React, TypeScript, Vite, and Three.js walkthrough; spatial audio and DotPad integration |
+| [`backend/`](backend/) | FastAPI service for map import, storage, spatial questions, routes, speech, and the community catalog |
+| [`ios-scanner/`](ios-scanner/) | SwiftUI and RoomPlan capture, map review, package sharing, and exploration |
+| [`sample-data/`](sample-data/) | Synthetic fixtures, third-party scan, and venue reconstruction with provenance |
+| [`shared/`](shared/) | Soundscape configuration and spatial test fixtures |
+| [`docs/`](docs/) | Additional design and implementation notes; some describe earlier project directions |
+
+## Current status
+
+TouchSpace is a hackathon prototype. Full scan-to-tactile integration, capture on real devices, and tactile readability still need further validation.
+
+The web walkthrough is virtual practice using recorded maps. It does not track a visitor's physical position or detect live obstacles. Maps may be partial or outdated, and recorded routes do not establish accessibility. TouchSpace is not a replacement for a cane, guide dog, or other mobility aid.
+
+Next steps include connecting the iOS package workflow to web exploration, validating the complete workflow on real hardware, and testing with blind and visually impaired users. Broader mapping coverage, richer braille labels, and support for additional tactile displays remain future work.
